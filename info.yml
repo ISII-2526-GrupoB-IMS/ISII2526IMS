@@ -1,7 +1,7 @@
 project:
   name: 'ISII-2526-GrupoB-IMS'
-  owner: 'IMS'
-  teamId: 'ISII2526IMS'
+  owner: 'GrupoB'
+  teamId: 'IMS'
   identities: {}
   notifications:
     email: 'ismael.jimenez2@alu.uclm.es,miguelangel.felipe@alu.uclm.es,samuel.gomez3@alu.uclm.es'
@@ -9,7 +9,7 @@ project:
     member1:
       name: 'Ismael'
       surname: 'Jiménez Calonge' 
-      githubUsername: 'Ismaeljc68'
+      githubUsername: 'ismaeljc68'
     member2:
       name: 'Miguel Angel'
       surname: 'Felipe Lopez' 
