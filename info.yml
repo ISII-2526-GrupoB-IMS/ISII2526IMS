@@ -8,7 +8,7 @@ project:
   members:
     member1:
       name: 'Ismael'
-      surname: 'Jiménez_Calonge' 
+      surname: 'JimÃ©nez_Calonge' 
       githubUsername: 'ismaeljc68'
     member2:
       name: 'Miguel Angel'
