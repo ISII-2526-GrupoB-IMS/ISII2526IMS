@@ -8,13 +8,13 @@ project:
   members:
     member1:
       name: 'Ismael'
-      surname: 'Jiménez Calonge' 
+      surname: 'Jiménez_Calonge' 
       githubUsername: 'ismaeljc68'
     member2:
       name: 'Miguel Angel'
-      surname: 'Felipe Lopez' 
+      surname: 'Felipe_Lopez' 
       githubUsername: 'MiguelAngel2323'
     member3:
       name: 'Samuel'
-      surname: 'Gomez Lechiguero' 
+      surname: 'Gomez_Lechiguero' 
       githubUsername: 'Samuel150305'
