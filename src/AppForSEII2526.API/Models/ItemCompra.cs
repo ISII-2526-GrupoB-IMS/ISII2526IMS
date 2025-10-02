@@ -1,0 +1,62 @@
+﻿using System;
+namespace AppForSEII2526.API.Models 
+{
+    public class ItemCompra
+    {
+        public ItemCompra()
+        {
+        }
+
+        public ItemCompra(string descripcion, Dispositivo dispositivo, Compra compra, int cantidad)
+        {
+            Descripcion = descripcion;
+            Dispositivo = dispositivo;
+            IdDispositivo = dispositivo.Id;
+            Compra = compra;
+            IdCompra = compra.Id;
+            Precio = dispositivo.PrecioParaCompra
+            Cantidad = cantidad;
+            
+        }
+
+        [Key]
+        public int Id { get; set; }
+
+        //DESCRIPCIÓN
+        [Required]
+        [StringLength(150, ErrorMessage = "La descripción no puede ser superior a 150 carecteres")]
+        public string? Descripcion { get; set; }
+
+        //Dispositivo
+        [Required]
+        public Dispositivo Dispositivo { get; set; }
+        //Id Dispositivo
+        [Required]
+        [ForeignKey("Dispositivo")]
+        public int IdDispositivo { get; set; }
+
+        //COMPRA
+        [Required]
+        public Compra Compra { get; set; }
+        //Id Compra
+        [Required]
+        [ForeignKey("Compra")]
+        public int IdCompra { get; set; }
+
+        //PRECIO 
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(0.5, float.MaxValue, ErrorMessage = "El precio mínimo es de 0,5 ")]
+        [Display(Name = "Precio ")]
+        [Precision(10, 2)]
+        public double Precio { get; set; }
+
+        //CANTIDAD
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes proporcionar una cantidad válida mayor de 1")]
+        public int Cantidad { get; set; }
+
+        
+    }
+}
+
