@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NuGet.DependencyResolver;
+
 namespace AppForSEII2526.API.Models
 {
     [Index(nameof(NombreModelo), IsUnique = true)] //Nombre es UNIQUE
@@ -10,7 +11,7 @@ namespace AppForSEII2526.API.Models
 
         public Modelo(string nombreModelo)
         {
-            NombreModelo = nombreModelo;    
+            NombreModelo = nombreModelo;
         }
 
         //ID Modleo
@@ -26,6 +27,3 @@ namespace AppForSEII2526.API.Models
         public IList<Dispositivo> Dispositivos { get; set; } = new List<Dispositivo>();
     }
 }
-
-
-
