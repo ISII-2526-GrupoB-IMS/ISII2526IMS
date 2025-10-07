@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AppForSEII2526.API.Models
+﻿namespace AppForSEII2526.API.Models
 {
     public class Compra
     {
@@ -18,7 +16,7 @@ namespace AppForSEII2526.API.Models
             FechaCompra = fechaCompra;
             PrecioTotal = itemsCompra.Sum(ic => ic.Precio * ic.Cantidad);
             CantidadTotal = itemsCompra.Sum(ic => 1 * ic.Cantidad);
-          
+
         }
 
         [Key]
@@ -44,7 +42,7 @@ namespace AppForSEII2526.API.Models
         public MetodosDePago MetodoDePago { get; set; }
 
         //FECHA DE COMPRA
-        [DataType(DataType.Date)]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de compra")]
         public DateTime FechaCompra { get; set; }
@@ -63,11 +61,16 @@ namespace AppForSEII2526.API.Models
         [Display(Name = "Cantidad Total")]
         public int CantidadTotal { get; set; }
 
-        
+
 
 
         public IList<ItemCompra> ItemsCompra { get; set; }
-
+        public enum MetodosDePago
+        {
+            TarjetaCredito,
+            PayPal,
+            Efectivo
+        }
         public override bool Equals(object? obj)
         {
             return obj is Compra compra &&
@@ -80,7 +83,7 @@ namespace AppForSEII2526.API.Models
                    PrecioTotal == compra.PrecioTotal &&
                    CantidadTotal == compra.CantidadTotal &&
                    EqualityComparer<IList<ItemCompra>>.Default.Equals(ItemsCompra, compra.ItemsCompra);
-                  
+
         }
 
         public override int GetHashCode()
@@ -101,12 +104,3 @@ namespace AppForSEII2526.API.Models
     }
 }
 
-    public enum MetodosDePago
-    {
-        TarjetaCredito,
-        PayPal,
-        Efectivo
-    }
-
-
-}
