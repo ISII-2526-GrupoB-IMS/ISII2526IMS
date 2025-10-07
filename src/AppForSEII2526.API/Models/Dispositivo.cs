@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace AppForSEII2526.API.Models
 {
     [Index(nameof(NombreDispositivo), IsUnique = true)] //Nombre es UNIQUE
@@ -9,19 +8,18 @@ namespace AppForSEII2526.API.Models
         {
         }
 
-        public Dispositivo(Modelo modelo, string marca, string color, string nombreDispositivo, double precioParaCompra, double precioParaAlquiler, int cantidadParaCompra, int cantidadParaAlquiler, IList<ItemCompra> itemsCompra, IList<ItemAlquiler> itemsAlquiler, IList<ItemReseña> itemsReseña, int año)
+        public Dispositivo(Modelo modelo, string marca, string color, string nombreDispositivo, double precioParaCompra, double precioParaAlquiler, int cantidadParaCompra, int cantidadParaAlquiler, IList<ItemCompra> itemsCompra, int año)
         {
             Modelo = modelo;
-            Marca = marca; 
+            Marca = marca;
             Color = color;
-            NombreDispositivo = nombreDispositivo;  
+            NombreDispositivo = nombreDispositivo;
             PrecioParaCompra = precioParaCompra;
-            PrecioParaAlquiler = precioParaAlquiler;
+
             CantidadParaCompra = cantidadParaCompra;
-            CantidadParaAlquiler = cantidadParaAlquiler;
-            ItemsCompra = itemsCompra;  
-            ItemsAlquiler = itemsAlquiler;
-            ItemsReseña = itemsReseña;
+
+            ItemsCompra = itemsCompra;
+
             Año = año;
         }
 
@@ -56,12 +54,7 @@ namespace AppForSEII2526.API.Models
         [Precision(10, 2)]
         public double PrecioParaCompra { get; set; }
 
-        //PRECIO ALQUILER
-        [Required]
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(0.5, float.MaxValue, ErrorMessage = "El precio mínimo es de 0,5 ")]
-        [Display(Name = "Precio de Alquiler")]
-        public double PrecioParaAlquiler { get; set; }
+
 
         //CANTIDAD PARA COMPRA
         [Required]
@@ -69,11 +62,7 @@ namespace AppForSEII2526.API.Models
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad mínima para comprar es 1")]
         public int CantidadParaCompra { get; set; }
 
-        //CANTIDAD PARA ALQUILER
-        [Required]
-        [Display(Name = "Cantidad para alquilar")]
-        [Range(1, int.MaxValue, ErrorMessage = "La cantidad mínima para alquilar es 1")]
-        public int CantidadParaCompra { get; set; }
+
 
 
         //AÑO
@@ -85,8 +74,7 @@ namespace AppForSEII2526.API.Models
 
 
         public IList<ItemCompra> ItemsCompra { get; set; }
-        public IList<ItemAlquiler> ItemsAlquiler { get; set; }
-        public IList<ItemReseña> ItemsReseña { get; set; }
+
 
 
 
@@ -95,5 +83,3 @@ namespace AppForSEII2526.API.Models
     }
 
 }
-
-
