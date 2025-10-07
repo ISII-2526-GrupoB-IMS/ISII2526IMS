@@ -1,6 +1,8 @@
-﻿using System;
-namespace AppForSEII2526.API.Models 
+﻿using NuGet.DependencyResolver;
+
+namespace AppForSEII2526.API.Models
 {
+    [PrimaryKey(nameof(IdDispositivo), nameof(IdCompra))]
     public class ItemCompra
     {
         public ItemCompra()
@@ -14,13 +16,12 @@ namespace AppForSEII2526.API.Models
             IdDispositivo = dispositivo.Id;
             Compra = compra;
             IdCompra = compra.Id;
-            Precio = dispositivo.PrecioParaCompra
+            Precio = dispositivo.PrecioParaCompra;
             Cantidad = cantidad;
-            
+
         }
 
-        [Key]
-        public int Id { get; set; }
+
 
         //DESCRIPCIÓN
         [Required]
@@ -32,7 +33,6 @@ namespace AppForSEII2526.API.Models
         public Dispositivo Dispositivo { get; set; }
         //Id Dispositivo
         [Required]
-        [ForeignKey("Dispositivo")]
         public int IdDispositivo { get; set; }
 
         //COMPRA
@@ -40,7 +40,6 @@ namespace AppForSEII2526.API.Models
         public Compra Compra { get; set; }
         //Id Compra
         [Required]
-        [ForeignKey("Compra")]
         public int IdCompra { get; set; }
 
         //PRECIO 
@@ -56,7 +55,6 @@ namespace AppForSEII2526.API.Models
         [Range(1, int.MaxValue, ErrorMessage = "Debes proporcionar una cantidad válida mayor de 1")]
         public int Cantidad { get; set; }
 
-        
+
     }
 }
-
