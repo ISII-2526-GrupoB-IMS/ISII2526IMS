@@ -1,4 +1,5 @@
 ﻿
+
 namespace AppForSEII2526.API.Models
 {
     [PrimaryKey(nameof(IdDispositivo), nameof(IdAlquiler))]
@@ -22,31 +23,33 @@ namespace AppForSEII2526.API.Models
         [Display(Name = "Cantidad")]
         int Cantidad { get; set; }
 
-        public IList<Alquiler> Alquileres;
+        public Alquiler Alquiler;
         public AlquilarDispositivo()
         {
         }
 
-        public AlquilarDispositivo(int idDispositivo, double precio, int cantidad, int idAlquiler)
+        public AlquilarDispositivo(int idDispositivo, int idAlquiler, double precio, int cantidad, Alquiler alquiler)
         {
             IdDispositivo = idDispositivo;
+            IdAlquiler = idAlquiler;
             Precio = precio;
             Cantidad = cantidad;
-            IdAlquiler = idAlquiler;
+            Alquiler = alquiler;
         }
 
         public override bool Equals(object? obj)
         {
             return obj is AlquilarDispositivo dispositivo &&
                    IdDispositivo == dispositivo.IdDispositivo &&
+                   IdAlquiler == dispositivo.IdAlquiler &&
                    Precio == dispositivo.Precio &&
                    Cantidad == dispositivo.Cantidad &&
-                   IdAlquiler == dispositivo.IdAlquiler;
+                   EqualityComparer<Alquiler>.Default.Equals(Alquiler, dispositivo.Alquiler);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(IdDispositivo, Precio, Cantidad, IdAlquiler);
+            return HashCode.Combine(IdDispositivo, IdAlquiler, Precio, Cantidad, Alquiler);
         }
     }
 }
