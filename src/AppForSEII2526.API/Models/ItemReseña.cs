@@ -1,10 +1,8 @@
 ﻿
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppForSEII2526.API.Models
 {
+    [PrimaryKey(nameof(IdDispositivo), nameof(IdReseña))]
     public class ItemReseña
     {
         public ItemReseña() { }
@@ -19,9 +17,7 @@ namespace AppForSEII2526.API.Models
             IdReseña = reseña.Id;
         }
 
-        // ID del ítem de reseña
-        [Key]
-        public int Id { get; set; }
+
 
         // COMENTARIO
         [Required(ErrorMessage = "Debe proporcionar un comentario para el dispositivo")]
@@ -51,9 +47,9 @@ namespace AppForSEII2526.API.Models
         [ForeignKey("Reseña")]
         public int IdReseña { get; set; }
 
-     
 
-       
+
+
     }
 }
 
