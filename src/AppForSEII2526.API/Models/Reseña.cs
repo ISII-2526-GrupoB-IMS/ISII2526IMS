@@ -36,7 +36,7 @@ namespace AppForSEII2526.API.Models
 
         
 
-        [DataType(DataType.Date)]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de la reseña")]
         public DateTime FechaReseña { get; set; }
@@ -54,7 +54,6 @@ namespace AppForSEII2526.API.Models
                    Id == reseña.Id &&
                    Titulo == reseña.Titulo &&
                    Pais == reseña.Pais &&
-                   NombreCliente == reseña.NombreCliente &&
                    FechaReseña == reseña.FechaReseña &&
                    CalificaciónGeneral == reseña.CalificaciónGeneral;
         }
@@ -65,7 +64,6 @@ namespace AppForSEII2526.API.Models
             hash.Add(Id);
             hash.Add(Titulo);
             hash.Add(Pais);
-            hash.Add(NombreCliente);
             hash.Add(FechaReseña);
             hash.Add(CalificaciónGeneral);
             return hash.ToHashCode();
