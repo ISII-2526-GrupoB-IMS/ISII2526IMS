@@ -42,6 +42,9 @@ public class Alquiler
     [Precision(10, 2)]
     public double PrecioTotal { get; set; }
 
+    public ApplicationUser ApplicationUser { get; set; }
+
+
     [Required]
     public IList<AlquilarDispositivo> DispositivosAlquilados { get; set; }
 
