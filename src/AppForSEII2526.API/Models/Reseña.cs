@@ -11,12 +11,12 @@ namespace AppForSEII2526.API.Models
     {
         public Reseña() { }
 
-        public Reseña(int id, string titulo, string pais, string? nombreCliente, DateTime fechaReseña, IList<ItemReseña> itemsReseña)
+        public Reseña(int id, string titulo, string pais, DateTime fechaReseña, IList<ItemReseña> itemsReseña)
         {
             Id = id;
             Titulo = titulo;
             Pais = pais;
-            NombreCliente = nombreCliente;
+           
             FechaReseña = fechaReseña;
             CalificaciónGeneral = itemsReseña.Average(ir => ir.Puntuacion);
             ItemsReseña = itemsReseña;
@@ -34,9 +34,7 @@ namespace AppForSEII2526.API.Models
         [StringLength(50, ErrorMessage = "El país no puede superar los 50 caracteres")]
         public string Pais { get; set; }
 
-        [StringLength(60, ErrorMessage = "El nombre del cliente no puede ser mayor de 60 caracteres")]
-        [Display(Name = "Nombre del cliente (opcional)")]
-        public string? NombreCliente { get; set; }
+        
 
         [DataType(DataType.Date)]
         [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -48,6 +46,7 @@ namespace AppForSEII2526.API.Models
         public double CalificaciónGeneral { get; set; }
 
         public IList<ItemReseña> ItemsReseña { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         public override bool Equals(object? obj)
         {
