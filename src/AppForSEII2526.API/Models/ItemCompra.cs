@@ -5,23 +5,6 @@ namespace AppForSEII2526.API.Models
     [PrimaryKey(nameof(IdDispositivo), nameof(IdCompra))]
     public class ItemCompra
     {
-        public ItemCompra()
-        {
-        }
-
-        public ItemCompra(string descripcion, Dispositivo dispositivo, Compra compra, int cantidad)
-        {
-            Descripcion = descripcion;
-            Dispositivo = dispositivo;
-            IdDispositivo = dispositivo.Id;
-            Compra = compra;
-            IdCompra = compra.Id;
-            Precio = dispositivo.PrecioParaCompra;
-            Cantidad = cantidad;
-
-        }
-
-
 
         //DESCRIPCIÓN
         [Required]
@@ -57,4 +40,5 @@ namespace AppForSEII2526.API.Models
 
 
     }
+
 }
