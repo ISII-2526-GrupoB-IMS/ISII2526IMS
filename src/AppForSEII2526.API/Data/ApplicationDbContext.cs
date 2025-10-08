@@ -10,4 +10,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Dispositivo> Dispositivo { get; set; }
     public DbSet<Compra> Compra { get; set; }
     public DbSet<ItemCompra> ItemCompra { get; set; }
+    public DbSet<AlquilarDispositivo> AlquilarDispositivo { get; set; }
+    public DbSet<Alquiler> Alquiler { get; set; }
 }
