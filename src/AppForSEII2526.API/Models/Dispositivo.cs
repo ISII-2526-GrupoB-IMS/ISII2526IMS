@@ -1,28 +1,8 @@
 ﻿
 namespace AppForSEII2526.API.Models
 {
-    [Index(nameof(NombreDispositivo), IsUnique = true)] //Nombre es UNIQUE
     public class Dispositivo
     {
-        public Dispositivo()
-        {
-        }
-
-        public Dispositivo(Modelo modelo, string marca, string color, string nombreDispositivo, double precioParaCompra, double precioParaAlquiler, int cantidadParaCompra, int cantidadParaAlquiler, IList<ItemCompra> itemsCompra, int año)
-        {
-            Modelo = modelo;
-            Marca = marca;
-            Color = color;
-            NombreDispositivo = nombreDispositivo;
-            PrecioParaCompra = precioParaCompra;
-
-            CantidadParaCompra = cantidadParaCompra;
-
-            ItemsCompra = itemsCompra;
-
-            Año = año;
-        }
-
         //ID Dispositivo
         [Key]
         public int Id { get; set; }
@@ -54,16 +34,11 @@ namespace AppForSEII2526.API.Models
         [Precision(10, 2)]
         public double PrecioParaCompra { get; set; }
 
-
-
         //CANTIDAD PARA COMPRA
         [Required]
         [Display(Name = "Cantidad para comprar")]
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad mínima para comprar es 1")]
         public int CantidadParaCompra { get; set; }
-
-
-
 
         //AÑO
         [Required]
@@ -72,13 +47,7 @@ namespace AppForSEII2526.API.Models
         [Display(Name = "Año")]
         public double Año { get; set; }
 
-
         public IList<ItemCompra> ItemsCompra { get; set; }
-
-        public IList<AlquilarDispositivo> DispositivosAlquilados { get; set; }
-
-
-
 
 
     }
