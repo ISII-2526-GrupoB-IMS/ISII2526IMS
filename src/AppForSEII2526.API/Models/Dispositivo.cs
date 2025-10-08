@@ -50,6 +50,7 @@ namespace AppForSEII2526.API.Models
         public IList<ItemCompra> ItemsCompra { get; set; }
 
         public IList<AlquilarDispositivo> DispositivosAlquilados { get; set; }
+        public IList<ItemReseña> ItemsReseña { get; set; }
 
     }
 
