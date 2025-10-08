@@ -1,5 +1,7 @@
 ﻿
 
+using NuGet.DependencyResolver;
+
 namespace AppForSEII2526.API.Models
 {
     [PrimaryKey(nameof(IdDispositivo), nameof(IdAlquiler))]
@@ -8,8 +10,12 @@ namespace AppForSEII2526.API.Models
 
         [Required]
         int IdDispositivo { get; set; }
+        public Dispositivo Dispositivo { get; set; }
+
         [Required]
         int IdAlquiler { get; set; }
+        public Alquiler Alquiler { get; set; }
+
 
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
@@ -23,33 +29,35 @@ namespace AppForSEII2526.API.Models
         [Display(Name = "Cantidad")]
         int Cantidad { get; set; }
 
-        public Alquiler Alquiler;
+
         public AlquilarDispositivo()
         {
         }
 
-        public AlquilarDispositivo(int idDispositivo, int idAlquiler, double precio, int cantidad, Alquiler alquiler)
+        public AlquilarDispositivo(int idDispositivo, Dispositivo dispositivo, int idAlquiler, Alquiler alquiler, double precio, int cantidad)
         {
             IdDispositivo = idDispositivo;
+            Dispositivo = dispositivo;
             IdAlquiler = idAlquiler;
+            Alquiler = alquiler;
             Precio = precio;
             Cantidad = cantidad;
-            Alquiler = alquiler;
         }
 
         public override bool Equals(object? obj)
         {
             return obj is AlquilarDispositivo dispositivo &&
                    IdDispositivo == dispositivo.IdDispositivo &&
+                   EqualityComparer<Dispositivo>.Default.Equals(Dispositivo, dispositivo.Dispositivo) &&
                    IdAlquiler == dispositivo.IdAlquiler &&
+                   EqualityComparer<Alquiler>.Default.Equals(Alquiler, dispositivo.Alquiler) &&
                    Precio == dispositivo.Precio &&
-                   Cantidad == dispositivo.Cantidad &&
-                   EqualityComparer<Alquiler>.Default.Equals(Alquiler, dispositivo.Alquiler);
+                   Cantidad == dispositivo.Cantidad;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(IdDispositivo, IdAlquiler, Precio, Cantidad, Alquiler);
+            return HashCode.Combine(IdDispositivo, Dispositivo, IdAlquiler, Alquiler, Precio, Cantidad);
         }
     }
 }
