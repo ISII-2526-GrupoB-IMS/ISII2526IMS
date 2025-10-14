@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AppForSEII2526.API.Models.Dispositivo">
+    <Position X="4.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECABAAAAAAAAAIJAAAIAIAAAAAAAAAAAgAgAEAAAI=</HashCode>
+      <FileName>Models\Dispositivo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Modelo" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DispositivosAlquilados" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Modelo">
+    <Position X="8.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAE=</HashCode>
+      <FileName>Models\Modelo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Dispositivos" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.AlquilarDispositivo">
+    <Position X="8.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEABAAAAAAAgAAAAAAQAAIAAIAAAAAABAAAAAA=</HashCode>
+      <FileName>Models\AlquilarDispositivo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Dispositivo" />
+      <Property Name="Alquiler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Alquiler">
+    <Position X="12.5" Y="3" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Alquiler.TiposMetodoPago" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\Alquiler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAACASAAAAAAQAAQoBAAAAAAAAAAAIIAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Alquiler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DispositivosAlquilados" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
