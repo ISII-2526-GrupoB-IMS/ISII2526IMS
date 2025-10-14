@@ -34,11 +34,25 @@ namespace AppForSEII2526.API.Models
         [Precision(10, 2)]
         public double PrecioParaCompra { get; set; }
 
+        //PRECIO Alquiler
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(0.5, float.MaxValue, ErrorMessage = "El precio mínimo es de 0,5 ")]
+        [Display(Name = "Precio para Alquilar")]
+        [Precision(10, 2)]
+        public double PrecioParaAlquiler { get; set; }
+
         //CANTIDAD PARA COMPRA
         [Required]
         [Display(Name = "Cantidad para comprar")]
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad mínima para comprar es 1")]
         public int CantidadParaCompra { get; set; }
+
+        //CANTIDAD PARA Alquilar
+        [Required]
+        [Display(Name = "Cantidad para alquilar")]
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidad mínima para alquilar es 1")]
+        public int CantidadParaAlquilar{ get; set; }
 
         //AÑO
         [Required]
