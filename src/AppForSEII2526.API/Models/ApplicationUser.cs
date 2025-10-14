@@ -17,4 +17,6 @@ public class ApplicationUser : IdentityUser {
     [Required]
     [StringLength(100, ErrorMessage = "La direccion no puede ser superior a 100 carecteres")]
     public string DireccionDeEnvio { get; set; }
+
+    public IList<Compra> Compra { get; set; }
 }
