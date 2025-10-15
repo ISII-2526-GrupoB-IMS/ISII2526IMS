@@ -12,24 +12,6 @@ namespace AppForSEII2526.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Alquiler",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DireccionEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MetodoPago = table.Column<int>(type: "int", nullable: false),
-                    FechaAlquiler = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaAlquilerDesde = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaAlquilerHasta = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PrecioTotal = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Alquiler", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -101,6 +83,31 @@ namespace AppForSEII2526.API.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Alquiler",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DireccionEntrega = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MetodoPago = table.Column<int>(type: "int", nullable: false),
+                    FechaAlquiler = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaAlquilerDesde = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaAlquilerHasta = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PrecioTotal = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Alquiler", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Alquiler_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -245,8 +252,11 @@ namespace AppForSEII2526.API.Migrations
                     Color = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     NombreDispositivo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PrecioParaCompra = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false),
+                    PrecioParaAlquiler = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false),
                     CantidadParaCompra = table.Column<int>(type: "int", nullable: false),
-                    Año = table.Column<double>(type: "float", nullable: false)
+                    CantidadParaAlquilar = table.Column<int>(type: "int", nullable: false),
+                    Año = table.Column<double>(type: "float", nullable: false),
+                    Calidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -349,6 +359,11 @@ namespace AppForSEII2526.API.Migrations
                 name: "IX_AlquilarDispositivo_DispositivoId",
                 table: "AlquilarDispositivo",
                 column: "DispositivoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Alquiler_ApplicationUserId",
+                table: "Alquiler",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
