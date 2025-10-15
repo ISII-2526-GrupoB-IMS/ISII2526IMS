@@ -30,6 +30,10 @@ namespace AppForSEII2526.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("DireccionEntrega")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -51,6 +55,8 @@ namespace AppForSEII2526.API.Migrations
                         .HasColumnType("float(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Alquiler");
                 });
@@ -197,6 +203,12 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<double>("Año")
                         .HasColumnType("float");
 
+                    b.Property<int>("Calidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CantidadParaAlquilar")
+                        .HasColumnType("int");
+
                     b.Property<int>("CantidadParaCompra")
                         .HasColumnType("int");
 
@@ -217,6 +229,10 @@ namespace AppForSEII2526.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("PrecioParaAlquiler")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("float(10)");
 
                     b.Property<double>("PrecioParaCompra")
                         .HasPrecision(10, 2)
@@ -472,6 +488,17 @@ namespace AppForSEII2526.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Alquiler", b =>
+                {
+                    b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("AppForSEII2526.API.Models.AlquilarDispositivo", b =>
                 {
                     b.HasOne("Alquiler", "Alquiler")
@@ -494,7 +521,7 @@ namespace AppForSEII2526.API.Migrations
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Compra")
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
@@ -612,6 +639,11 @@ namespace AppForSEII2526.API.Migrations
             modelBuilder.Entity("Alquiler", b =>
                 {
                     b.Navigation("DispositivosAlquilados");
+                });
+
+            modelBuilder.Entity("AppForSEII2526.API.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Compra");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra", b =>
