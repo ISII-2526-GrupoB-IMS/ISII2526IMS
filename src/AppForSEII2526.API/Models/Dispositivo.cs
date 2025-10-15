@@ -61,6 +61,15 @@ namespace AppForSEII2526.API.Models
         [Display(Name = "Año")]
         public double Año { get; set; }
 
+        //CALIDAD
+        public TipoDeCalidad Calidad { get; set; }
+        public enum TipoDeCalidad
+        {
+            Buena,
+            Regular,
+            Mala
+        }
+
         public IList<ItemCompra> ItemsCompra { get; set; }
 
         public IList<AlquilarDispositivo> DispositivosAlquilados { get; set; }

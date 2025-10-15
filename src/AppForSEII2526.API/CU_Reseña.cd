@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="AppForSEII2526.API.Models.Dispositivo">
-    <Position X="4.25" Y="2.5" Width="1.5" />
+    <Position X="4.75" Y="3.25" Width="1.5" />
     <NestedTypes>
       <Enum Name="AppForSEII2526.API.Models.Dispositivo.TipoDeCalidad" Collapsed="true">
         <TypeIdentifier>
@@ -17,11 +17,22 @@
       <Property Name="Modelo" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="DispositivosAlquilados" />
+      <Property Name="ItemsReseña" />
     </ShowAsCollectionAssociation>
   </Class>
+  <Class Name="AppForSEII2526.API.Models.ItemReseña">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAAACAAIAAAAAAAAABSAAAAA=</HashCode>
+      <FileName>Models\ItemReseña.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Dispositivo" />
+      <Property Name="Reseña" />
+    </ShowAsAssociation>
+  </Class>
   <Class Name="AppForSEII2526.API.Models.Modelo">
-    <Position X="8.75" Y="2.25" Width="1.5" />
+    <Position X="7.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAE=</HashCode>
       <FileName>Models\Modelo.cs</FileName>
@@ -30,32 +41,14 @@
       <Property Name="Dispositivos" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="AppForSEII2526.API.Models.AlquilarDispositivo">
-    <Position X="8.75" Y="4.25" Width="1.5" />
+  <Class Name="AppForSEII2526.API.Models.Reseña">
+    <Position X="12.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEABAAAAAAAgAAAAAAQAAIAAIAAAAAABAAAAAA=</HashCode>
-      <FileName>Models\AlquilarDispositivo.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Dispositivo" />
-      <Property Name="Alquiler" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="Alquiler">
-    <Position X="12.5" Y="3" Width="1.5" />
-    <NestedTypes>
-      <Enum Name="Alquiler.TiposMetodoPago" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Models\Alquiler.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
-    <TypeIdentifier>
-      <HashCode>AAACASAAAAAAQAAQoBAAAAAAAAAAAIIAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\Alquiler.cs</FileName>
+      <HashCode>AEACAAAAAAQAAABYgAAAAAAAAAAAAIAAAAAAAAAAABA=</HashCode>
+      <FileName>Models\Reseña.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="DispositivosAlquilados" />
+      <Property Name="ItemsReseña" />
     </ShowAsCollectionAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
