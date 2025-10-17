@@ -19,4 +19,6 @@ public class ApplicationUser : IdentityUser {
     public string DireccionDeEnvio { get; set; }
 
     public IList<Compra> Compra { get; set; }
+    public IList<Alquiler> Alquiler { get; set; }
+    public IList<Reseña> Reseña { get; set; }
 }
