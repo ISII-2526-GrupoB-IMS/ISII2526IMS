@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251015075847_CreateIdentitySchema")]
+    [Migration("20251017101244_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -494,7 +494,7 @@ namespace AppForSEII2526.API.Migrations
             modelBuilder.Entity("Alquiler", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Alquiler")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -582,7 +582,7 @@ namespace AppForSEII2526.API.Migrations
             modelBuilder.Entity("AppForSEII2526.API.Models.Reseña", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Reseña")
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
@@ -646,7 +646,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Alquiler");
+
                     b.Navigation("Compra");
+
+                    b.Navigation("Reseña");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra", b =>
