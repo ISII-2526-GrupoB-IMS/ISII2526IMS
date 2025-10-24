@@ -50,5 +50,25 @@ namespace AppForSEII2526.API.Controllers
                 .ToListAsync();
             return Ok(dispositivos);
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<DispositivoParaAlquilarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetDispositivosParaAlquilar()
+        {
+            var dispositivos = await _context.Dispositivo
+                .Select(d => new DispositivoParaAlquilarDTO(
+                    d.Id,
+                    d.Modelo,
+                    d.NombreDispositivo,
+                    d.Marca,
+                    d.Año,
+                    d.Color,
+                    d.PrecioParaAlquiler
+                    ))
+                .ToListAsync();
+
+            return Ok(dispositivos);
+        }
     }
 }
