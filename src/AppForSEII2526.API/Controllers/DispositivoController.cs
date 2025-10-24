@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AppForSEII2526.API.DTOs.DispositivoDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppForSEII2526.API.Controllers
@@ -34,10 +35,18 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(IList<Dispositivo>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IList<DispositivoParaComprarDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetDispositivosParaComprar()
         {
-            IList<Dispositivo> dispositivos = await _context.Dispositivo
+            var dispositivos = await _context.Dispositivo
+                .Select(d => new DispositivoParaComprarDTO(
+                    d.Id,
+                    d.NombreDispositivo,
+                    d.Marca,
+                    d.Modelo,
+                    d.Color,
+                    d.PrecioParaCompra
+                ))
                 .ToListAsync();
             return Ok(dispositivos);
         }
