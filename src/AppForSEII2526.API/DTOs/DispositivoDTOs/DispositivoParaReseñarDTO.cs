@@ -1,8 +1,8 @@
 ﻿namespace AppForSEII2526.API.DTOs.DispositivoDTOs
 {
-    public class DispositivoParaAlquilarDTO
+    public class DispositivoParaReseñarDTO
     {
-        public DispositivoParaAlquilarDTO(int id, Modelo modelo, string nombreDispositivo, string marca, double año, string color)
+        public DispositivoParaReseñarDTO(int id, Modelo modelo, string nombreDispositivo, string marca, double año, string color)
         {
             Id = id;
             NombreDispositivo = nombreDispositivo;
