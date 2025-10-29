@@ -53,6 +53,16 @@
             }
         }
 
+        [Display(Name = "Cantidad Total")]
+        [JsonPropertyName("CantidadTotal")]
+        public double CantidadTotal
+        {
+            get
+            {
+                return CompraItems.Sum(ri => 1 * ri.Cantidad);
+            }
+        }
+
         public override bool Equals(object? obj)
         {
             return obj is CompraForCreateDTO dTO &&
@@ -61,12 +71,13 @@
                    NombreUsuario == dTO.NombreUsuario &&
                    ApellidosUsuario == dTO.ApellidosUsuario &&
                    EqualityComparer<IList<CompraItemDTO>>.Default.Equals(CompraItems, dTO.CompraItems) &&
-                   PrecioTotal == dTO.PrecioTotal;
+                   PrecioTotal == dTO.PrecioTotal &&
+                   CantidadTotal == dTO.CantidadTotal;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(FechaCompra, DireccionEntrega, NombreUsuario, ApellidosUsuario, CompraItems, TotalPrice);
+            return HashCode.Combine(FechaCompra, DireccionEntrega, NombreUsuario, ApellidosUsuario, CompraItems, PrecioTotal, CantidadTotal);
         }
     }
 }

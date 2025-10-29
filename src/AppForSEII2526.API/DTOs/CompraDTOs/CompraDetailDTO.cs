@@ -18,7 +18,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
             Id = id;
         }
         public int Id { get; set; }
-
+        
         public override bool Equals(object? obj)
         {
             return obj is CompraDetailDTO dTO &&
