@@ -2,7 +2,7 @@
 {
     public class DispositivoParaReseñarDTO
     {
-        public DispositivoParaReseñarDTO(int id, Modelo modelo, string nombreDispositivo, string marca, double año, string color)
+        public DispositivoParaReseñarDTO(int id, string nombreDispositivo, string marca, string color, double año, Modelo modelo)
         {
             Id = id;
             NombreDispositivo = nombreDispositivo;
