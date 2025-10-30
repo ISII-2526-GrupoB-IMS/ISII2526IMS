@@ -3,9 +3,9 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
     public class CompraItemDTO
     {
-        public CompraItemDTO(int dispositivoId, string marca, string modelo, string color, double precio, int cantidad ,string descripcion = "")
+        public CompraItemDTO(string marca, string modelo, string color, double precio, int cantidad ,string descripcion = "")
         {
-            DispositivoId = dispositivoId;
+            
             Marca = marca;
             Modelo = modelo;
             Color = color;
@@ -15,11 +15,12 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 
         }
 
-        public int DispositivoId { get; set; }
-
-
+        
+        [StringLength(50, ErrorMessage = "La marca no puede ser mayor de 50 caracteres")]
         public string Marca { get; set; }
         public string Modelo { get; set; }
+
+        [StringLength(20, ErrorMessage = "El color no puede ser mayor de 20 caracteres ni menor que 1 ", MinimumLength = 1)]
         public string Color { get; set; }
 
         public double Precio { get; set; }
@@ -29,7 +30,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         public override bool Equals(object? obj)
         {
             return obj is CompraItemDTO dTO &&
-                   DispositivoId == dTO.DispositivoId &&
+                   
                    Marca == dTO.Marca &&
                    Modelo == dTO.Modelo &&
                    Color == dTO.Color &&
@@ -40,7 +41,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(DispositivoId, Marca, Modelo, Color, Precio, Cantidad, Descripcion);
+            return HashCode.Combine(Marca, Modelo, Color, Precio, Cantidad, Descripcion);
         }
     }
 }

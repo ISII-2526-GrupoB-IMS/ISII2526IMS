@@ -36,9 +36,10 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<DispositivoParaComprarDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetDispositivosParaComprar()
+        public async Task<ActionResult> GetDispositivosParaComprar(string? filtroNombre, string? filtroColor)
         {
             var dispositivos = await _context.Dispositivo
+                .Where(d => (d.NombreDispositivo.Contains(filtroNombre) || filtroNombre == null) && (d.Color.Contains(filtroColor) || filtroColor == null ))
                 .Select(d => new DispositivoParaComprarDTO(
                     d.Id,
                     d.NombreDispositivo,

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AppForSEII2526.API.DTOs.CompraDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using AppForSEII2526.API.DTOs.CompraDTOs;
+using System.Linq;
 namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
@@ -24,9 +25,9 @@ namespace AppForSEII2526.API.Controllers
         {
             var compradto = await _context.Compra
              .Where(c => c.Id == id)
-             .Include(c => c.ItemsCompra) 
-                    .ThenInclude(ic => ic.Dispositivo) 
-                        .ThenInclude(v => v.Modelo) 
+             .Include(c => c.ItemsCompra)
+                    .ThenInclude(ic => ic.Dispositivo)
+                        .ThenInclude(v => v.Modelo)
              .Select(c => new CompraDetailDTO(c.Id, c.ApplicationUser.NombreUsuario, c.ApplicationUser.ApellidosUsuario, c.FechaCompra, c.DireccionEntrega,
                         .
 
