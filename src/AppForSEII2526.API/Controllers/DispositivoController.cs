@@ -71,5 +71,24 @@ namespace AppForSEII2526.API.Controllers
 
             return Ok(dispositivos);
         }
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<DispositivoParaReseñarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetDispositivosParaReseñar()
+        {
+            var dispositivos = await _context.Dispositivo
+                .Select(d => new DispositivoParaReseñarDTO(
+                    d.Id,
+                    d.NombreDispositivo,
+                    d.Marca,
+                    d.Color,
+                    d.Año,
+                    d.Modelo
+                    ))
+                .ToListAsync();
+
+            return Ok(dispositivos);
+        }
     }
 }
