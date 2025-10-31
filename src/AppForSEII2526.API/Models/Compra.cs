@@ -11,12 +11,7 @@
         //MÉTODO DE PAGO
         [Display(Name = "Método de pago")]
         [Required(ErrorMessage = "Elija un método de pago")]
-        public MetodosDePago MetodoDePago { get; set; }
-
-        //FECHA DE COMPRA
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
-        [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Fecha de compra")]
+        public MetodoPago MetodoDePago { get; set; }
         public DateTime FechaCompra { get; set; }
 
         //PRECIO TOTAL
@@ -39,12 +34,28 @@
         public IList<ItemCompra> ItemsCompra { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
-        public enum MetodosDePago
+        private Compra()
+        {
+            ItemsCompra = new List<ItemCompra>();
+        }
+
+        public Compra(MetodoPago metodoDePago, DateTime fechaCompra, IList<ItemCompra> itemsCompra, ApplicationUser applicationUser)
+        {
+            MetodoDePago = metodoDePago;
+            FechaCompra = fechaCompra;
+            ItemsCompra = itemsCompra;
+            ApplicationUser = applicationUser;
+        }
+
+        public enum MetodoPago
         {
             TarjetaCredito,
             PayPal,
             Efectivo
-        }
+        }   
+
+
+
 
 
 

@@ -23,9 +23,19 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         [StringLength(20, ErrorMessage = "El color no puede ser mayor de 20 caracteres ni menor que 1 ", MinimumLength = 1)]
         public string Color { get; set; }
 
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(0.5, float.MaxValue, ErrorMessage = "El precio mínimo es de 0,5 ")]
+        [Display(Name = "Precio para compra")]
+        [Precision(10, 2)]
         public double Precio { get; set; }
-        public int Cantidad { get; set; }
+
+        [StringLength(150, ErrorMessage = "La descripcion no puede ser mayor de 150 caracteres")]
         public string? Descripcion { get; set; }
+
+        
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidd minima es 1")]
+        
+        public int Cantidad { get; set; }
 
         public override bool Equals(object? obj)
         {

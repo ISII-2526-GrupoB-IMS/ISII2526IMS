@@ -5,6 +5,14 @@ namespace AppForSEII2526.API.Models
     [PrimaryKey(nameof(IdDispositivo), nameof(IdCompra))]
     public class ItemCompra
     {
+        private ItemCompra() { }
+        public ItemCompra( int idDispositivo, int cantidad, Compra compra)
+        {
+            IdDispositivo = idDispositivo;
+            Cantidad = cantidad;
+            Compra = compra;
+        }
+        
 
         //DESCRIPCIÓN
         [Required]

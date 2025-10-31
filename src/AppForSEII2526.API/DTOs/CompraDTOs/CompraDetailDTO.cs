@@ -4,38 +4,61 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
-    public class CompraDetailDTO : CompraForCreateDTO
+    public class CompraDetailDTO 
     {
-       
 
-        public CompraDetailDTO(int id, string nombreUsuario, string apellidosUsuario, string direccionEntrega, DateTime fechaCompra, IList<CompraItemDTO> compraItems)
-           : base(nombreUsuario,
-                  apellidosUsuario,
-                  direccionEntrega,
-                  fechaCompra,
-                  compraItems)
+        public CompraDetailDTO( string nombreUsuario, string apellidosUsuario, string direccionDeEntrega, DateTime fechaCompra, double precioTotal, int cantidadTotal, IList<CompraItemDTO> itemsCompra)
         {
-            Id = id;
+            NombreUsuario = nombreUsuario;
+            ApellidosUsuario = apellidosUsuario;
+            DireccionDeEntrega = direccionDeEntrega;
+            FechaCompra = fechaCompra;
+            PrecioTotal = precioTotal;
+            CantidadTotal = cantidadTotal;
+            ItemsCompra = itemsCompra;
+
         }
-        public int Id { get; set; }
+
+        //NOMBRE USUARIO
         
-        public override bool Equals(object? obj)
-        {
-            return obj is CompraDetailDTO dTO &&
-                   base.Equals(obj) &&
-                   FechaCompra == dTO.FechaCompra &&
-                   DireccionEntrega == dTO.DireccionEntrega &&
-                   NombreUsuario == dTO.NombreUsuario &&
-                   ApellidosUsuario == dTO.ApellidosUsuario &&
-                   EqualityComparer<IList<CompraItemDTO>>.Default.Equals(CompraItems, dTO.CompraItems) &&
-                   PrecioTotal == dTO.PrecioTotal &&
-                   Id == dTO.Id;
-        }
+        [StringLength(40, ErrorMessage = "El nombre del usuario no puede ser superior a 40 carecteres")]
+        public string NombreUsuario { get; set; }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(base.GetHashCode(), FechaCompra, DireccionEntrega, NombreUsuario, ApellidosUsuario, CompraItems, PrecioTotal, Id);
-        }
+        //APELLIDOS 
+        [StringLength(40, ErrorMessage = "Los apellidos del usuario no pueden ser superiores a 40 carecteres")]
+        public string ApellidosUsuario { get; set; }
+
+        //DIRECCION
+        [Required]
+        [StringLength(100, ErrorMessage = "La direccion no puede ser superior a 100 carecteres")]
+        public string DireccionDeEntrega { get; set; }
+
+        //FECHA DE COMPRA
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
+        [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Fecha de compra")]
+        public DateTime FechaCompra { get; set; }
+
+        //PRECIO TOTAL
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(0.5, double.MaxValue, ErrorMessage = "Precio mínimo es O,5")]
+        [Display(Name = "Precio Total")]
+        public double PrecioTotal { get; set; }
+
+        //CANTIDAD TOTAL
+        [Required]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidd minima es 1")]
+        [Display(Name = "Cantidad Total")]
+        public int CantidadTotal { get; set; }
+
+        public IList<CompraItemDTO> ItemsCompra { get; set; }
+
+
+
+
+
     }
 
 }
