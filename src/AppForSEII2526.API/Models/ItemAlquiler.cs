@@ -5,15 +5,18 @@ using NuGet.DependencyResolver;
 namespace AppForSEII2526.API.Models
 {
     [PrimaryKey(nameof(IdDispositivo), nameof(IdAlquiler))]
-    public class AlquilarDispositivo
+    public class ItemAlquiler
     {
 
         [Required]
         int IdDispositivo { get; set; }
+        [ForeignKey(nameof(IdDispositivo))]
         public Dispositivo Dispositivo { get; set; }
 
         [Required]
         int IdAlquiler { get; set; }
+
+        [ForeignKey(nameof(IdAlquiler))]
         public Alquiler Alquiler { get; set; }
 
 
@@ -21,20 +24,20 @@ namespace AppForSEII2526.API.Models
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
         [Range(0.5, double.MaxValue, ErrorMessage = "Precio mínimo es O,5")]
         [Display(Name = "Precio")]
-        double Precio { get; set; }
+        public double Precio { get; set; }
 
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
         [Range(1, int.MaxValue, ErrorMessage = "La cantidd minima es 1")]
         [Display(Name = "Cantidad")]
-        int Cantidad { get; set; }
+        public int Cantidad { get; set; }
 
 
-        public AlquilarDispositivo()
+        public ItemAlquiler()
         {
         }
 
-        public AlquilarDispositivo(int idDispositivo, Dispositivo dispositivo, int idAlquiler, Alquiler alquiler, double precio, int cantidad)
+        public ItemAlquiler(int idDispositivo, Dispositivo dispositivo, int idAlquiler, Alquiler alquiler, double precio, int cantidad)
         {
             IdDispositivo = idDispositivo;
             Dispositivo = dispositivo;
@@ -44,9 +47,16 @@ namespace AppForSEII2526.API.Models
             Cantidad = cantidad;
         }
 
+        public ItemAlquiler(int idDispositivo, int idAlquiler, double precio)
+        {
+            IdDispositivo = idDispositivo;
+            IdAlquiler = idAlquiler;
+            Precio = precio;
+        }
+
         public override bool Equals(object? obj)
         {
-            return obj is AlquilarDispositivo dispositivo &&
+            return obj is ItemAlquiler dispositivo &&
                    IdDispositivo == dispositivo.IdDispositivo &&
                    EqualityComparer<Dispositivo>.Default.Equals(Dispositivo, dispositivo.Dispositivo) &&
                    IdAlquiler == dispositivo.IdAlquiler &&

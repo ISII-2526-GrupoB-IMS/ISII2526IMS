@@ -54,9 +54,13 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<DispositivoParaAlquilarDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetDispositivosParaAlquilar()
+        public async Task<ActionResult> GetDispositivosParaAlquilar(string? nombreModelo = null, double? precioMaximo = null)
         {
             var dispositivos = await _context.Dispositivo
+                .Include(d => d.Modelo)
+                .Where(d => ((d.Modelo.NombreModelo.Contains(nombreModelo)) || (nombreModelo == null))
+                    && ((d.PrecioParaAlquiler <= precioMaximo) || (precioMaximo == null)))
+                .OrderBy(d => d.Modelo.NombreModelo)
                 .Select(d => new DispositivoParaAlquilarDTO(
                     d.Id,
                     d.Modelo,
@@ -65,7 +69,7 @@ namespace AppForSEII2526.API.Controllers
                     d.Año,
                     d.Color,
                     d.PrecioParaAlquiler
-                    ))
+                ))
                 .ToListAsync();
 
             return Ok(dispositivos);
