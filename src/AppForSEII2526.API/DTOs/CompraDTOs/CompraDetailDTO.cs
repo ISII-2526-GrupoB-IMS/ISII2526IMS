@@ -4,10 +4,10 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
-    public class CompraDetailDTO 
+    public class CompraDetailDTO
     {
 
-        public CompraDetailDTO( string nombreUsuario, string apellidosUsuario, string direccionDeEntrega, DateTime fechaCompra, double precioTotal, int cantidadTotal, IList<CompraItemDTO> itemsCompra)
+        public CompraDetailDTO(string nombreUsuario, string apellidosUsuario, string direccionDeEntrega, DateTime fechaCompra, double precioTotal, int cantidadTotal, IList<CompraItemDTO> itemsCompra)
         {
             NombreUsuario = nombreUsuario;
             ApellidosUsuario = apellidosUsuario;
@@ -20,7 +20,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         }
 
         //NOMBRE USUARIO
-        
+
         [StringLength(40, ErrorMessage = "El nombre del usuario no puede ser superior a 40 carecteres")]
         public string NombreUsuario { get; set; }
 
@@ -54,11 +54,5 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         public int CantidadTotal { get; set; }
 
         public IList<CompraItemDTO> ItemsCompra { get; set; }
-
-
-
-
-
     }
-
 }

@@ -51,87 +51,140 @@ namespace AppForSEII2526.API.Controllers
             return Ok(compra);
         }
 
+
         [HttpPost]
         [Route("[action]")]
-        [ProducesResponseType(typeof(CompraDetailDTO), (int)HttpStatusCode.Created)] //OK si lo metemos en la base de datos
-        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)] // BadRequest cuando hay un error 
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)] //Conflict cuando hay un error al añadir a la base de datos
-        public async Task<ActionResult> CreateCompra(CompraForCreateDTO compraForCreate)
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+        [ProducesResponseType(typeof(CompraDetailDTO), (int)HttpStatusCode.Created)]
+        public async Task<ActionResult> CrearCompra(CompraForCreateDTO compraParaCrear)
         {
-            if (compraForCreate.ItemsCompra.Count == 0) //comprobamos que he seleccionado algún dispositivo para comprar.
+            // Validar que hay items en la compra
+            if (compraParaCrear.ItemsCompra == null || compraParaCrear.ItemsCompra.Count == 0)
             {
-                ModelState.AddModelError("ItemsCompra", "Error! Incluye al menos un coche para comprar");
-            }
-
-            var usuario = _context.ApplicationUser.FirstOrDefault(au => au.NombreUsuario == compraForCreate.NombreUsuario); //¿existe el usuario en la base de datos?
-            if (usuario == null)
-            {
-                ModelState.AddModelError("CompraApplicationUser", "Error! NombreUsuario no registrado");
-            }
-
-            if (ModelState.ErrorCount > 0) //devuelve BadRequest si hay errores en el anteriore
-            {
+                ModelState.AddModelError("ItemsCompra", "Error. Necesitas seleccionar al menos un dispositivo para ser comprado.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            var dispostivosCompra = compraForCreate.ItemsCompra.Select(ic => ic.Modelo).ToList<string>();
+            // Buscar el usuario
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.NombreUsuario == compraParaCrear.NombreUsuario
+                                       && u.ApellidosUsuario == compraParaCrear.ApellidosUsuario);
 
-            var dispositivos = _context.Dispositivo.Include(c => c.ItemsCompra)
-                .ThenInclude(ic => ic.Compra)
-                .Include(d => d.Modelo)
-                .Where(d => dispostivosCompra.Contains(d.Modelo.NombreModelo))
-                .Select(d => new
-                {
-                    d.Id,
-                    d.Modelo.NombreModelo,
-                    d.CantidadParaCompra,
-                    d.PrecioParaCompra,
-                    NumeroItemsCompra = d.ItemsCompra.Sum(ic => ic.Cantidad)
-                })
-                .ToList();
-
-            Compra compra = new Compra(compraForCreate.MetodoDePago, DateTime.Now, new List<ItemCompra>(), usuario);
-            compra.PrecioTotal = 0;
-
-            foreach (var item in compraForCreate.ItemsCompra)
+            if (user == null)
             {
-                var dispositivo = dispositivos.FirstOrDefault(d => d.NombreModelo == item.Modelo);
+                ModelState.AddModelError("CompraApplicationUser", "Error! Usuario no registrado");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            // Crear la compra (sin ItemsCompra inicialmente)
+            var compra = new Compra(
+                compraParaCrear.MetodoDePago,
+                compraParaCrear.FechaCompra,
+                new List<ItemCompra>(),
+                user
+            );
+
+            double precioTotal = 0;
+            int cantidadTotal = 0;
+
+            // Procesar cada item de la compra
+            foreach (var itemDTO in compraParaCrear.ItemsCompra)
+            {
+                // Buscar el dispositivo por marca, modelo y color
+                var dispositivo = await _context.Dispositivo
+                    .Include(d => d.Modelo)
+                    .Where(d => d.Marca == itemDTO.Marca
+                             && d.Modelo.NombreModelo == itemDTO.Modelo
+                             && d.Color == itemDTO.Color)
+                    .FirstOrDefaultAsync();
 
                 if (dispositivo == null)
                 {
-                    ModelState.AddModelError("ItemsCompra", $"Error! El dispositivo {item.Modelo} no se puede vender");
+                    ModelState.AddModelError("DispositivoNoExiste",
+                        $"Error! No se encontró el dispositivo: Marca='{itemDTO.Marca}', Modelo='{itemDTO.Modelo}', Color='{itemDTO.Color}'");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
                 }
-                else if ((dispositivo.NumeroItemsCompra + item.Cantidad) > dispositivo.CantidadParaCompra)
+
+                // Validar stock disponible
+                if (dispositivo.CantidadParaCompra < itemDTO.Cantidad)
                 {
-                    ModelState.AddModelError("ItemsCompra", $"Error! No hay suficientes unidades {item.Modelo}");
+                    ModelState.AddModelError("DispositivoNoDisponible",
+                        $"Error! No hay suficiente stock del dispositivo '{itemDTO.Modelo}'. Disponible: {dispositivo.CantidadParaCompra}, Solicitado: {itemDTO.Cantidad}");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
                 }
-                else
-                {
-                    compra.ItemsCompra.Add(new ItemCompra(dispositivo.Id, item.Cantidad, compra));
-                    item.Precio = dispositivo.PrecioParaCompra;
-                    compra.PrecioTotal += (dispositivo.PrecioParaCompra * item.Cantidad);
-                }
+
+                // Actualizar la cantidad disponible del dispositivo
+                dispositivo.CantidadParaCompra -= itemDTO.Cantidad;
+
+                // Crear el ItemCompra con el constructor correcto (3 parámetros)
+                var itemCompra = new ItemCompra(
+                    dispositivo.Id,
+                    dispositivo.PrecioParaCompra,
+                    itemDTO.Cantidad
+                );
+
+                // Establecer explícitamente la relación con el dispositivo
+                itemCompra.Dispositivo = dispositivo;
+                itemCompra.IdDispositivo = dispositivo.Id;
+
+                // Asignar la descripción después de la construcción
+                itemCompra.Descripcion = string.IsNullOrEmpty(itemDTO.Descripcion)
+                    ? $"{dispositivo.Marca} {dispositivo.Modelo.NombreModelo} - {dispositivo.Color}"
+                    : itemDTO.Descripcion;
+
+                // Agregar el item a la compra
+                compra.ItemsCompra.Add(itemCompra);
+
+                // Calcular totales
+                precioTotal += dispositivo.PrecioParaCompra * itemDTO.Cantidad;
+                cantidadTotal += itemDTO.Cantidad;
+
+                // Actualizar el precio en el DTO para la respuesta
+                itemDTO.Precio = dispositivo.PrecioParaCompra;
             }
 
+            // Establecer los totales en la compra
+            compra.PrecioTotal = precioTotal;
+            compra.CantidadTotal = cantidadTotal;
+
+            // Verificar si hay errores de validación
             if (ModelState.ErrorCount > 0)
             {
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
+            // Log para debugging
+            _logger.LogInformation($"Creando compra con {compra.ItemsCompra.Count} items");
+            foreach (var item in compra.ItemsCompra)
+            {
+                _logger.LogInformation($"ItemCompra: DispositivoId={item.IdDispositivo}, Cantidad={item.Cantidad}, Precio={item.Precio}");
+            }
+
+            // Agregar la compra al contexto
             _context.Add(compra);
 
             try
             {
+                // Guardar los cambios en la base de datos
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                ModelState.AddModelError("Compra", $"Error! Error con la compra");
-                return Conflict("Error" + ex.Message);
+                _logger.LogError($"{DateTime.Now}: {ex.ToString()}");
+                return Conflict("Error al guardar la compra: " + ex.Message);
             }
 
-            var compraDetail = new CompraDetailDTO(compra.ApplicationUser.NombreUsuario, compra.ApplicationUser.ApellidosUsuario, compra.ApplicationUser.DireccionDeEnvio, compra.FechaCompra, compra.PrecioTotal, compra.CantidadTotal, compraForCreate.ItemsCompra);
+            // Crear el DTO de respuesta
+            var compraDetail = new CompraDetailDTO(
+                compra.ApplicationUser.NombreUsuario,
+                compra.ApplicationUser.ApellidosUsuario,
+                compra.ApplicationUser.DireccionDeEnvio,
+                compra.FechaCompra,
+                compra.PrecioTotal,
+                compra.CantidadTotal,
+                compraParaCrear.ItemsCompra
+            );
 
             return CreatedAtAction("GetDetalleCompra", new { id = compra.Id }, compraDetail);
         }

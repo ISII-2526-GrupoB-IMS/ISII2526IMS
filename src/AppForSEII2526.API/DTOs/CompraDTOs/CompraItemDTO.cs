@@ -28,9 +28,9 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         [Display(Name = "Precio para compra")]
         [Precision(10, 2)]
         public double Precio { get; set; }
-
+        [Required]
         [StringLength(150, ErrorMessage = "La descripcion no puede ser mayor de 150 caracteres")]
-        public string? Descripcion { get; set; }
+        public string Descripcion { get; set; }
 
         
         [Range(1, int.MaxValue, ErrorMessage = "La cantidd minima es 1")]

@@ -6,11 +6,13 @@ namespace AppForSEII2526.API.Models
     public class ItemCompra
     {
         private ItemCompra() { }
-        public ItemCompra( int idDispositivo, int cantidad, Compra compra)
+        public ItemCompra( int idDispositivo,  double precio, int cantidad)
         {
             IdDispositivo = idDispositivo;
+            
+            Precio = precio;
             Cantidad = cantidad;
-            Compra = compra;
+
         }
         
 

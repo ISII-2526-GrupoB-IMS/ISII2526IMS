@@ -1,17 +1,18 @@
 ﻿using AppForSEII2526.API.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
     public class CompraForCreateDTO
     {
-        public CompraForCreateDTO( string nombreUsuario, string apellidosUsuario, string direccionDeEntrega, Compra.MetodoPago metodoDePago, int cantidad, IList<CompraItemDTO> itemsCompra) 
+        public CompraForCreateDTO(string nombreUsuario, string apellidosUsuario, string direccionDeEnvio, TiposMetodoPago metodoDePago, int cantidad, IList<CompraItemDTO> itemsCompra)
         {
-            NombreUsuario = nombreUsuario ?? throw new ArgumentNullException(nameof(NombreUsuario));
-            ApellidosUsuario = apellidosUsuario ?? throw new ArgumentNullException(nameof(ApellidosUsuario));
-            DireccionDeEntrega = direccionDeEntrega ?? throw new ArgumentNullException(nameof(DireccionDeEntrega));
+            NombreUsuario = nombreUsuario ?? throw new ArgumentNullException(nameof(nombreUsuario));
+            ApellidosUsuario = apellidosUsuario ?? throw new ArgumentNullException(nameof(apellidosUsuario));
+            DireccionDeEnvio = direccionDeEnvio ?? throw new ArgumentNullException(nameof(direccionDeEnvio));
             MetodoDePago = metodoDePago;
             Cantidad = cantidad;
-            ItemsCompra = itemsCompra ?? throw new ArgumentNullException(nameof(ItemsCompra));
+            ItemsCompra = itemsCompra ?? throw new ArgumentNullException(nameof(itemsCompra));
         }
 
         [StringLength(50, ErrorMessage = "El nombre no puede tener mas de 50 caracteres")]
@@ -21,12 +22,17 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         public string ApellidosUsuario { get; set; }
 
         [StringLength(100, ErrorMessage = "La direccion no puede tener mas de 100 caracteres")]
-        public string DireccionDeEntrega { get; set; }
+        public string DireccionDeEnvio { get; set; }
 
-        public Compra.MetodoPago MetodoDePago { get; set; }
+        public DateTime FechaCompra
+        {
+            get { return DateTime.Now; }
+        }
+
+        public TiposMetodoPago MetodoDePago { get; set; }
 
         public int Cantidad { get; set; }
-        public IList<CompraItemDTO> ItemsCompra { get; set; }
 
+        public IList<CompraItemDTO> ItemsCompra { get; set; }
     }
 }
