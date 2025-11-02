@@ -117,18 +117,17 @@ namespace AppForSEII2526.API.Controllers
                 // Actualizar la cantidad disponible del dispositivo
                 dispositivo.CantidadParaCompra -= itemDTO.Cantidad;
 
-                // Crear el ItemCompra con el constructor correcto (3 parámetros)
+                // Crear el ItemCompra - SOLO con el constructor básico
                 var itemCompra = new ItemCompra(
                     dispositivo.Id,
                     dispositivo.PrecioParaCompra,
                     itemDTO.Cantidad
                 );
 
-                // Establecer explícitamente la relación con el dispositivo
-                itemCompra.Dispositivo = dispositivo;
-                itemCompra.IdDispositivo = dispositivo.Id;
+                // NO establecer manualmente IdDispositivo ni Dispositivo
+                // Entity Framework lo hará automáticamente por la relación
 
-                // Asignar la descripción después de la construcción
+                // Asignar solo la descripción
                 itemCompra.Descripcion = string.IsNullOrEmpty(itemDTO.Descripcion)
                     ? $"{dispositivo.Marca} {dispositivo.Modelo.NombreModelo} - {dispositivo.Color}"
                     : itemDTO.Descripcion;
@@ -169,6 +168,13 @@ namespace AppForSEII2526.API.Controllers
                 // Guardar los cambios en la base de datos
                 await _context.SaveChangesAsync();
             }
+            catch (DbUpdateException ex)
+            {
+                var innerException = ex.InnerException?.Message ?? "No inner exception";
+                _logger.LogError($"{DateTime.Now}: {ex.ToString()}");
+                _logger.LogError($"Inner Exception: {innerException}");
+                return Conflict($"Error al guardar la compra: {ex.Message}. Inner: {innerException}");
+            }
             catch (Exception ex)
             {
                 _logger.LogError($"{DateTime.Now}: {ex.ToString()}");
@@ -188,7 +194,6 @@ namespace AppForSEII2526.API.Controllers
 
             return CreatedAtAction("GetDetalleCompra", new { id = compra.Id }, compraDetail);
         }
-
 
 
     }
