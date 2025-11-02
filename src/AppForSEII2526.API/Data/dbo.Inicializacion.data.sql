@@ -3,61 +3,63 @@ SET IDENTITY_INSERT [dbo].[Modelo] ON;
 
 INSERT INTO [dbo].[Modelo] ([Id], [NombreModelo]) VALUES
 (1, 'iPhone 14 Pro'),
-(2, 'Galaxy S23 Ultra'),
-(3, 'MacBook Pro M2'),
-(4, 'iPad Air'),
-(5, 'Surface Pro 9'),
-(6, 'PlayStation 5'),
-(7, 'Xbox Series X'),
-(8, 'Apple Watch Series 8'),
-(9, 'AirPods Pro'),
-(10, 'Canon EOS R6');
+(2, 'iPhone 13'),
+(3, 'Galaxy S23 Ultra'),
+(4, 'Galaxy A54'),
+(5, 'Xiaomi 13 Pro'),
+(6, 'Pixel 7 Pro'),
+(7, 'OnePlus 11'),
+(8, 'Huawei P60 Pro'),
+(9, 'Oppo Find X5'),
+(10, 'Realme GT3');
 
 SET IDENTITY_INSERT [dbo].[Modelo] OFF;
 GO
 
--- PASO 2: Insertar Dispositivos
+-- PASO 2: Insertar Dispositivos (solo móviles)
 SET IDENTITY_INSERT [dbo].[Dispositivo] ON;
 
 INSERT INTO [dbo].[Dispositivo] 
 ([Id], [ModeloId], [Marca], [Color], [NombreDispositivo], [PrecioParaCompra], [PrecioParaAlquiler], [CantidadParaCompra], [CantidadParaAlquilar], [Año], [Calidad])
 VALUES
--- Smartphones
+-- iPhone
 (1, 1, 'Apple', 'Negro', 'iPhone 14 Pro 256GB', 1199.99, 45.00, 5, 10, 2023, 0),
 (2, 1, 'Apple', 'Plata', 'iPhone 14 Pro 512GB', 1399.99, 50.00, 3, 8, 2023, 0),
-(3, 2, 'Samsung', 'Verde', 'Galaxy S23 Ultra 512GB', 1299.99, 48.00, 4, 12, 2023, 0),
-(4, 2, 'Samsung', 'Negro', 'Galaxy S23 Ultra 256GB', 1099.99, 42.00, 6, 15, 2023, 0),
+(3, 1, 'Apple', 'Morado', 'iPhone 14 Pro 128GB', 1099.99, 42.00, 7, 12, 2023, 0),
+(4, 2, 'Apple', 'Azul', 'iPhone 13 256GB', 799.99, 35.00, 10, 15, 2022, 0),
+(5, 2, 'Apple', 'Rosa', 'iPhone 13 128GB', 699.99, 30.00, 12, 20, 2022, 1),
 
--- Laptops
-(5, 3, 'Apple', 'Gris Espacial', 'MacBook Pro 14" M2 16GB', 2199.99, 85.00, 3, 6, 2023, 0),
-(6, 3, 'Apple', 'Plata', 'MacBook Pro 16" M2 32GB', 2999.99, 120.00, 2, 4, 2023, 0),
-(7, 5, 'Microsoft', 'Platino', 'Surface Pro 9 i7 16GB', 1599.99, 65.00, 4, 8, 2023, 0),
+-- Samsung Galaxy
+(6, 3, 'Samsung', 'Verde', 'Galaxy S23 Ultra 512GB', 1299.99, 48.00, 4, 12, 2023, 0),
+(7, 3, 'Samsung', 'Negro', 'Galaxy S23 Ultra 256GB', 1099.99, 42.00, 6, 15, 2023, 0),
+(8, 4, 'Samsung', 'Blanco', 'Galaxy A54 5G 256GB', 449.99, 22.00, 15, 25, 2023, 0),
+(9, 4, 'Samsung', 'Negro', 'Galaxy A54 5G 128GB', 399.99, 20.00, 18, 30, 2023, 1),
 
--- Tablets
-(8, 4, 'Apple', 'Azul', 'iPad Air 5 256GB', 749.99, 35.00, 8, 20, 2022, 0),
-(9, 4, 'Apple', 'Rosa', 'iPad Air 5 64GB', 599.99, 28.00, 10, 25, 2022, 1),
+-- Xiaomi
+(10, 5, 'Xiaomi', 'Negro', 'Xiaomi 13 Pro 256GB', 999.99, 40.00, 8, 18, 2023, 0),
+(11, 5, 'Xiaomi', 'Blanco', 'Xiaomi 13 Pro 512GB', 1099.99, 45.00, 5, 12, 2023, 0),
 
--- Consolas
-(10, 6, 'Sony', 'Blanco', 'PlayStation 5 Disc Edition', 549.99, 25.00, 5, 12, 2023, 0),
-(11, 6, 'Sony', 'Blanco', 'PlayStation 5 Digital', 449.99, 22.00, 6, 15, 2023, 0),
-(12, 7, 'Microsoft', 'Negro', 'Xbox Series X 1TB', 499.99, 23.00, 7, 14, 2023, 0),
+-- Google Pixel
+(12, 6, 'Google', 'Blanco', 'Pixel 7 Pro 256GB', 899.99, 38.00, 6, 14, 2022, 0),
+(13, 6, 'Google', 'Negro', 'Pixel 7 Pro 128GB', 799.99, 35.00, 8, 16, 2022, 1),
 
--- Accesorios
-(13, 8, 'Apple', 'Medianoche', 'Apple Watch Series 8 45mm', 449.99, 18.00, 10, 18, 2023, 0),
-(14, 9, 'Apple', 'Blanco', 'AirPods Pro 2da Gen', 249.99, 12.00, 15, 30, 2023, 0),
+-- OnePlus
+(14, 7, 'OnePlus', 'Verde', 'OnePlus 11 5G 256GB', 849.99, 37.00, 7, 15, 2023, 0),
 
--- Cámaras
-(15, 10, 'Canon', 'Negro', 'Canon EOS R6 Body', 2499.99, 95.00, 2, 5, 2022, 0);
+-- Huawei
+(15, 8, 'Huawei', 'Dorado', 'Huawei P60 Pro 256GB', 949.99, 40.00, 5, 10, 2023, 0),
+
+-- Oppo
+(16, 9, 'Oppo', 'Azul', 'Oppo Find X5 Pro 256GB', 799.99, 35.00, 6, 12, 2022, 0),
+
+-- Realme
+(17, 10, 'Realme', 'Negro', 'Realme GT3 240W 256GB', 649.99, 28.00, 10, 20, 2023, 0),
+(18, 10, 'Realme', 'Blanco', 'Realme GT3 240W 128GB', 599.99, 25.00, 12, 22, 2023, 1);
 
 SET IDENTITY_INSERT [dbo].[Dispositivo] OFF;
 GO
 
--- PASO 3: Insertar Usuarios (requiere que AspNetUsers exista)
--- Nota: Estos INSERT asumen que ya tienes usuarios creados.
--- Si no los tienes, debes crearlos a través del sistema de Identity de ASP.NET
-
--- Ejemplo de cómo insertar un usuario básico (solo para testing - en producción usa Identity):
-
+-- PASO 3: Insertar Usuarios
 INSERT INTO [dbo].[AspNetUsers] 
 ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], 
  [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnabled], [AccessFailedCount],
@@ -73,51 +75,157 @@ VALUES
  
 ('user-003', 'carlos.sanchez@email.com', 'CARLOS.SANCHEZ@EMAIL.COM', 'carlos.sanchez@email.com', 'CARLOS.SANCHEZ@EMAIL.COM', 1,
  'AQAAAAIAAYagAAAAEDummyHashForTesting', NEWID(), NEWID(), 0, 0, 1, 0,
- 'Carlos', 'Sánchez Ruiz', 'Plaza España 7, Valencia');
+ 'Carlos', 'Sánchez Ruiz', 'Plaza España 7, Valencia'),
 
+('user-004', 'laura.martin@email.com', 'LAURA.MARTIN@EMAIL.COM', 'laura.martin@email.com', 'LAURA.MARTIN@EMAIL.COM', 1,
+ 'AQAAAAIAAYagAAAAEDummyHashForTesting', NEWID(), NEWID(), 0, 0, 1, 0,
+ 'Laura', 'Martín González', 'Calle Gran Vía 50, Sevilla'),
+
+('user-005', 'david.gomez@email.com', 'DAVID.GOMEZ@EMAIL.COM', 'david.gomez@email.com', 'DAVID.GOMEZ@EMAIL.COM', 1,
+ 'AQAAAAIAAYagAAAAEDummyHashForTesting', NEWID(), NEWID(), 0, 0, 1, 0,
+ 'David', 'Gómez Fernández', 'Paseo de la Castellana 100, Madrid');
+GO
 
 -- PASO 4: Insertar Alquileres
--- IMPORTANTE: Reemplaza 'user-001', 'user-002', 'user-003' con IDs reales de tu tabla AspNetUsers
 SET IDENTITY_INSERT [dbo].[Alquiler] ON;
 
 INSERT INTO [dbo].[Alquiler] 
 ([Id], [DireccionEntrega], [MetodoPago], [FechaAlquiler], [FechaAlquilerDesde], [FechaAlquilerHasta], [PrecioTotal], [ApplicationUserId])
 VALUES
--- Alquiler 1: Usuario alquila iPhone por 7 días
+-- Alquiler 1: Usuario alquila iPhone 14 Pro por 7 días
 (1, 'Calle Mayor 123, 28001 Madrid', 0, '2024-10-01', '2024-10-05', '2024-10-12', 315.00, 'user-001'),
 
--- Alquiler 2: Usuario alquila MacBook por 15 días
-(2, 'Avenida Libertad 45, 08001 Barcelona', 1, '2024-10-03', '2024-10-10', '2024-10-25', 1275.00, 'user-002'),
+-- Alquiler 2: Usuario alquila Galaxy S23 Ultra por 15 días
+(2, 'Avenida Libertad 45, 08001 Barcelona', 1, '2024-10-03', '2024-10-10', '2024-10-25', 630.00, 'user-002'),
 
--- Alquiler 3: Usuario alquila PlayStation y varios accesorios por 30 días
-(3, 'Plaza España 7, 46001 Valencia', 2, '2024-10-05', '2024-10-15', '2024-11-15', 750.00, 'user-003'),
+-- Alquiler 3: Usuario alquila varios móviles por 10 días
+(3, 'Plaza España 7, 46001 Valencia', 2, '2024-10-05', '2024-10-15', '2024-10-25', 850.00, 'user-003'),
 
--- Alquiler 4: Usuario alquila iPad por 10 días
-(4, 'Calle Alcalá 200, 28028 Madrid', 0, '2024-10-10', '2024-10-20', '2024-10-30', 350.00, 'user-001'),
+-- Alquiler 4: Usuario alquila Xiaomi por 5 días
+(4, 'Calle Alcalá 200, 28028 Madrid', 0, '2024-10-10', '2024-10-20', '2024-10-25', 200.00, 'user-001'),
 
--- Alquiler 5: Usuario alquila cámara Canon por 5 días (evento/boda)
-(5, 'Rambla Catalunya 88, 08008 Barcelona', 0, '2024-10-12', '2024-10-25', '2024-10-30', 475.00, 'user-002');
+-- Alquiler 5: Usuario alquila Pixel 7 Pro por 14 días
+(5, 'Rambla Catalunya 88, 08008 Barcelona', 0, '2024-10-12', '2024-10-25', '2024-11-08', 532.00, 'user-002'),
+
+-- Alquiler 6: Usuario alquila varios móviles económicos por 30 días
+(6, 'Calle Gran Vía 50, 41001 Sevilla', 1, '2024-10-15', '2024-10-20', '2024-11-20', 1410.00, 'user-004');
 
 SET IDENTITY_INSERT [dbo].[Alquiler] OFF;
 GO
 
--- PASO 5: Insertar Items de Alquiler (tabla intermedia AlquilarDispositivo)
+-- PASO 5: Insertar Items de Alquiler
 INSERT INTO [dbo].[AlquilarDispositivo] 
 ([IdDispositivo], [IdAlquiler], [Precio], [Cantidad])
 VALUES
 -- Alquiler 1: iPhone 14 Pro (7 días x 45€/día)
 (1, 1, 45.00, 1),
 
--- Alquiler 2: MacBook Pro (15 días x 85€/día)
-(5, 2, 85.00, 1),
+-- Alquiler 2: Galaxy S23 Ultra (15 días x 42€/día)
+(7, 2, 42.00, 1),
 
--- Alquiler 3: PlayStation + accesorios (30 días)
-(10, 3, 25.00, 1),  -- PlayStation 5
-(14, 3, 12.00, 2),  -- 2x AirPods (por ejemplo, para jugar con amigos)
+-- Alquiler 3: Varios móviles (10 días)
+(10, 3, 40.00, 1),  -- Xiaomi 13 Pro
+(14, 3, 37.00, 1),  -- OnePlus 11
+(8, 3, 22.00, 1),   -- Galaxy A54
 
--- Alquiler 4: iPad Air (10 días x 35€/día)
-(8, 4, 35.00, 1),
+-- Alquiler 4: Xiaomi (5 días x 40€/día)
+(10, 4, 40.00, 1),
 
--- Alquiler 5: Canon EOS R6 (5 días x 95€/día)
-(15, 5, 95.00, 1);
+-- Alquiler 5: Pixel 7 Pro (14 días x 38€/día)
+(12, 5, 38.00, 1),
+
+-- Alquiler 6: Varios móviles económicos (30 días)
+(5, 6, 30.00, 1),   -- iPhone 13
+(9, 6, 20.00, 1),   -- Galaxy A54
+(17, 6, 28.00, 1);  -- Realme GT3
 GO
+
+-- PASO 6: Insertar Compras
+SET IDENTITY_INSERT [dbo].[Compra] ON;
+
+INSERT INTO [dbo].[Compra] 
+([Id], [MetodoDePago], [FechaCompra], [PrecioTotal], [CantidadTotal], [ApplicationUserId])
+VALUES
+-- Compra 1: Juan compra un iPhone 14 Pro
+(1, 0, '2024-09-15 10:30:00', 1199.99, 1, 'user-001'),
+
+-- Compra 2: María compra Galaxy S23 Ultra
+(2, 1, '2024-09-18 14:20:00', 1099.99, 1, 'user-002'),
+
+-- Compra 3: Carlos compra 2 móviles
+(3, 0, '2024-09-22 16:45:00', 1799.98, 2, 'user-003'),
+
+-- Compra 4: Laura compra iPhone 13 y Galaxy A54
+(4, 2, '2024-09-25 11:00:00', 1249.98, 2, 'user-004'),
+
+-- Compra 5: David compra Xiaomi 13 Pro
+(5, 1, '2024-09-28 09:15:00', 999.99, 1, 'user-005'),
+
+-- Compra 6: Juan hace segunda compra (3 móviles económicos)
+(6, 0, '2024-10-02 15:30:00', 1649.97, 3, 'user-001'),
+
+-- Compra 7: María compra 2 Pixel 7 Pro
+(7, 1, '2024-10-05 12:00:00', 1799.98, 2, 'user-002'),
+
+-- Compra 8: Carlos compra OnePlus y Huawei
+(8, 0, '2024-10-08 10:45:00', 1799.98, 2, 'user-003'),
+
+-- Compra 9: Laura compra 4 Galaxy A54 (para empresa)
+(9, 2, '2024-10-12 14:30:00', 1799.96, 4, 'user-004'),
+
+-- Compra 10: David compra múltiples móviles premium
+(10, 1, '2024-10-15 16:20:00', 3299.97, 3, 'user-005');
+
+SET IDENTITY_INSERT [dbo].[Compra] OFF;
+GO
+
+-- PASO 7: Insertar Items de Compra
+INSERT INTO [dbo].[ItemCompra] 
+([IdDispositivo], [IdCompra], [Descripcion], [DispositivoId], [CompraId], [Precio], [Cantidad])
+VALUES
+-- Compra 1: iPhone 14 Pro
+(1, 1, 'iPhone 14 Pro 256GB color negro, pantalla 6.1 pulgadas', 1, 1, 1199.99, 1),
+
+-- Compra 2: Galaxy S23 Ultra
+(7, 2, 'Samsung Galaxy S23 Ultra 256GB con S Pen integrado', 7, 2, 1099.99, 1),
+
+-- Compra 3: 2 móviles (iPhone + Xiaomi)
+(4, 3, 'iPhone 13 256GB azul, uso personal', 4, 3, 799.99, 1),
+(10, 3, 'Xiaomi 13 Pro negro, cámara profesional', 10, 3, 999.99, 1),
+
+-- Compra 4: iPhone 13 + Galaxy A54
+(5, 4, 'iPhone 13 128GB rosa, gama media', 5, 4, 699.99, 1),
+(8, 4, 'Galaxy A54 5G 256GB blanco, batería larga duración', 8, 4, 449.99, 1),
+
+-- Compra 5: Xiaomi 13 Pro
+(11, 5, 'Xiaomi 13 Pro 512GB blanco, versión premium', 11, 5, 999.99, 1),
+
+-- Compra 6: 3 móviles económicos
+(9, 6, 'Galaxy A54 128GB negro, relación calidad-precio', 9, 6, 399.99, 1),
+(17, 6, 'Realme GT3 256GB negro, carga rápida 240W', 17, 6, 649.99, 1),
+(5, 6, 'iPhone 13 128GB rosa, segunda unidad', 5, 6, 699.99, 1),
+
+-- Compra 7: 2 Pixel 7 Pro
+(12, 7, 'Google Pixel 7 Pro 256GB blanco, Android puro', 12, 7, 899.99, 2),
+
+-- Compra 8: OnePlus + Huawei
+(14, 8, 'OnePlus 11 5G verde, pantalla AMOLED 120Hz', 14, 8, 849.99, 1),
+(15, 8, 'Huawei P60 Pro dorado, cámara Leica', 15, 8, 949.99, 1),
+
+-- Compra 9: 4 Galaxy A54 (compra empresarial)
+(8, 9, 'Pack 4 Galaxy A54 5G 256GB para empresa', 8, 9, 449.99, 4),
+
+-- Compra 10: Múltiples premium
+(2, 10, 'iPhone 14 Pro 512GB plata, máximo almacenamiento', 2, 10, 1399.99, 1),
+(6, 10, 'Galaxy S23 Ultra 512GB verde, máxima potencia', 6, 10, 1299.99, 1),
+(16, 10, 'Oppo Find X5 Pro azul, diseño premium', 16, 10, 799.99, 1);
+GO
+
+PRINT 'Datos de inicialización insertados correctamente';
+PRINT 'Total Modelos: 10';
+PRINT 'Total Dispositivos móviles: 18';
+PRINT 'Total Usuarios: 5';
+PRINT 'Total Alquileres: 6';
+PRINT 'Total Items Alquiler: 9';
+PRINT 'Total Compras: 10';
+PRINT 'Total Items Compra: 17';
