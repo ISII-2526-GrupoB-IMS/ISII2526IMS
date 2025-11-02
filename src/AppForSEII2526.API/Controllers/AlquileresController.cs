@@ -73,7 +73,7 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("RentalDateFrom&RentalDateTo", "Error! Your rental must end later than it starts");
 
             if (alquilerForCreate.ItemsAlquiler.Count == 0)
-                ModelState.AddModelError("RentalItems", "Error! You must include at least one movie to be rented");
+                ModelState.AddModelError("RentalItems", "Error! You must include at least one device to be rented");
 
             //we must relate the Rental to the User
             var user = await _context.Users.FirstOrDefaultAsync(au => au.UserName == alquilerForCreate.NombreUsuario);
@@ -127,7 +127,7 @@ namespace AppForSEII2526.API.Controllers
                     }
                 }
 
-                decimal numDays = (decimal)(alquiler.FechaAlquilerDesde- alquiler.FechaAlquilerHasta).TotalDays;
+                decimal numDays = (decimal)(alquiler.FechaAlquilerHasta - alquiler.FechaAlquilerDesde).TotalDays;
                 alquiler.PrecioTotal = alquiler.ItemsAlquiler.Sum(ia => ia.Precio * (double) numDays);
 
                 //if there is any problem because of the available quantity of movies or because any movie does not exist
@@ -151,13 +151,10 @@ namespace AppForSEII2526.API.Controllers
 
                 }
 
-                var rentalDetail = new AlquilerForCreateDTO(alquiler.Id, alquiler.PrecioTotal,
-                    alquiler.FechaAlquiler, alquiler.DireccionEntrega, alquiler.ApplicationUser.NombreUsuario, alquiler.ApplicationUser.NombreUsuario,
-                    alquiler.FechaAlquilerDesde, alquiler.FechaAlquilerHasta, alquiler.MetodoPago,
+                var rentalDetail = new AlquilerForCreateDTO(alquiler.ApplicationUser.NombreUsuario, alquiler.ApplicationUser.ApellidosUsuario,
+                alquiler.DireccionEntrega, alquiler.MetodoPago, alquiler.FechaAlquilerDesde, alquiler.FechaAlquilerHasta, alquilerForCreate.ItemsAlquiler);
 
-                    alquiler.ApplicationUser.NombreUsuario!, alquilerForCreate.ItemsAlquiler);
-
-                return CreatedAtAction("GetRental", new { id = alquiler.Id }, rentalDetail);
+                return CreatedAtAction("CrearAlquiler", new { id = alquiler.Id }, rentalDetail);
 
 
             }

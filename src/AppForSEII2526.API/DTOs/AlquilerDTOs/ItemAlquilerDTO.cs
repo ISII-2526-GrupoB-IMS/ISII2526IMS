@@ -2,23 +2,22 @@
 {
     public class ItemAlquilerDTO
     {
-        public ItemAlquilerDTO(int idDispositivo, string modelo, string nomberDispositivo,string marca, double precioParaAlquiler)
+        public ItemAlquilerDTO()
+        {
+        }
+        public ItemAlquilerDTO(int idDispositivo, string modelo, string nombreDispositivo,string marca, double precioParaAlquiler)
         {
             IdDispositivo = idDispositivo;
             Modelo = modelo;
-            NombreDispositivo = nomberDispositivo;
+            NombreDispositivo = nombreDispositivo;
             Marca = marca;
             PrecioParaAlquiler = precioParaAlquiler;
         }
 
         public int IdDispositivo { get; set; }
-
-
-        public string Modelo { get; set; }
-
-
-        public string Marca { get; set; }
-        public string NombreDispositivo { get; set; }
+        public string Modelo { get; set; } = default!;
+        public string Marca { get; set; } = default!;
+        public string NombreDispositivo { get; set; } = default!;
         public double PrecioParaAlquiler { get; set; }
 
         public override bool Equals(object? obj)

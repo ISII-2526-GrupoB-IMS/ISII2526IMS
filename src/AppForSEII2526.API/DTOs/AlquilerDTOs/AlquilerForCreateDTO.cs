@@ -28,20 +28,6 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
             ItemsAlquiler = new List<ItemAlquilerDTO>();
         }
 
-        public AlquilerForCreateDTO(int id, double precioTotal, DateTime fechaAlquiler, string direccionEntrega, string nombreUsuario1, string nombreUsuario2, DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta, TiposMetodoPago metodoPago, string v, IList<ItemAlquilerDTO> itemsAlquiler)
-        {
-            this.id = id;
-            this.precioTotal = precioTotal;
-            this.fechaAlquiler = fechaAlquiler;
-            DireccionEntrega = direccionEntrega;
-            this.nombreUsuario1 = nombreUsuario1;
-            this.nombreUsuario2 = nombreUsuario2;
-            FechaAlquilerDesde = fechaAlquilerDesde;
-            FechaAlquilerHasta = fechaAlquilerHasta;
-            this.MetodoPago = metodoPago;
-            this.v = v;
-            ItemsAlquiler = itemsAlquiler;
-        }
 
         public DateTime FechaAlquilerDesde { get; set; }
 

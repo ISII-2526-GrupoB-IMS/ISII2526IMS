@@ -4,12 +4,6 @@ using System.Runtime.CompilerServices;
 
 public class Alquiler
 {
-    private string nombreUsuario;
-    private string apellidosUsuario;
-    private ApplicationUser? user;
-    private TiposMetodoPago metodoPago;
-    private List<ItemAlquiler> itemsAlquilers;
-
     public int Id { get; set; }
 
     [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
@@ -19,11 +13,10 @@ public class Alquiler
 
     public TiposMetodoPago MetodoPago { get; set; }
 
-
     [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
     [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     [Display(Name = "Fecha de alquiler")]
-    public DateTime FechaAlquiler {  get; set; }
+    public DateTime FechaAlquiler { get; set; }
 
     [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
     [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -44,26 +37,25 @@ public class Alquiler
 
     public ApplicationUser ApplicationUser { get; set; }
 
-
     [Required]
     public IList<ItemAlquiler> ItemsAlquiler { get; set; }
 
-
     public Alquiler()
     {
+        ItemsAlquiler = new List<ItemAlquiler>();
     }
 
-
-    public Alquiler(string direccionEntrega, string nombreUsuario, string apellidosUsuario, ApplicationUser? user, DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta, TiposMetodoPago metodoPago, List<ItemAlquiler> itemsAlquilers)
+    public Alquiler(string direccionEntrega, string nombreUsuario, string apellidosUsuario,
+        ApplicationUser? user, DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta,
+        TiposMetodoPago metodoPago, List<ItemAlquiler> itemsAlquilers)
     {
         DireccionEntrega = direccionEntrega;
-        this.nombreUsuario = nombreUsuario;
-        this.apellidosUsuario = apellidosUsuario;
-        this.user = user;
+        ApplicationUser = user;  // Asignar a la propiedad
+        FechaAlquiler = DateTime.Now;  // Inicializar la fecha de alquiler
         FechaAlquilerDesde = fechaAlquilerDesde;
         FechaAlquilerHasta = fechaAlquilerHasta;
-        this.metodoPago = metodoPago;
-        this.itemsAlquilers = itemsAlquilers;
+        MetodoPago = metodoPago;  // Asignar a la propiedad
+        ItemsAlquiler = itemsAlquilers;  // Asignar a la propiedad
     }
 
     public override bool Equals(object? obj)

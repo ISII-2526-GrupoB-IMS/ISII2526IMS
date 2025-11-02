@@ -8,7 +8,7 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
 
         public AlquilerDetailDTO(int id, DateTime fechaAlquiler, string nombreUsuario, string apellidosUsuario,
             string direccionEntrega, TiposMetodoPago metodoPago, 
-            DateTime fechaAlquilerdesde, DateTime fechaAlquilerHasta, IList<ItemAlquilerDTO> itemsAlquiler)
+            DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta, IList<ItemAlquilerDTO> itemsAlquiler)
         {
             Id = id;
             FechaAlquiler = fechaAlquiler;
@@ -16,7 +16,7 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
             ApellidosUsuario = apellidosUsuario;
             DireccionEntrega = direccionEntrega;
             MetodoPago = metodoPago;
-            FechaAlquilerDesde = fechaAlquilerdesde;
+            FechaAlquilerDesde = fechaAlquilerDesde;
             FechaAlquilerHasta = fechaAlquilerHasta;
             ItemsAlquiler = itemsAlquiler;
         }

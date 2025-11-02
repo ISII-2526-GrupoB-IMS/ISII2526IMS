@@ -57,7 +57,7 @@ GO
 -- Si no los tienes, debes crearlos a través del sistema de Identity de ASP.NET
 
 -- Ejemplo de cómo insertar un usuario básico (solo para testing - en producción usa Identity):
-/*
+
 INSERT INTO [dbo].[AspNetUsers] 
 ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], 
  [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnabled], [AccessFailedCount],
@@ -74,7 +74,7 @@ VALUES
 ('user-003', 'carlos.sanchez@email.com', 'CARLOS.SANCHEZ@EMAIL.COM', 'carlos.sanchez@email.com', 'CARLOS.SANCHEZ@EMAIL.COM', 1,
  'AQAAAAIAAYagAAAAEDummyHashForTesting', NEWID(), NEWID(), 0, 0, 1, 0,
  'Carlos', 'Sánchez Ruiz', 'Plaza España 7, Valencia');
-*/
+
 
 -- PASO 4: Insertar Alquileres
 -- IMPORTANTE: Reemplaza 'user-001', 'user-002', 'user-003' con IDs reales de tu tabla AspNetUsers
