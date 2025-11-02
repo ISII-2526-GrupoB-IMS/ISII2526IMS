@@ -17,5 +17,6 @@ namespace AppForSEII2526.API.Models
 
 
         public IList<Dispositivo> Dispositivos { get; set; }
+
     }
 }

@@ -275,21 +275,21 @@ namespace AppForSEII2526.API.Migrations
                 {
                     IdDispositivo = table.Column<int>(type: "int", nullable: false),
                     IdAlquiler = table.Column<int>(type: "int", nullable: false),
-                    DispositivoId = table.Column<int>(type: "int", nullable: false),
-                    AlquilerId = table.Column<int>(type: "int", nullable: false)
+                    Precio = table.Column<double>(type: "float", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AlquilarDispositivo", x => new { x.IdDispositivo, x.IdAlquiler });
                     table.ForeignKey(
-                        name: "FK_AlquilarDispositivo_Alquiler_AlquilerId",
-                        column: x => x.AlquilerId,
+                        name: "FK_AlquilarDispositivo_Alquiler_IdAlquiler",
+                        column: x => x.IdAlquiler,
                         principalTable: "Alquiler",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AlquilarDispositivo_Dispositivo_DispositivoId",
-                        column: x => x.DispositivoId,
+                        name: "FK_AlquilarDispositivo_Dispositivo_IdDispositivo",
+                        column: x => x.IdDispositivo,
                         principalTable: "Dispositivo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -351,14 +351,9 @@ namespace AppForSEII2526.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AlquilarDispositivo_AlquilerId",
+                name: "IX_AlquilarDispositivo_IdAlquiler",
                 table: "AlquilarDispositivo",
-                column: "AlquilerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AlquilarDispositivo_DispositivoId",
-                table: "AlquilarDispositivo",
-                column: "DispositivoId");
+                column: "IdAlquiler");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alquiler_ApplicationUserId",

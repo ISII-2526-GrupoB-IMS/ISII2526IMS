@@ -61,29 +61,6 @@ namespace AppForSEII2526.API.Migrations
                     b.ToTable("Alquiler");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.AlquilarDispositivo", b =>
-                {
-                    b.Property<int>("IdDispositivo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdAlquiler")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AlquilerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DispositivoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdDispositivo", "IdAlquiler");
-
-                    b.HasIndex("AlquilerId");
-
-                    b.HasIndex("DispositivoId");
-
-                    b.ToTable("AlquilarDispositivo");
-                });
-
             modelBuilder.Entity("AppForSEII2526.API.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -244,6 +221,27 @@ namespace AppForSEII2526.API.Migrations
                     b.HasIndex("ModeloId");
 
                     b.ToTable("Dispositivo");
+                });
+
+            modelBuilder.Entity("AppForSEII2526.API.Models.ItemAlquiler", b =>
+                {
+                    b.Property<int>("IdDispositivo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdAlquiler")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Precio")
+                        .HasColumnType("float");
+
+                    b.HasKey("IdDispositivo", "IdAlquiler");
+
+                    b.HasIndex("IdAlquiler");
+
+                    b.ToTable("AlquilarDispositivo");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ItemCompra", b =>
@@ -498,25 +496,6 @@ namespace AppForSEII2526.API.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.AlquilarDispositivo", b =>
-                {
-                    b.HasOne("Alquiler", "Alquiler")
-                        .WithMany("DispositivosAlquilados")
-                        .HasForeignKey("AlquilerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AppForSEII2526.API.Models.Dispositivo", "Dispositivo")
-                        .WithMany("DispositivosAlquilados")
-                        .HasForeignKey("DispositivoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Alquiler");
-
-                    b.Navigation("Dispositivo");
-                });
-
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "ApplicationUser")
@@ -535,6 +514,25 @@ namespace AppForSEII2526.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Modelo");
+                });
+
+            modelBuilder.Entity("AppForSEII2526.API.Models.ItemAlquiler", b =>
+                {
+                    b.HasOne("Alquiler", "Alquiler")
+                        .WithMany("ItemsAlquiler")
+                        .HasForeignKey("IdAlquiler")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII2526.API.Models.Dispositivo", "Dispositivo")
+                        .WithMany("ItemsAlquiler")
+                        .HasForeignKey("IdDispositivo")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Alquiler");
+
+                    b.Navigation("Dispositivo");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ItemCompra", b =>
@@ -637,7 +635,7 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("Alquiler", b =>
                 {
-                    b.Navigation("DispositivosAlquilados");
+                    b.Navigation("ItemsAlquiler");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ApplicationUser", b =>
@@ -656,7 +654,7 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Dispositivo", b =>
                 {
-                    b.Navigation("DispositivosAlquilados");
+                    b.Navigation("ItemsAlquiler");
 
                     b.Navigation("ItemsCompra");
 
