@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251017101244_CreateIdentitySchema")]
+    [Migration("20251102101706_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -182,11 +182,12 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<DateTime>("FechaCompra")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MetodoDePago")
-                        .HasColumnType("int");
-
                     b.Property<double>("PrecioTotal")
                         .HasColumnType("float");
+
+                    b.Property<int>("TiposMetodoPago")
+                        .HasColumnType("int")
+                        .HasColumnName("MetodoDePago");
 
                     b.HasKey("Id");
 
@@ -250,16 +251,13 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ItemCompra", b =>
                 {
-                    b.Property<int>("IdDispositivo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdCompra")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cantidad")
+                    b.Property<int>("DispositivoId")
                         .HasColumnType("int");
 
                     b.Property<int>("CompraId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
@@ -267,18 +265,19 @@ namespace AppForSEII2526.API.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("DispositivoId")
+                    b.Property<int>("IdCompra")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdDispositivo")
                         .HasColumnType("int");
 
                     b.Property<double>("Precio")
                         .HasPrecision(10, 2)
                         .HasColumnType("float(10)");
 
-                    b.HasKey("IdDispositivo", "IdCompra");
+                    b.HasKey("DispositivoId", "CompraId");
 
                     b.HasIndex("CompraId");
-
-                    b.HasIndex("DispositivoId");
 
                     b.ToTable("ItemCompra");
                 });

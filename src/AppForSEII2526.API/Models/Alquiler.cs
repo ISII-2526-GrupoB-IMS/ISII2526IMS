@@ -13,12 +13,7 @@ public class Alquiler
     public string DireccionEntrega { get; set; }
 
     public TiposMetodoPago MetodoPago { get; set; }
-    public enum TiposMetodoPago
-    {
-        TarjetaCredito,
-        PayPal,
-        Efectivo
-    }
+   
 
     [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
     [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
