@@ -1,22 +1,12 @@
-﻿namespace AppForSEII2526.API.Models
+﻿
+namespace AppForSEII2526.API.Models
 {
     public class Compra
     {
 
         [Key]
         public int Id { get; set; }
-
-
-
-        //MÉTODO DE PAGO
-        [Display(Name = "Método de pago")]
-        [Required(ErrorMessage = "Elija un método de pago")]
-        public MetodosDePago MetodoDePago { get; set; }
-
-        //FECHA DE COMPRA
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
-        [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Fecha de compra")]
+       
         public DateTime FechaCompra { get; set; }
 
         //PRECIO TOTAL
@@ -39,15 +29,37 @@
         public IList<ItemCompra> ItemsCompra { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
-        public enum MetodosDePago
+        [Column("MetodoDePago")]
+        public TiposMetodoPago TiposMetodoPago { get; set; }
+        private Compra()
         {
-            TarjetaCredito,
-            PayPal,
-            Efectivo
+           
         }
 
+        public Compra(TiposMetodoPago tiposMetodoPago, DateTime fechaCompra, IList<ItemCompra> itemsCompra, ApplicationUser applicationUser)
+        {
+            TiposMetodoPago = tiposMetodoPago;
+            FechaCompra = fechaCompra;
+            ItemsCompra = itemsCompra;
+            ApplicationUser = applicationUser;
+        }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is Compra compra &&
+                   Id == compra.Id &&
+                   FechaCompra == compra.FechaCompra &&
+                   PrecioTotal == compra.PrecioTotal &&
+                   CantidadTotal == compra.CantidadTotal &&
+                   EqualityComparer<IList<ItemCompra>>.Default.Equals(ItemsCompra, compra.ItemsCompra) &&
+                   EqualityComparer<ApplicationUser>.Default.Equals(ApplicationUser, compra.ApplicationUser) &&
+                   TiposMetodoPago == compra.TiposMetodoPago;
+        }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, FechaCompra, PrecioTotal, CantidadTotal, ItemsCompra, ApplicationUser, TiposMetodoPago);
+        }
     }
 }
 

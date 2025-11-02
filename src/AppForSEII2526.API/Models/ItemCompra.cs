@@ -2,9 +2,19 @@
 
 namespace AppForSEII2526.API.Models
 {
-    [PrimaryKey(nameof(IdDispositivo), nameof(IdCompra))]
+    [PrimaryKey(nameof(DispositivoId), nameof(CompraId))]
     public class ItemCompra
     {
+        private ItemCompra() { }
+        public ItemCompra( int idDispositivo,  double precio, int cantidad)
+        {
+            DispositivoId = idDispositivo;
+            IdDispositivo = idDispositivo;
+            Precio = precio;
+            Cantidad = cantidad;
+
+        }
+        
 
         //DESCRIPCIÓN
         [Required]
@@ -17,6 +27,7 @@ namespace AppForSEII2526.API.Models
         //Id Dispositivo
         [Required]
         public int IdDispositivo { get; set; }
+        public int DispositivoId { get; set; }
 
         //COMPRA
         [Required]
@@ -24,6 +35,7 @@ namespace AppForSEII2526.API.Models
         //Id Compra
         [Required]
         public int IdCompra { get; set; }
+        public int CompraId { get; set; }
 
         //PRECIO 
         [Required]
