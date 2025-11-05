@@ -48,8 +48,16 @@ jobs:
         name: TestResults
         path: ./test/AppForSEII2526.UT/TestResults/TestResults.trx
         
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Build API
+      run: dotnet build ./src/AppForSEII2526.API/AppForSEII2526.API.csproj --no-restore
+
+    - name: Build Web
+      run: dotnet build ./src/AppForSEII2526.Web/AppForSEII2526.Web.csproj --no-restore
+
+    - name: Build Tests
+      run: |
+        dotnet build ./test/AppForSEII2526.UT/AppForSEII2526.UT.csproj --no-restore
+        dotnet build ./test/AppForSEII2526.UIT/AppForSEII2526.UIT.csproj --no-restore
       
     - name: Test
       run: dotnet test --no-build --verbosity normal
