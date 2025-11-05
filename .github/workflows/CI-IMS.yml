@@ -26,14 +26,14 @@ jobs:
       with:
         dotnet-version: 8.0
     - name: Restore dependencies
-      run: 
+      run: |
         dotnet restore ${{env.API}}
         dotnet restore ${{env.WEB}}
         dotnet restore ${{env.UT}}
         dotnet restore ${{env.UIT}}
 
     - name: Build the solution
-      run: 
+      run: |
        dotnet build ${{env.API}}  --configuration Release --no-restore
        dotnet build ${{env.WEB}}  --configuration Release --no-restore
        dotnet build ${{env.UT}}  --configuration Release --no-restore
