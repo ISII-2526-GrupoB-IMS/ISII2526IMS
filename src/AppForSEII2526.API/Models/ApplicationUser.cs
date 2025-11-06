@@ -32,6 +32,7 @@ public class ApplicationUser : IdentityUser {
         DireccionDeEnvio = direccionDeEnvio;
     }
 
+
     public ApplicationUser()
     {
     }
