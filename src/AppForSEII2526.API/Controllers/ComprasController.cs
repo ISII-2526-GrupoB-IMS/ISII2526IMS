@@ -30,26 +30,44 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
+            // Nos traemos la compra con sus items y los dispositivos relacionados
             var compra = await _context.Compra
-             .Where(c => c.Id == id)
-                 .Include(c => c.ApplicationUser) //join tabla ApplicationUser
-                 .Include(c => c.ItemsCompra) //join table ItemCompra
-                    .ThenInclude(d => d.Dispositivo) //then join tabla dispositivo
-                        .ThenInclude(m => m.Modelo) //then join tabla Modelo     
-             .Select(c => new CompraDetailDTO(c.ApplicationUser.NombreUsuario, c.ApplicationUser.ApellidosUsuario, c.ApplicationUser.DireccionDeEnvio, c.FechaCompra, c.PrecioTotal, c.CantidadTotal, c.ItemsCompra
-                        .Select(ci => new CompraItemDTO(ci.Dispositivo.Marca, ci.Dispositivo.Modelo.NombreModelo, ci.Dispositivo.Color, ci.Dispositivo.PrecioParaCompra, c.ItemsCompra.Count, ci.Descripcion)).ToList<CompraItemDTO>()))
-             .FirstOrDefaultAsync();
+                .Include(c => c.ApplicationUser)
+                .Include(c => c.ItemsCompra)
+                    .ThenInclude(d => d.Dispositivo)
+                        .ThenInclude(m => m.Modelo)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-
+            // Comprobamos que la compra existe
             if (compra == null)
             {
                 _logger.LogError($"Error: Compra con {id} no existe");
                 return NotFound();
             }
 
+            // Tenemos que crear los CompraItemDTO manualmente en memoria pq SQLite no lo soprta y no lo traducimos a SQL
+            var compraDTO = new CompraDetailDTO(
+                compra.ApplicationUser.NombreUsuario,
+                compra.ApplicationUser.ApellidosUsuario,
+                compra.ApplicationUser.DireccionDeEnvio,
+                compra.FechaCompra,
+                compra.PrecioTotal,
+                compra.CantidadTotal,
+                compra.ItemsCompra
+                    .Select(ci => new CompraItemDTO(
+                        ci.Dispositivo.Marca,
+                        ci.Dispositivo.Modelo.NombreModelo,
+                        ci.Dispositivo.Color,
+                        ci.Dispositivo.PrecioParaCompra,
+                        ci.Cantidad, // Seguimos usando la cantidad total de items en la compra
+                        ci.Descripcion
+                    ))
+                    .ToList()
+            );
 
-            return Ok(compra);
+            return Ok(compraDTO);
         }
+
 
 
         [HttpPost]
