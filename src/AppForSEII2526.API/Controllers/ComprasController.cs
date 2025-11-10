@@ -51,15 +51,15 @@ namespace AppForSEII2526.API.Controllers
                 compra.ApplicationUser.ApellidosUsuario,
                 compra.ApplicationUser.DireccionDeEnvio,
                 compra.FechaCompra,
-                Math.Round(compra.PrecioTotal, 2),
+                compra.PrecioTotal,
                 compra.CantidadTotal,
                 compra.ItemsCompra
                     .Select(ci => new CompraItemDTO(
                         ci.Dispositivo.Marca,
                         ci.Dispositivo.Modelo.NombreModelo,
                         ci.Dispositivo.Color,
-                        Math.Round(ci.Dispositivo.PrecioParaCompra, 2),
-                        ci.Cantidad, 
+                        ci.Dispositivo.PrecioParaCompra,
+                        ci.Cantidad, // Seguimos usando la cantidad total de items en la compra
                         ci.Descripcion
                     ))
                     .ToList()
@@ -77,7 +77,7 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(CompraDetailDTO), (int)HttpStatusCode.Created)]
         public async Task<ActionResult> CrearCompra(CompraForCreateDTO compraParaCrear)
         {
-            // Comprobar que hay items en la compra
+            // Validar que hay items en la compra
             if (compraParaCrear.ItemsCompra == null || compraParaCrear.ItemsCompra.Count == 0)
             {
                 ModelState.AddModelError("ItemsCompra", "Error. Necesitas seleccionar al menos un dispositivo para ser comprado.");
@@ -95,7 +95,7 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            // Crear la compra sin ItemsCompra inicialmente
+            // Crear la compra (sin ItemsCompra inicialmente)
             var compra = new Compra(
                 compraParaCrear.MetodoDePago,
                 compraParaCrear.FechaCompra,
@@ -124,7 +124,7 @@ namespace AppForSEII2526.API.Controllers
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
-                // Comprobar stock disponible
+                // Validar stock disponible
                 if (dispositivo.CantidadParaCompra < itemDTO.Cantidad)
                 {
                     ModelState.AddModelError("DispositivoNoDisponible",
@@ -135,14 +135,15 @@ namespace AppForSEII2526.API.Controllers
                 // Actualizar la cantidad disponible del dispositivo
                 dispositivo.CantidadParaCompra -= itemDTO.Cantidad;
 
-                // Crear el ItemCompra 
+                // Crear el ItemCompra - SOLO con el constructor básico
                 var itemCompra = new ItemCompra(
                     dispositivo.Id,
                     dispositivo.PrecioParaCompra,
                     itemDTO.Cantidad
                 );
 
-                
+                // NO establecer manualmente IdDispositivo ni Dispositivo
+                // Entity Framework lo hará automáticamente por la relación
 
                 // Asignar solo la descripción
                 itemCompra.Descripcion = string.IsNullOrEmpty(itemDTO.Descripcion)
