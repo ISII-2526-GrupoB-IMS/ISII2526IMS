@@ -5,6 +5,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
     public class CompraForCreateDTO
     {
+
         public CompraForCreateDTO(string nombreUsuario, string apellidosUsuario, string direccionDeEnvio, TiposMetodoPago metodoDePago, int cantidad, IList<CompraItemDTO> itemsCompra)
         {
             NombreUsuario = nombreUsuario ?? throw new ArgumentNullException(nameof(nombreUsuario));
@@ -34,5 +35,17 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         public int Cantidad { get; set; }
 
         public IList<CompraItemDTO> ItemsCompra { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CompraForCreateDTO dTO &&
+                   NombreUsuario == dTO.NombreUsuario &&
+                   ApellidosUsuario == dTO.ApellidosUsuario &&
+                   DireccionDeEnvio == dTO.DireccionDeEnvio &&
+                   FechaCompra == dTO.FechaCompra &&
+                   MetodoDePago == dTO.MetodoDePago &&
+                   Cantidad == dTO.Cantidad &&
+                   EqualityComparer<IList<CompraItemDTO>>.Default.Equals(ItemsCompra, dTO.ItemsCompra);
+        }
     }
 }

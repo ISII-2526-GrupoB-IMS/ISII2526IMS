@@ -40,7 +40,7 @@ namespace AppForSEII2526.API.Models
         //PRECIO 
         [Required]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(0.5, float.MaxValue, ErrorMessage = "El precio mínimo es de 0,5 ")]
+        [Range(0.5, double.MaxValue, ErrorMessage = "El precio mínimo es de 0,5 ")]
         [Display(Name = "Precio ")]
         [Precision(10, 2)]
         public double Precio { get; set; }
