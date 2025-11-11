@@ -11,15 +11,21 @@ namespace AppForSEII2526.API.Models
     {
         public Reseña() { }
 
-        public Reseña(int id, string titulo, string pais, DateTime fechaReseña, IList<ItemReseña> itemsReseña)
+        public Reseña(int id, string titulo, string pais, DateTime fechaReseña, IList<ItemReseña> itemsReseña, ApplicationUser applicationUser)
         {
             Id = id;
             Titulo = titulo;
             Pais = pais;
            
             FechaReseña = fechaReseña;
-            CalificaciónGeneral = itemsReseña.Average(ir => ir.Puntuacion);
+            ItemsReseña = itemsReseña ?? new List<ItemReseña>();
+
+            // ✅ Calcular CalificaciónGeneral solo si hay elementos
+            CalificaciónGeneral = (ItemsReseña != null && ItemsReseña.Any())
+                ? ItemsReseña.Average(item => item.Puntuacion)
+                : 0;
             ItemsReseña = itemsReseña;
+            ApplicationUser = applicationUser;
         }
 
         [Key]
