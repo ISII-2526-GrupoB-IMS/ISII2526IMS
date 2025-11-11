@@ -4,6 +4,16 @@ namespace AppForSEII2526.API.Models
 {
     public class Modelo
     {
+        public Modelo()
+        {
+        }
+
+        public Modelo( string nombreModelo)
+        {
+            
+            NombreModelo = nombreModelo;
+            
+        }
 
 
         //ID Modleo
