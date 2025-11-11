@@ -51,14 +51,14 @@ namespace AppForSEII2526.API.Controllers
                 compra.ApplicationUser.ApellidosUsuario,
                 compra.ApplicationUser.DireccionDeEnvio,
                 compra.FechaCompra,
-                compra.PrecioTotal,
+                Math.Round(compra.PrecioTotal, 2),
                 compra.CantidadTotal,
                 compra.ItemsCompra
                     .Select(ci => new CompraItemDTO(
                         ci.Dispositivo.Marca,
                         ci.Dispositivo.Modelo.NombreModelo,
                         ci.Dispositivo.Color,
-                        ci.Dispositivo.PrecioParaCompra,
+                        Math.Round(ci.Dispositivo.PrecioParaCompra, 2),
                         ci.Cantidad, // Seguimos usando la cantidad total de items en la compra
                         ci.Descripcion
                     ))
