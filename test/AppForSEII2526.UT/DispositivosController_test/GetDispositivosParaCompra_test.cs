@@ -8,7 +8,7 @@ using AppForSEII2526.API.DTOs.DispositivoDTOs;
 
 namespace AppForSEII2526.UT.DispositivosController_test
 {
-    public class GetDispositivosParaCompra_test : AppForMovies.UT.AppForMovies4SqliteUT
+    public class GetDispositivosParaCompra_test : AppForSEII2526.UT.AppForSEII25264SqliteUT
     {
         public GetDispositivosParaCompra_test()
         {
