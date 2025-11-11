@@ -54,5 +54,17 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         public int CantidadTotal { get; set; }
 
         public IList<CompraItemDTO> ItemsCompra { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CompraDetailDTO dTO &&
+                   NombreUsuario == dTO.NombreUsuario &&
+                   ApellidosUsuario == dTO.ApellidosUsuario &&
+                   DireccionDeEntrega == dTO.DireccionDeEntrega &&
+                   FechaCompra == dTO.FechaCompra &&
+                   PrecioTotal == dTO.PrecioTotal &&
+                   CantidadTotal == dTO.CantidadTotal &&
+                   ItemsCompra.SequenceEqual(dTO.ItemsCompra);
+        }
     }
 }

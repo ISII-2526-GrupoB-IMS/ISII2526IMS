@@ -125,23 +125,7 @@ namespace AppForSEII2526.UT.ComprasController_test
             var compraDTOActual = Assert.IsType<CompraDetailDTO>(okResult.Value);
 
             // Verificamos que los datos esperados y actuales son los mismos
-            Assert.Equal(expectedCompra.NombreUsuario, compraDTOActual.NombreUsuario);
-            Assert.Equal(expectedCompra.ApellidosUsuario, compraDTOActual.ApellidosUsuario);
-            Assert.Equal(expectedCompra.DireccionDeEntrega, compraDTOActual.DireccionDeEntrega);
-            Assert.Equal(expectedCompra.PrecioTotal, compraDTOActual.PrecioTotal,2);//Para solo comprar dos decimales
-            Assert.Equal(expectedCompra.CantidadTotal, compraDTOActual.CantidadTotal);
-            Assert.Equal(expectedCompra.ItemsCompra.Count, compraDTOActual.ItemsCompra.Count);
-
-            // Verificamos items de compra
-            for (int i = 0; i < expectedCompra.ItemsCompra.Count; i++)
-            {
-                Assert.Equal(expectedCompra.ItemsCompra[i].Marca, compraDTOActual.ItemsCompra[i].Marca);
-                Assert.Equal(expectedCompra.ItemsCompra[i].Modelo, compraDTOActual.ItemsCompra[i].Modelo);
-                Assert.Equal(expectedCompra.ItemsCompra[i].Color, compraDTOActual.ItemsCompra[i].Color);
-                Assert.Equal(expectedCompra.ItemsCompra[i].Precio, compraDTOActual.ItemsCompra[i].Precio,2); //Para solo comprar dos decimales
-                Assert.Equal(expectedCompra.ItemsCompra[i].Cantidad, compraDTOActual.ItemsCompra[i].Cantidad);
-                Assert.Equal(expectedCompra.ItemsCompra[i].Descripcion, compraDTOActual.ItemsCompra[i].Descripcion);
-            }
+            Assert.Equal(expectedCompra, compraDTOActual);
         }
 
 
