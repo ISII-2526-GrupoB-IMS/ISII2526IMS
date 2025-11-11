@@ -57,14 +57,20 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 
         public override bool Equals(object? obj)
         {
-            return obj is CompraDetailDTO dTO &&
-                   NombreUsuario == dTO.NombreUsuario &&
-                   ApellidosUsuario == dTO.ApellidosUsuario &&
-                   DireccionDeEntrega == dTO.DireccionDeEntrega &&
-                   FechaCompra == dTO.FechaCompra &&
-                   PrecioTotal == dTO.PrecioTotal &&
-                   CantidadTotal == dTO.CantidadTotal &&
-                   ItemsCompra.SequenceEqual(dTO.ItemsCompra);
+            if (obj is not CompraDetailDTO dTO)
+                return false;
+
+            // 🔸 Tolerancia de 1 segundo en la comparación de fechas
+            bool fechasCasiIguales = Math.Abs((FechaCompra - dTO.FechaCompra).TotalSeconds) < 1;
+
+            return
+                NombreUsuario == dTO.NombreUsuario &&
+                ApellidosUsuario == dTO.ApellidosUsuario &&
+                DireccionDeEntrega == dTO.DireccionDeEntrega &&
+                fechasCasiIguales &&
+                Math.Abs(PrecioTotal - dTO.PrecioTotal) < 0.01 &&
+                CantidadTotal == dTO.CantidadTotal &&
+                ItemsCompra.SequenceEqual(dTO.ItemsCompra);
         }
     }
 }

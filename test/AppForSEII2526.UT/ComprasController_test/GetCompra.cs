@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace AppForSEII2526.UT.ComprasController_test
 {
-   public class GetCompra : AppForMovies.UT.AppForMovies4SqliteUT
-   {
+   public class GetCompra : AppForSEII2526.UT.AppForSEII25264SqliteUT
+    {
         public GetCompra()
         {
 

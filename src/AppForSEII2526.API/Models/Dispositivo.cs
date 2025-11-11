@@ -21,6 +21,16 @@ namespace AppForSEII2526.API.Models
             Año = año;
         }
 
+        public Dispositivo(Modelo modelo, string marca, string color, double precioParaCompra, int cantidadParaCompra)
+        {
+            Modelo = modelo;
+            Marca = marca;
+            Color = color;
+            PrecioParaCompra = precioParaCompra;
+            CantidadParaCompra = cantidadParaCompra;
+        }
+
+
 
 
 
