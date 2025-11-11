@@ -221,6 +221,88 @@ VALUES
 (16, 10, 'Oppo Find X5 Pro azul, diseño premium', 16, 10, 799.99, 1);
 GO
 
+-- PASO 8: Insertar Reseñas
+SET IDENTITY_INSERT [dbo].[Reseña] ON;
+
+INSERT INTO [dbo].[Reseña] 
+([Id], [Titulo], [Pais], [FechaReseña], [CalificaciónGeneral] , [ApplicationUserId])
+VALUES
+-- Reseña 1
+(1, 'Excelente experiencia con el iPhone', 'España', '2024-09-16 15:30:00', 5, 'user-001'),
+
+-- Reseña 2
+(2, 'Galaxy S23 Ultra impresionante', 'México', '2024-09-19 22:15:00', 4, 'user-002'),
+
+-- Reseña 3
+(3, 'Buena compra de varios móviles', 'Argentina', '2024-09-23 13:50:00', 4, 'user-003'),
+
+-- Reseña 4
+(4, 'iPhone y Galaxy A54 combinados', 'Chile', '2024-09-26 09:45:00', 5, 'user-004'),
+
+-- Reseña 5
+(5, 'Xiaomi 13 Pro muy recomendable', 'Perú', '2024-09-29 17:00:00', 5, 'user-005'),
+
+-- Reseña 6
+(6, 'Compré 3 móviles económicos, contento', 'España', '2024-10-03 20:30:00', 4, 'user-001'),
+
+-- Reseña 7
+(7, 'Pixel 7 Pro, buen rendimiento', 'México', '2024-10-06 08:00:00', 4, 'user-002'),
+
+-- Reseña 8
+(8, 'OnePlus y Huawei cumplen expectativas', 'Argentina', '2024-10-09 11:40:00', 4, 'user-003'),
+
+-- Reseña 9
+(9, 'Galaxy A54 para empresa, excelente', 'Chile', '2024-10-13 10:20:00', 5, 'user-004'),
+-- Reseña 10
+(10, 'Móviles premium, muy satisfecho', 'Perú', '2024-10-16 19:00:00', 5, 'user-005');
+
+SET IDENTITY_INSERT [dbo].[Reseña] OFF;
+GO
+
+
+-- PASO 9: Insertar Items de Reseña
+INSERT INTO [dbo].[ItemReseña] 
+([IdDispositivo], [IdReseña], [Comentario], [Puntuacion])
+VALUES
+-- Reseña 1: Opinión sobre iPhone 14 Pro
+(1, 1, 'El iPhone 14 Pro tiene un rendimiento excepcional y una cámara impresionante. La batería podría durar un poco más.', 5),
+
+-- Reseña 2: Experiencia con Galaxy S23 Ultra
+(7, 2, 'El Galaxy S23 Ultra es increíble para fotografía, aunque el tamaño lo hace algo incómodo de usar con una mano.', 4),
+
+-- Reseña 3: Comparativa iPhone 13 vs Xiaomi 13 Pro
+(4, 3, 'El iPhone 13 es muy equilibrado, pero el Xiaomi 13 Pro ofrece mejor carga y cámara por el precio.', 4),
+(10, 3, 'Excelente pantalla y autonomía. Android muy fluido.', 5),
+
+-- Reseña 4: Gama media equilibrada
+(5, 4, 'iPhone 13 128GB rosa: buena calidad y cámara, aunque algo caro.', 4),
+(8, 4, 'Galaxy A54: excelente autonomía y pantalla, ideal para uso diario.', 5),
+
+-- Reseña 5: Xiaomi 13 Pro Premium
+(11, 5, 'Xiaomi 13 Pro versión premium, materiales de lujo y cámara brutal.', 5),
+
+-- Reseña 6: Móviles económicos
+(9, 6, 'Galaxy A54 ofrece mucho por su precio, buen rendimiento.', 4),
+(17, 6, 'Realme GT3 destaca por su carga ultrarrápida, aunque se calienta.', 3),
+
+
+-- Reseña 7: Google Pixel 7 Pro
+(12, 7, 'Android puro y excelente cámara, aunque la batería no destaca.', 5),
+
+-- Reseña 8: OnePlus 11 y Huawei P60 Pro
+(14, 8, 'OnePlus 11 es una bestia en fluidez y pantalla.', 5),
+(15, 8, 'Huawei P60 Pro tiene una cámara insuperable, pero limita por falta de servicios Google.', 4),
+
+-- Reseña 9: Compra empresarial Galaxy A54
+(8, 9, 'Perfectos para empleados: buena autonomía, rendimiento decente y diseño moderno.', 4),
+
+-- Reseña 10: Dispositivos premium 2025
+(2, 10, 'iPhone 14 Pro 512GB: espectacular pero demasiado caro.', 4),
+(6, 10, 'Galaxy S23 Ultra 512GB: potencia y cámara sobresalientes.', 5);
+GO
+
+
+
 PRINT 'Datos de inicialización insertados correctamente';
 PRINT 'Total Modelos: 10';
 PRINT 'Total Dispositivos móviles: 18';
@@ -229,3 +311,5 @@ PRINT 'Total Alquileres: 6';
 PRINT 'Total Items Alquiler: 9';
 PRINT 'Total Compras: 10';
 PRINT 'Total Items Compra: 17';
+PRINT 'Total Reseñas: 10';
+PRINT 'Total Items Reseñas: 15';
