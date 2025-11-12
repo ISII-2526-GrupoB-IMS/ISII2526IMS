@@ -64,9 +64,9 @@ public class Alquiler
                Id == alquiler.Id &&
                DireccionEntrega == alquiler.DireccionEntrega &&
                MetodoPago == alquiler.MetodoPago &&
-               FechaAlquiler == alquiler.FechaAlquiler &&
-               FechaAlquilerDesde == alquiler.FechaAlquilerDesde &&
-               FechaAlquilerHasta == alquiler.FechaAlquilerHasta &&
+               FechaAlquiler.Day == alquiler.FechaAlquiler.Day &&
+               FechaAlquilerDesde.Day == alquiler.FechaAlquilerDesde.Day &&
+               FechaAlquilerHasta.Day == alquiler.FechaAlquilerHasta.Day &&
                PrecioTotal == alquiler.PrecioTotal &&
                EqualityComparer<IList<ItemAlquiler>>.Default.Equals(ItemsAlquiler, alquiler.ItemsAlquiler);
     }

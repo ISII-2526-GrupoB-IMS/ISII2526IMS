@@ -10,12 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AlquileresController_test\**" />
-    <EmbeddedResource Remove="AlquileresController_test\**" />
-    <None Remove="AlquileresController_test\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

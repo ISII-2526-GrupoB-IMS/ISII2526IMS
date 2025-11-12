@@ -21,7 +21,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(AlquilerDetailDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetAlquiler(int id)
+        public async Task<ActionResult> GetDetalleAlquiler(int id)
         {
             if (_context.Alquiler == null)
             {
