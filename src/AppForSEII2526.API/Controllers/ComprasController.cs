@@ -175,7 +175,7 @@ namespace AppForSEII2526.API.Controllers
             _logger.LogInformation($"Creando compra con {compra.ItemsCompra.Count} items");
             foreach (var item in compra.ItemsCompra)
             {
-                _logger.LogInformation($"ItemCompra: DispositivoId={item.IdDispositivo}, Cantidad={item.Cantidad}, Precio={item.Precio}");
+                _logger.LogInformation($"ItemCompra: DispositivoId={item.DispositivoId}, Cantidad={item.Cantidad}, Precio={item.Precio}");
             }
 
             // Agregar la compra al contexto

@@ -181,44 +181,44 @@ GO
 
 -- PASO 7: Insertar Items de Compra
 INSERT INTO [dbo].[ItemCompra] 
-([IdDispositivo], [IdCompra], [Descripcion], [DispositivoId], [CompraId], [Precio], [Cantidad])
+([DispositivoId], [CompraId], [Descripcion], [Precio], [Cantidad])
 VALUES
 -- Compra 1: iPhone 14 Pro
-(1, 1, 'iPhone 14 Pro 256GB color negro, pantalla 6.1 pulgadas', 1, 1, 1199.99, 1),
+(1, 1, 'iPhone 14 Pro 256GB color negro, pantalla 6.1 pulgadas', 1199.99, 1),
 
 -- Compra 2: Galaxy S23 Ultra
-(7, 2, 'Samsung Galaxy S23 Ultra 256GB con S Pen integrado', 7, 2, 1099.99, 1),
+(7, 2, 'Samsung Galaxy S23 Ultra 256GB con S Pen integrado', 1099.99, 1),
 
 -- Compra 3: 2 móviles (iPhone + Xiaomi)
-(4, 3, 'iPhone 13 256GB azul, uso personal', 4, 3, 799.99, 1),
-(10, 3, 'Xiaomi 13 Pro negro, cámara profesional', 10, 3, 999.99, 1),
+(4, 3, 'iPhone 13 256GB azul, uso personal',  799.99, 1),
+(10, 3, 'Xiaomi 13 Pro negro, cámara profesional',  999.99, 1),
 
 -- Compra 4: iPhone 13 + Galaxy A54
-(5, 4, 'iPhone 13 128GB rosa, gama media', 5, 4, 699.99, 1),
-(8, 4, 'Galaxy A54 5G 256GB blanco, batería larga duración', 8, 4, 449.99, 1),
+(5, 4, 'iPhone 13 128GB rosa, gama media', 699.99, 1),
+(8, 4, 'Galaxy A54 5G 256GB blanco, batería larga duración', 449.99, 1),
 
 -- Compra 5: Xiaomi 13 Pro
-(11, 5, 'Xiaomi 13 Pro 512GB blanco, versión premium', 11, 5, 999.99, 1),
+(11, 5, 'Xiaomi 13 Pro 512GB blanco, versión premium',  999.99, 1),
 
 -- Compra 6: 3 móviles económicos
-(9, 6, 'Galaxy A54 128GB negro, relación calidad-precio', 9, 6, 399.99, 1),
-(17, 6, 'Realme GT3 256GB negro, carga rápida 240W', 17, 6, 649.99, 1),
-(5, 6, 'iPhone 13 128GB rosa, segunda unidad', 5, 6, 699.99, 1),
+(9, 6, 'Galaxy A54 128GB negro, relación calidad-precio',  399.99, 1),
+(17, 6, 'Realme GT3 256GB negro, carga rápida 240W',  649.99, 1),
+(5, 6, 'iPhone 13 128GB rosa, segunda unidad',  699.99, 1),
 
 -- Compra 7: 2 Pixel 7 Pro
-(12, 7, 'Google Pixel 7 Pro 256GB blanco, Android puro', 12, 7, 899.99, 2),
+(12, 7, 'Google Pixel 7 Pro 256GB blanco, Android puro',  899.99, 2),
 
 -- Compra 8: OnePlus + Huawei
-(14, 8, 'OnePlus 11 5G verde, pantalla AMOLED 120Hz', 14, 8, 849.99, 1),
-(15, 8, 'Huawei P60 Pro dorado, cámara Leica', 15, 8, 949.99, 1),
+(14, 8, 'OnePlus 11 5G verde, pantalla AMOLED 120Hz',  849.99, 1),
+(15, 8, 'Huawei P60 Pro dorado, cámara Leica',  949.99, 1),
 
 -- Compra 9: 4 Galaxy A54 (compra empresarial)
-(8, 9, 'Pack 4 Galaxy A54 5G 256GB para empresa', 8, 9, 449.99, 4),
+(8, 9, 'Pack 4 Galaxy A54 5G 256GB para empresa',  449.99, 4),
 
 -- Compra 10: Múltiples premium
-(2, 10, 'iPhone 14 Pro 512GB plata, máximo almacenamiento', 2, 10, 1399.99, 1),
-(6, 10, 'Galaxy S23 Ultra 512GB verde, máxima potencia', 6, 10, 1299.99, 1),
-(16, 10, 'Oppo Find X5 Pro azul, diseño premium', 16, 10, 799.99, 1);
+(2, 10, 'iPhone 14 Pro 512GB plata, máximo almacenamiento', 1399.99, 1),
+(6, 10, 'Galaxy S23 Ultra 512GB verde, máxima potencia',  1299.99, 1),
+(16, 10, 'Oppo Find X5 Pro azul, diseño premium', 799.99, 1);
 GO
 
 -- PASO 8: Insertar Reseñas

@@ -302,8 +302,6 @@ namespace AppForSEII2526.API.Migrations
                     DispositivoId = table.Column<int>(type: "int", nullable: false),
                     CompraId = table.Column<int>(type: "int", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    IdDispositivo = table.Column<int>(type: "int", nullable: false),
-                    IdCompra = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false)
                 },

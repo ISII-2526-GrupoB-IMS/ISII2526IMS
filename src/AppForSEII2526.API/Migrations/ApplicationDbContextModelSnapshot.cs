@@ -260,12 +260,6 @@ namespace AppForSEII2526.API.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("IdCompra")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdDispositivo")
-                        .HasColumnType("int");
-
                     b.Property<double>("Precio")
                         .HasPrecision(10, 2)
                         .HasColumnType("float(10)");

@@ -60,7 +60,7 @@ VALUES
  INSERT INTO [dbo].[ItemCompra]
     ([IdDispositivo], [IdCompra], [Descripcion], [DispositivoId], [CompraId], [Precio], [Cantidad])
     VALUES
-    (1, 1, 'Galaxy S24 Ultra 512GB', 1, 1, 1399.99, 1),
-    (1, 2, 'Galaxy S24 Ultra 512GB', 1, 2, 1399.99, 1),
-    (1, 3, 'Galaxy S24 Ultra 512GB', 1, 3, 1399.99, 1);
+    (1, 1, 'Galaxy S24 Ultra 512GB', 1399.99, 1),
+    (1, 2, 'Galaxy S24 Ultra 512GB', 1399.99, 1),
+    (1, 3, 'Galaxy S24 Ultra 512GB', 1399.99, 1);
     
