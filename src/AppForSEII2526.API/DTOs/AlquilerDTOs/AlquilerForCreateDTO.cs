@@ -4,12 +4,7 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
 {
     public class AlquilerForCreateDTO
     {
-        private int id;
-        private double precioTotal;
-        private DateTime fechaAlquiler;
-        private string nombreUsuario1;
-        private string nombreUsuario2;
-        private string v;
+
 
         public AlquilerForCreateDTO(string nombreUsuario, string apellidosUsuario, string direccionEntrega, TiposMetodoPago metodoPago, 
             DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta, IList<ItemAlquilerDTO> itemsAlquiler)

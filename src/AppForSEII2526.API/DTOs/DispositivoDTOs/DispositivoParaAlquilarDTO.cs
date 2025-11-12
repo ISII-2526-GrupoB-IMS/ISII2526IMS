@@ -1,4 +1,6 @@
-﻿namespace AppForSEII2526.API.DTOs.DispositivoDTOs
+﻿
+
+namespace AppForSEII2526.API.DTOs.DispositivoDTOs
 {
     public class DispositivoParaAlquilarDTO
     {
@@ -16,6 +18,7 @@
         public int Id { get; set; }
 
         //MODELO
+        [Required]
 
         public Modelo Modelo { get; set; }
 
@@ -47,8 +50,16 @@
         [Display(Name = "Año")]
         public double Año { get; set; }
 
-
-
-
+        public override bool Equals(object? obj)
+        {
+            return obj is DispositivoParaAlquilarDTO dTO &&
+                   Id == dTO.Id &&
+                   EqualityComparer<Modelo>.Default.Equals(Modelo, dTO.Modelo) &&
+                   Marca == dTO.Marca &&
+                   Color == dTO.Color &&
+                   NombreDispositivo == dTO.NombreDispositivo &&
+                   PrecioParaAlquiler == dTO.PrecioParaAlquiler &&
+                   Año == dTO.Año;
+        }
     }
 }
