@@ -1,4 +1,5 @@
-﻿namespace AppForSEII2526.API.DTOs.DispositivoDTOs
+﻿
+namespace AppForSEII2526.API.DTOs.DispositivoDTOs
 {
     public class DispositivoParaComprarDTO
     {
@@ -39,5 +40,16 @@
         [Display(Name = "Precio para compra")]
         [Precision(10, 2)]
         public double PrecioParaCompra { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is DispositivoParaComprarDTO dTO &&
+                   Id == dTO.Id &&
+                   NombreDispositivo == dTO.NombreDispositivo &&
+                   Marca == dTO.Marca &&
+                   EqualityComparer<Modelo>.Default.Equals(Modelo, dTO.Modelo) &&
+                   Color == dTO.Color &&
+                   PrecioParaCompra == dTO.PrecioParaCompra;
+        }
     }
 }
