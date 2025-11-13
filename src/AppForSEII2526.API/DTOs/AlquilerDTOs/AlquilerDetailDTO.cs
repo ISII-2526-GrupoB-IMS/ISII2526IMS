@@ -1,4 +1,5 @@
-﻿using static Alquiler;
+﻿using AppForSEII2526.API.Models;
+using static Alquiler;
 
 namespace AppForSEII2526.API.DTOs.AlquilerDTOs
 {
@@ -48,14 +49,15 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
         {
             return obj is AlquilerDetailDTO dTO &&
                    Id == dTO.Id &&
-                   FechaAlquiler == dTO.FechaAlquiler &&
+                   FechaAlquiler.Day == dTO.FechaAlquiler.Day &&
                    NombreUsuario == dTO.NombreUsuario &&
                    ApellidosUsuario == dTO.ApellidosUsuario &&
                    DireccionEntrega == dTO.DireccionEntrega &&
                    MetodoPago == dTO.MetodoPago &&
-                   EqualityComparer<IList<ItemAlquilerDTO>>.Default.Equals(ItemsAlquiler, dTO.ItemsAlquiler) &&
-                   FechaAlquilerDesde == dTO.FechaAlquilerDesde &&
-                   FechaAlquilerHasta == dTO.FechaAlquilerHasta;
+                   ItemsAlquiler.SequenceEqual(dTO.ItemsAlquiler) &&
+                   //La fecha se ajusta al mismo día para evitar errores por diferencias en horas/minutos/segundos
+                   FechaAlquilerDesde.Day == dTO.FechaAlquilerDesde.Day &&
+                   FechaAlquilerHasta.Day == dTO.FechaAlquilerHasta.Day;
         }
 
         public override int GetHashCode()
