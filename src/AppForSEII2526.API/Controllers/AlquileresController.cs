@@ -76,7 +76,7 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("RentalItems", "Error! You must include at least one device to be rented");
 
             //we must relate the Rental to the User
-            var user = await _context.Users.FirstOrDefaultAsync(au => au.UserName == alquilerForCreate.NombreUsuario);
+            var user = await _context.Users.FirstOrDefaultAsync(au => au.NombreUsuario == alquilerForCreate.NombreUsuario);
             if (user == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
 
@@ -117,7 +117,7 @@ namespace AppForSEII2526.API.Controllers
                     //we must check that there is enough quantity to be rented in the database
                     if ((dispositivo == null) || (dispositivo.NumeroDeDispositivosAlquilados >= dispositivo.CantidadParaAlquilar))
                     {
-                        ModelState.AddModelError("RentalItems", $"Error! Movie titled '{item.NombreDispositivo}' is not available for being rented from {alquilerForCreate.FechaAlquilerDesde.ToShortDateString()} to {alquilerForCreate.FechaAlquilerHasta.ToShortDateString()}");
+                        ModelState.AddModelError("RentalItems", $"Error! Device with name'{item.NombreDispositivo}' is not available for being rented from {alquilerForCreate.FechaAlquilerDesde.ToShortDateString()} to {alquilerForCreate.FechaAlquilerHasta.ToShortDateString()}");
                     }
                     else
                     {
