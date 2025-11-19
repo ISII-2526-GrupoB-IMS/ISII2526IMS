@@ -17,7 +17,7 @@ namespace AppForSEII2526.API.Models
         }
 
         // DESCRIPCIÓN
-        [Required]
+        
         [StringLength(150, ErrorMessage = "La descripción no puede ser superior a 150 caracteres.")]
         public string? Descripcion { get; set; }
 

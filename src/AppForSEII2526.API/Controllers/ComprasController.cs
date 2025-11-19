@@ -145,10 +145,7 @@ namespace AppForSEII2526.API.Controllers
                 // NO establecer manualmente IdDispositivo ni Dispositivo
                 // Entity Framework lo hará automáticamente por la relación
 
-                // Asignar solo la descripción
-                itemCompra.Descripcion = string.IsNullOrEmpty(itemDTO.Descripcion)
-                    ? $"{dispositivo.Marca} {dispositivo.Modelo.NombreModelo} - {dispositivo.Color}"
-                    : itemDTO.Descripcion;
+                itemCompra.Descripcion = itemDTO.Descripcion;
 
                 // Agregar el item a la compra
                 compra.ItemsCompra.Add(itemCompra);

@@ -256,7 +256,6 @@ namespace AppForSEII2526.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 

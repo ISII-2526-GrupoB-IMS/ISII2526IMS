@@ -58,7 +58,7 @@ VALUES
     (3, '2024-10-25', 1399.99, 1, 'user-cliente-001');
 
  INSERT INTO [dbo].[ItemCompra]
-    ([IdDispositivo], [IdCompra], [Descripcion], [DispositivoId], [CompraId], [Precio], [Cantidad])
+    ([DispositivoId], [CompraId], [Descripcion],  [Precio], [Cantidad])
     VALUES
     (1, 1, 'Galaxy S24 Ultra 512GB', 1399.99, 1),
     (1, 2, 'Galaxy S24 Ultra 512GB', 1399.99, 1),

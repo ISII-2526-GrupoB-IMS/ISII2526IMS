@@ -3,7 +3,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
     public class CompraItemDTO
     {
-        public CompraItemDTO(string marca, string modelo, string color, double precio, int cantidad ,string descripcion = "")
+        public CompraItemDTO(string marca, string modelo, string color, double precio, int cantidad , string? descripcion = null)
         {
             
             Marca = marca;
@@ -28,7 +28,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
         [Display(Name = "Precio para compra")]
         [Precision(10, 2)]
         public double Precio { get; set; }
-        [Required]
+        
         [StringLength(150, ErrorMessage = "La descripcion no puede ser mayor de 150 caracteres")]
         public string Descripcion { get; set; }
 
