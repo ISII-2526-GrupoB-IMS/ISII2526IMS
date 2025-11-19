@@ -228,33 +228,33 @@ INSERT INTO [dbo].[Reseña]
 ([Id], [Titulo], [Pais], [FechaReseña], [CalificaciónGeneral] , [ApplicationUserId])
 VALUES
 -- Reseña 1
-(1, 'Excelente experiencia con el iPhone', 'España', '2024-09-16 15:30:00', 5, 'user-001'),
+(1, 'Excelente experiencia con el iPhone', 'España', '2024-09-16', 5, 'user-001'),
 
 -- Reseña 2
-(2, 'Galaxy S23 Ultra impresionante', 'México', '2024-09-19 22:15:00', 4, 'user-002'),
+(2, 'Galaxy S23 Ultra impresionante', 'México', '2024-09-19', 4, 'user-002'),
 
 -- Reseña 3
-(3, 'Buena compra de varios móviles', 'Argentina', '2024-09-23 13:50:00', 4, 'user-003'),
+(3, 'Buena compra de varios móviles', 'Argentina', '2024-09-23', 4, 'user-003'),
 
 -- Reseña 4
-(4, 'iPhone y Galaxy A54 combinados', 'Chile', '2024-09-26 09:45:00', 5, 'user-004'),
+(4, 'iPhone y Galaxy A54 combinados', 'Chile', '2024-09-26', 5, 'user-004'),
 
 -- Reseña 5
-(5, 'Xiaomi 13 Pro muy recomendable', 'Perú', '2024-09-29 17:00:00', 5, 'user-005'),
+(5, 'Xiaomi 13 Pro muy recomendable', 'Perú', '2024-09-29', 5, 'user-005'),
 
 -- Reseña 6
-(6, 'Compré 3 móviles económicos, contento', 'España', '2024-10-03 20:30:00', 4, 'user-001'),
+(6, 'Compré 3 móviles económicos, contento', 'España', '2024-10-03', 4, 'user-001'),
 
 -- Reseña 7
-(7, 'Pixel 7 Pro, buen rendimiento', 'México', '2024-10-06 08:00:00', 4, 'user-002'),
+(7, 'Pixel 7 Pro, buen rendimiento', 'México', '2024-10-06', 4, 'user-002'),
 
 -- Reseña 8
-(8, 'OnePlus y Huawei cumplen expectativas', 'Argentina', '2024-10-09 11:40:00', 4, 'user-003'),
+(8, 'OnePlus y Huawei cumplen expectativas', 'Argentina', '2024-10-09', 4, 'user-003'),
 
 -- Reseña 9
-(9, 'Galaxy A54 para empresa, excelente', 'Chile', '2024-10-13 10:20:00', 5, 'user-004'),
+(9, 'Galaxy A54 para empresa, excelente', 'Chile', '2024-10-13', 5, 'user-004'),
 -- Reseña 10
-(10, 'Móviles premium, muy satisfecho', 'Perú', '2024-10-16 19:00:00', 5, 'user-005');
+(10, 'Móviles premium, muy satisfecho', 'Perú', '2024-10-16', 5, 'user-005');
 
 SET IDENTITY_INSERT [dbo].[Reseña] OFF;
 GO
