@@ -34,7 +34,7 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
         [Required(AllowEmptyStrings = false, ErrorMessage = "Porvafor, introduzca dirección de entrega")]
         public string DireccionEntrega { get; set; }
 
-        [EmailAddress]
+      
         [Required]
         public string NombreUsuario { get; set; }
 
