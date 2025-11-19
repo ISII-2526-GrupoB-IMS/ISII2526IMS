@@ -1,10 +1,9 @@
-﻿using System;
+﻿using AppForSEII2526.API.DTOs.AlquilerDTOs;
+using System;
 using System.Runtime.CompilerServices;
 
 public class Alquiler
 {
-
-
     public int Id { get; set; }
 
     [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
@@ -13,17 +12,11 @@ public class Alquiler
     public string DireccionEntrega { get; set; }
 
     public TiposMetodoPago MetodoPago { get; set; }
-    public enum TiposMetodoPago
-    {
-        TarjetaCredito,
-        PayPal,
-        Efectivo
-    }
 
     [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
     [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     [Display(Name = "Fecha de alquiler")]
-    public DateTime FechaAlquiler {  get; set; }
+    public DateTime FechaAlquiler { get; set; }
 
     [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
     [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -44,25 +37,25 @@ public class Alquiler
 
     public ApplicationUser ApplicationUser { get; set; }
 
-
     [Required]
-    public IList<AlquilarDispositivo> DispositivosAlquilados { get; set; }
-
+    public IList<ItemAlquiler> ItemsAlquiler { get; set; }
 
     public Alquiler()
     {
+        ItemsAlquiler = new List<ItemAlquiler>();
     }
 
-    public Alquiler(int id, string direccionEntrega, TiposMetodoPago metodoPago, DateTime fechaAlquiler, DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta, double precioTotal, IList<AlquilarDispositivo> dispositivosAlquilados)
+    public Alquiler(string direccionEntrega, string nombreUsuario, string apellidosUsuario,
+        ApplicationUser? user, DateTime fechaAlquilerDesde, DateTime fechaAlquilerHasta,
+        TiposMetodoPago metodoPago, List<ItemAlquiler> itemsAlquilers)
     {
-        Id = id;
         DireccionEntrega = direccionEntrega;
-        MetodoPago = metodoPago;
-        FechaAlquiler = fechaAlquiler;
+        ApplicationUser = user;  // Asignar a la propiedad
+        FechaAlquiler = DateTime.Now;  // Inicializar la fecha de alquiler
         FechaAlquilerDesde = fechaAlquilerDesde;
         FechaAlquilerHasta = fechaAlquilerHasta;
-        PrecioTotal = precioTotal;
-        DispositivosAlquilados = dispositivosAlquilados;
+        MetodoPago = metodoPago;  // Asignar a la propiedad
+        ItemsAlquiler = itemsAlquilers;  // Asignar a la propiedad
     }
 
     public override bool Equals(object? obj)
@@ -71,15 +64,15 @@ public class Alquiler
                Id == alquiler.Id &&
                DireccionEntrega == alquiler.DireccionEntrega &&
                MetodoPago == alquiler.MetodoPago &&
-               FechaAlquiler == alquiler.FechaAlquiler &&
-               FechaAlquilerDesde == alquiler.FechaAlquilerDesde &&
-               FechaAlquilerHasta == alquiler.FechaAlquilerHasta &&
+               FechaAlquiler.Day == alquiler.FechaAlquiler.Day &&
+               FechaAlquilerDesde.Day == alquiler.FechaAlquilerDesde.Day &&
+               FechaAlquilerHasta.Day == alquiler.FechaAlquilerHasta.Day &&
                PrecioTotal == alquiler.PrecioTotal &&
-               EqualityComparer<IList<AlquilarDispositivo>>.Default.Equals(DispositivosAlquilados, alquiler.DispositivosAlquilados);
+               EqualityComparer<IList<ItemAlquiler>>.Default.Equals(ItemsAlquiler, alquiler.ItemsAlquiler);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, DireccionEntrega, MetodoPago, FechaAlquiler, FechaAlquilerDesde, FechaAlquilerHasta, PrecioTotal, DispositivosAlquilados);
+        return HashCode.Combine(Id, DireccionEntrega, MetodoPago, FechaAlquiler, FechaAlquilerDesde, FechaAlquilerHasta, PrecioTotal, ItemsAlquiler);
     }
 }

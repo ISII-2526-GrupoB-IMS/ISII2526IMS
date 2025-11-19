@@ -203,11 +203,11 @@ namespace AppForSEII2526.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MetodoDePago = table.Column<int>(type: "int", nullable: false),
                     FechaCompra = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PrecioTotal = table.Column<double>(type: "float", nullable: false),
                     CantidadTotal = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MetodoDePago = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -275,21 +275,21 @@ namespace AppForSEII2526.API.Migrations
                 {
                     IdDispositivo = table.Column<int>(type: "int", nullable: false),
                     IdAlquiler = table.Column<int>(type: "int", nullable: false),
-                    DispositivoId = table.Column<int>(type: "int", nullable: false),
-                    AlquilerId = table.Column<int>(type: "int", nullable: false)
+                    Precio = table.Column<double>(type: "float", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AlquilarDispositivo", x => new { x.IdDispositivo, x.IdAlquiler });
                     table.ForeignKey(
-                        name: "FK_AlquilarDispositivo_Alquiler_AlquilerId",
-                        column: x => x.AlquilerId,
+                        name: "FK_AlquilarDispositivo_Alquiler_IdAlquiler",
+                        column: x => x.IdAlquiler,
                         principalTable: "Alquiler",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AlquilarDispositivo_Dispositivo_DispositivoId",
-                        column: x => x.DispositivoId,
+                        name: "FK_AlquilarDispositivo_Dispositivo_IdDispositivo",
+                        column: x => x.IdDispositivo,
                         principalTable: "Dispositivo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -299,17 +299,15 @@ namespace AppForSEII2526.API.Migrations
                 name: "ItemCompra",
                 columns: table => new
                 {
-                    IdDispositivo = table.Column<int>(type: "int", nullable: false),
-                    IdCompra = table.Column<int>(type: "int", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     DispositivoId = table.Column<int>(type: "int", nullable: false),
                     CompraId = table.Column<int>(type: "int", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     Precio = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemCompra", x => new { x.IdDispositivo, x.IdCompra });
+                    table.PrimaryKey("PK_ItemCompra", x => new { x.DispositivoId, x.CompraId });
                     table.ForeignKey(
                         name: "FK_ItemCompra_Compra_CompraId",
                         column: x => x.CompraId,
@@ -351,14 +349,9 @@ namespace AppForSEII2526.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AlquilarDispositivo_AlquilerId",
+                name: "IX_AlquilarDispositivo_IdAlquiler",
                 table: "AlquilarDispositivo",
-                column: "AlquilerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AlquilarDispositivo_DispositivoId",
-                table: "AlquilarDispositivo",
-                column: "DispositivoId");
+                column: "IdAlquiler");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alquiler_ApplicationUserId",
@@ -418,11 +411,6 @@ namespace AppForSEII2526.API.Migrations
                 name: "IX_ItemCompra_CompraId",
                 table: "ItemCompra",
                 column: "CompraId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ItemCompra_DispositivoId",
-                table: "ItemCompra",
-                column: "DispositivoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemReseña_IdReseña",
