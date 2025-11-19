@@ -56,7 +56,7 @@ namespace AppForSEII2526.API.Controllers
                 reseña.FechaReseña,
                 reseña.ItemsReseña
                     .Select(ir => new ReseñaItemDTO(
-                        ir.Dispositivo.Marca,
+                        ir.Dispositivo.NombreDispositivo,
                         ir.Dispositivo.Modelo.NombreModelo,
                         ir.Dispositivo.Año,
                         ir.Puntuacion,
