@@ -66,9 +66,11 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<DispositivoParaReseñarDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetDispositivosParaReseñar()
+        public async Task<ActionResult> GetDispositivosParaReseñar(string? marca = null, int? año = null)
         {
             var dispositivos = await _context.Dispositivo
+                .Where(d => (marca == null || d.Marca.Contains(marca)) &&
+                            (año == null || d.Año == año))
                 .Select(d => new DispositivoParaReseñarDTO(
                     d.Id,
                     d.NombreDispositivo,
@@ -76,10 +78,11 @@ namespace AppForSEII2526.API.Controllers
                     d.Color,
                     d.Año,
                     d.Modelo
-                    ))
+                ))
                 .ToListAsync();
 
             return Ok(dispositivos);
         }
+
     }
 }
