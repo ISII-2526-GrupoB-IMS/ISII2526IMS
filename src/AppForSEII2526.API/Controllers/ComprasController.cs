@@ -132,6 +132,14 @@ namespace AppForSEII2526.API.Controllers
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
+                // Validar marca
+                if (itemDTO.Marca.Contains("Xiaomi") || itemDTO.Marca.Contains("Huawei"))
+                {
+                    ModelState.AddModelError("TecnologiaNoDisponible",
+                        $"Error! Las tecnologias de estas marcas ya no estan disponibles, siguiendo recomendaciones de las autoridades competentes en materia de seguridad");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+
                 // Actualizar la cantidad disponible del dispositivo
                 dispositivo.CantidadParaCompra -= itemDTO.Cantidad;
 

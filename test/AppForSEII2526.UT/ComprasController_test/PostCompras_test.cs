@@ -24,20 +24,28 @@ namespace AppForSEII2526.UT.ComprasController_test
         private const string _modeloSinStock = "Xperia 1 VI";
         private const string _colorSinStock = "Morado";
 
+        private const string _marcaExamen = "Huawei";
+        private const string _modeloExamen = "Huawei P70 Pro";
+        private const string _colorExamen = "Dorado";
+
+
+
         public PostCompras_test()
         {
             // Datos base: Modelos
             var modelos = new List<Modelo>
             {
                 new Modelo("Galaxy S24 Ultra"),
-                new Modelo("Xperia 1 VI")
+                new Modelo("Xperia 1 VI"),
+                new Modelo("Huawei P70 Pro")
             };
 
             // Datos base: Dispositivos (uno con stock y otro sin stock)
             var dispositivos = new List<Dispositivo>
             {
                 new Dispositivo(modelos[0], _marcaValida, _colorValido, "Galaxy S24 Ultra 512GB", 1399.99, 59.99, 15, 5, 2024),
-                new Dispositivo(modelos[1], _marcaSinStock, _colorSinStock, "Xperia 1 VI 256GB", 1299.00, 52.99, 0, 3, 2024)
+                new Dispositivo(modelos[1], _marcaSinStock, _colorSinStock, "Xperia 1 VI 256GB", 1299.00, 52.99, 0, 3, 2024),
+                new Dispositivo(modelos[2],_marcaExamen, _colorExamen, "Huawei P70 Pro 256GB", 1499.99,63.99,10,10,2025)
             };
 
             // Datos base: Usuario
@@ -95,12 +103,21 @@ namespace AppForSEII2526.UT.ComprasController_test
                  }
             );
 
+            //Examen
+            var compraExamen = new CompraForCreateDTO(_nombreUsuario, _apellidosUsuario, _direccionEnvio, TiposMetodoPago.TarjetaCredito, 1,
+                 new List<CompraItemDTO>()
+                 {
+                    new CompraItemDTO(_marcaExamen, _modeloExamen, _colorExamen, 1499.99, 1, "No se puede comprar")
+                 }
+            );
+
             var allTests = new List<object[]>
             {
                  new object[] { compraSinItems, "Error. Necesitas seleccionar al menos un dispositivo para ser comprado." },
                  new object[] { compraUsuarioNoExiste, "Error! Usuario no registrado" },
                  new object[] { compraDispositivoNoExiste, "Error! No se encontró el dispositivo" },
                  new object[] { compraDispositivoSinStock, "Error! No hay suficiente stock del dispositivo" },
+                 new object[] { compraExamen, "Error! Las tecnologias de estas marcas ya no estan disponibles, siguiendo recomendaciones de las autoridades competentes en materia de seguridad" },
             };
 
             return allTests;
