@@ -2,6 +2,7 @@ using AppForSEII2526.API.DTOs.ReseñaDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -118,10 +119,19 @@ namespace AppForSEII2526.API.Controllers
                         d.Año == itemDTO.Año
                     );
 
+
                 if (dispositivo == null)
                 {
                     ModelState.AddModelError("DispositivoNoExiste",
                         $"Error! No se encontró el dispositivo: {itemDTO.NombreDispositivo} {itemDTO.Modelo} ({itemDTO.Año})");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+
+               
+
+                if (itemDTO.Comentario != null && !itemDTO.Comentario.StartsWith("Reseña para"))
+                {
+                    ModelState.AddModelError("ComentarioInvalido", "Error, el comentario de la reseña: debe empezar por Reseña para");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
