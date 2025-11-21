@@ -75,6 +75,9 @@ namespace AppForSEII2526.API.Controllers
             if (alquilerForCreate.ItemsAlquiler.Count == 0)
                 ModelState.AddModelError("RentalItems", "Error! You must include at least one device to be rented");
 
+            if (alquilerForCreate.DireccionEntrega == null || (!alquilerForCreate.DireccionEntrega.Contains("Calle") && !alquilerForCreate.DireccionEntrega.Contains("Carretera")))
+                ModelState.AddModelError("Rental dirección", "Error en la dirección de envío. Por favor,introduce una dirección válida incluyendo las palabras Calle o Carretera");
+            
             //we must relate the Rental to the User
             var user = await _context.Users.FirstOrDefaultAsync(au => au.NombreUsuario == alquilerForCreate.NombreUsuario);
             if (user == null)

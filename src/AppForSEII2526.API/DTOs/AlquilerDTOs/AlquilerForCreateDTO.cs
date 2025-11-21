@@ -11,7 +11,7 @@ namespace AppForSEII2526.API.DTOs.AlquilerDTOs
         {
             NombreUsuario = nombreUsuario ?? throw new ArgumentNullException(nameof(nombreUsuario));
             ApellidosUsuario = apellidosUsuario ?? throw new ArgumentNullException(nameof(apellidosUsuario));
-            DireccionEntrega = direccionEntrega ?? throw new ArgumentNullException(nameof(direccionEntrega));
+            DireccionEntrega = direccionEntrega;
             MetodoPago = metodoPago ;
             FechaAlquilerDesde = fechaAlquilerDesde;
             FechaAlquilerHasta = fechaAlquilerHasta;

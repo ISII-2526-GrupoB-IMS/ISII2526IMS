@@ -69,6 +69,8 @@ namespace AppForSEII2526.UT.ReseñasController_test
                 }
             );
 
+            
+
             // Caso 3: Dispositivo no existe
             var reseñaDispositivoNoExiste = new ReseñaForCreateDTO(
                 _titulo,
@@ -80,11 +82,27 @@ namespace AppForSEII2526.UT.ReseñasController_test
                 }
             );
 
+            // Caso 4: Comentario inválido
+            var reseñaComentarioInvalido = new ReseñaForCreateDTO(
+                _titulo,
+                _pais,
+                _nombreUsuario,
+                new List<ReseñaItemDTO>()
+                {
+                    new ReseñaItemDTO("iPhone 14 Pro 256GB", "iPhone 14 Pro", 2023, 5, "Bueno")
+                }
+            );
+
+
+
+
+
             return new List<object[]>
             {
                 new object[] { reseñaSinItems, "Error. Debes reseñar al menos un dispositivo" },
                 new object[] { reseñaUsuarioNoExiste, "Error! Usuario no registrado" },
-                new object[] { reseñaDispositivoNoExiste, "Error! No se encontró el dispositivo" }
+                new object[] { reseñaDispositivoNoExiste, "Error! No se encontró el dispositivo" },
+                new object[] { reseñaComentarioInvalido, "Error, el comentario de la reseña: debe empezar por Reseña para" }
             };
         }
 
@@ -124,8 +142,8 @@ namespace AppForSEII2526.UT.ReseñasController_test
 
             var items = new List<ReseñaItemDTO>()
             {
-                new ReseñaItemDTO(_nombreDisp1, _modelo1, 2023, 5, "Excelente rendimiento"),
-                new ReseñaItemDTO(_nombreDisp2, _modelo2, 2023, 4, "Muy buen dispositivo")
+                new ReseñaItemDTO(_nombreDisp1, _modelo1, 2023, 5, "Reseña para valorar el iPhone 14 Pro"),
+                new ReseñaItemDTO(_nombreDisp2, _modelo2, 2023, 4, "Reseña para valorar el Galaxy S23 Ultra")
             };
 
             var reseñaDTO = new ReseñaForCreateDTO(
