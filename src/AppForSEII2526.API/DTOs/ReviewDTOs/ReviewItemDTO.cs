@@ -1,14 +1,14 @@
-namespace AppForSEII2526.API.DTOs.ReseñaDTOs
+ï»¿namespace AppForSEII2526.API.DTOs.ReviewDTOs
 {
-    public class ReseñaItemDTO
+    public class ReviewItemDTO
     {
-        public ReseñaItemDTO(string nombreDispositivo, string modelo, double año, int puntuacion, string comentario = "")
+        public ReviewItemDTO(string nombreDispositivo, string modelo, double aÃ±o, int puntuacion, string comentario = "")
         {
 
 
             NombreDispositivo = nombreDispositivo;
             Modelo = modelo;
-            Año = año;
+            AÃ±o = aÃ±o;
             Puntuacion = puntuacion;
             Comentario = comentario;
 
@@ -20,13 +20,13 @@ namespace AppForSEII2526.API.DTOs.ReseñaDTOs
         public string Modelo { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(1998, 2025, ErrorMessage = "El año mínimo es 1998 y el máximo 2025")]
-        [Display(Name = "Año")]
-        public double Año { get; set; }
+        [Range(1998, 2025, ErrorMessage = "El aÃ±o mÃ­nimo es 1998 y el mÃ¡ximo 2025")]
+        [Display(Name = "AÃ±o")]
+        public double AÃ±o { get; set; }
 
         [Required]
-        [Range(1, 5, ErrorMessage = "La puntuación debe estar entre 1 y 5.")]
-        [Display(Name = "Puntuación")]
+        [Range(1, 5, ErrorMessage = "La puntuaciÃ³n debe estar entre 1 y 5.")]
+        [Display(Name = "PuntuaciÃ³n")]
         public int Puntuacion { get; set; }
 
         [Required]
@@ -38,18 +38,18 @@ namespace AppForSEII2526.API.DTOs.ReseñaDTOs
 
         public override bool Equals(object? obj)
         {
-            return obj is ReseñaItemDTO dTO &&
+            return obj is ReviewItemDTO dTO &&
 
                    NombreDispositivo == dTO.NombreDispositivo &&
                    Modelo == dTO.Modelo &&
-                   Año == dTO.Año &&
+                   AÃ±o == dTO.AÃ±o &&
                    Puntuacion == dTO.Puntuacion &&
                    Comentario == dTO.Comentario;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(NombreDispositivo, Modelo, Año, Puntuacion, Comentario);
+            return HashCode.Combine(NombreDispositivo, Modelo, AÃ±o, Puntuacion, Comentario);
         }
     }
 }

@@ -2,19 +2,19 @@
 
 namespace AppForSEII2526.API.Models
 {
-    [PrimaryKey(nameof(IdDispositivo), nameof(IdReseña))]
-    public class ItemReseña
+    [PrimaryKey(nameof(IdDispositivo), nameof(IdReview))]
+    public class ItemReview
     {
-        public ItemReseña() { }
+        public ItemReview() { }
 
-        public ItemReseña(string comentario, int puntuacion, Dispositivo dispositivo, Reseña reseña)
+        public ItemReview(string comentario, int puntuacion, Dispositivo dispositivo, Review Review)
         {
             Comentario = comentario;
             Puntuacion = puntuacion;
             Dispositivo = dispositivo;
             IdDispositivo = dispositivo.Id;
-            Reseña = reseña;
-            IdReseña = reseña.Id;
+            Review = Review;
+            IdReview = Review.Id;
         }
 
 
@@ -31,7 +31,7 @@ namespace AppForSEII2526.API.Models
         [Display(Name = "Puntuación")]
         public int Puntuacion { get; set; }
 
-        // DISPOSITIVO reseñado
+        // DISPOSITIVO Reviewdo
         [Required]
         public Dispositivo Dispositivo { get; set; }
 
@@ -39,13 +39,13 @@ namespace AppForSEII2526.API.Models
         [ForeignKey("Dispositivo")]
         public int IdDispositivo { get; set; }
 
-        // RESEÑA a la que pertenece este ítem
+        // Review a la que pertenece este ítem
         [Required]
-        public Reseña Reseña { get; set; }
+        public Review Review { get; set; }
 
         [Required]
-        [ForeignKey("Reseña")]
-        public int IdReseña { get; set; }
+        [ForeignKey("Review")]
+        public int IdReview { get; set; }
 
 
 

@@ -2,18 +2,18 @@ using AppForSEII2526.API.Models;
 using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace AppForSEII2526.API.DTOs.ReseñaDTOs
+namespace AppForSEII2526.API.DTOs.ReviewDTOs
 {
-    public class ReseñaDetailDTO
+    public class ReviewDetailDTO
     {
 
-        public ReseñaDetailDTO(string nombreUsuario, string pais, string titulo, DateTime fechaReseña, IList<ReseñaItemDTO> itemsReseña)
+        public ReviewDetailDTO(string nombreUsuario, string pais, string titulo, DateTime fechaReview, IList<ReviewItemDTO> itemsReview)
         {
             NombreUsuario = nombreUsuario;
             Pais = pais;
             Titulo = titulo;
-            FechaReseña = fechaReseña;
-            ItemsReseña = itemsReseña;
+            FechaReview = fechaReview;
+            ItemsReview = itemsReview;
 
         }
 
@@ -30,9 +30,9 @@ namespace AppForSEII2526.API.DTOs.ReseñaDTOs
         [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Fecha de la reseña")]
-        public DateTime FechaReseña { get; set; }
+        public DateTime FechaReview { get; set; }
 
 
-        public IList<ReseñaItemDTO> ItemsReseña { get; set; }
+        public IList<ReviewItemDTO> ItemsReview { get; set; }
     }
 }

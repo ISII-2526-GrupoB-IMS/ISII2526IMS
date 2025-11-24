@@ -7,24 +7,24 @@ using System.Linq;
 
 namespace AppForSEII2526.API.Models
 {
-    public class Reseña
+    public class Review
     {
-        public Reseña() { }
+        public Review() { }
 
-        public Reseña(int id, string titulo, string pais, DateTime fechaReseña, IList<ItemReseña> itemsReseña, ApplicationUser applicationUser)
+        public Review(int id, string titulo, string pais, DateTime fechaReview, IList<ItemReview> itemsReview, ApplicationUser applicationUser)
         {
             Id = id;
             Titulo = titulo;
             Pais = pais;
            
-            FechaReseña = fechaReseña;
-            ItemsReseña = itemsReseña ?? new List<ItemReseña>();
+            FechaReview = fechaReview;
+            ItemsReview = itemsReview ?? new List<ItemReview>();
 
             // ✅ Calcular CalificaciónGeneral solo si hay elementos
-            CalificaciónGeneral = (ItemsReseña != null && ItemsReseña.Any())
-                ? ItemsReseña.Average(item => item.Puntuacion)
+            CalificaciónGeneral = (ItemsReview != null && ItemsReview.Any())
+                ? ItemsReview.Average(item => item.Puntuacion)
                 : 0;
-            ItemsReseña = itemsReseña;
+            ItemsReview = itemsReview;
             ApplicationUser = applicationUser;
         }
 
@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.Models
 
         [Required]
         [StringLength(100, ErrorMessage = "El título no puede ser mayor de 100 caracteres")]
-        [Display(Name = "Título de la reseña")]
+        [Display(Name = "Título de la Review")]
         public string Titulo { get; set; }
 
         [Required]
@@ -44,24 +44,24 @@ namespace AppForSEII2526.API.Models
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         [Required, DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Fecha de la reseña")]
-        public DateTime FechaReseña { get; set; }
+        [Display(Name = "Fecha de la Review")]
+        public DateTime FechaReview { get; set; }
 
         [Range(1, 5, ErrorMessage = "La calificación general debe estar entre 1 y 5")]
         [Display(Name = "Calificación general")]
         public double CalificaciónGeneral { get; set; }
 
-        public IList<ItemReseña> ItemsReseña { get; set; }
+        public IList<ItemReview> ItemsReview { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public override bool Equals(object? obj)
         {
-            return obj is Reseña reseña &&
-                   Id == reseña.Id &&
-                   Titulo == reseña.Titulo &&
-                   Pais == reseña.Pais &&
-                   FechaReseña == reseña.FechaReseña &&
-                   CalificaciónGeneral == reseña.CalificaciónGeneral;
+            return obj is Review Review &&
+                   Id == Review.Id &&
+                   Titulo == Review.Titulo &&
+                   Pais == Review.Pais &&
+                   FechaReview == Review.FechaReview &&
+                   CalificaciónGeneral == Review.CalificaciónGeneral;
         }
 
         public override int GetHashCode()
@@ -70,7 +70,7 @@ namespace AppForSEII2526.API.Models
             hash.Add(Id);
             hash.Add(Titulo);
             hash.Add(Pais);
-            hash.Add(FechaReseña);
+            hash.Add(FechaReview);
             hash.Add(CalificaciónGeneral);
             return hash.ToHashCode();
         }
