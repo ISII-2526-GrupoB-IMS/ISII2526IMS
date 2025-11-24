@@ -1,4 +1,4 @@
-using AppForSEII2526.API.DTOs.ReviewDTOs;
+ï»¿using AppForSEII2526.API.DTOs.ReviewDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +59,7 @@ namespace AppForSEII2526.API.Controllers
                     .Select(ir => new ReviewItemDTO(
                         ir.Dispositivo.NombreDispositivo,
                         ir.Dispositivo.Modelo.NombreModelo,
-                        ir.Dispositivo.Año,
+                        ir.Dispositivo.AÃ±o,
                         ir.Puntuacion,
                         ir.Comentario
                     ))
@@ -97,9 +97,9 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            // Crear la entidad de Review (vacía al inicio)
+            // Crear la entidad de Review (vacÃ­a al inicio)
             var Review = new Review(
-                 0, // EF Core lo asignará automáticamente
+                 0, // EF Core lo asignarÃ¡ automÃ¡ticamente
         ReviewParaCrear.Titulo,
         ReviewParaCrear.Pais,
         ReviewParaCrear.FechaReview,
@@ -116,18 +116,18 @@ namespace AppForSEII2526.API.Controllers
                     .FirstOrDefaultAsync(d =>
                         d.NombreDispositivo == itemDTO.NombreDispositivo &&
                         d.Modelo.NombreModelo == itemDTO.Modelo &&
-                        d.Año == itemDTO.Año
+                        d.AÃ±o == itemDTO.AÃ±o
                     );
 
 
                 if (dispositivo == null)
                 {
                     ModelState.AddModelError("DispositivoNoExiste",
-                        $"Error! No se encontró el dispositivo: {itemDTO.NombreDispositivo} {itemDTO.Modelo} ({itemDTO.Año})");
+                        $"Error! No se encontrÃ³ el dispositivo: {itemDTO.NombreDispositivo} {itemDTO.Modelo} ({itemDTO.AÃ±o})");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
-               
+
 
                 if (itemDTO.Comentario != null && !itemDTO.Comentario.StartsWith("Review para"))
                 {
@@ -140,7 +140,7 @@ namespace AppForSEII2526.API.Controllers
                     itemDTO.Comentario,
                     itemDTO.Puntuacion,
                     dispositivo,
-                    Review 
+                    Review
                 );
 
                 Review.ItemsReview.Add(itemReview);
