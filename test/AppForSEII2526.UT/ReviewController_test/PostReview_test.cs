@@ -1,11 +1,11 @@
 ﻿using AppForSEII2526.API.Controllers;
-using AppForSEII2526.API.DTOs.ReseñaDTOs;
+using AppForSEII2526.API.DTOs.ReviewDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace AppForSEII2526.UT.ReseñasController_test
+namespace AppForSEII2526.UT.ReviewController_test
 {
-    public class PostReseñas_test : AppForSEII25264SqliteUT
+    public class PostReview_test : AppForSEII25264SqliteUT
     {
         private const string _usuarioEmail = "juan.perez@email.com";
         private const string _nombreUsuario = "Juan";
@@ -19,7 +19,7 @@ namespace AppForSEII2526.UT.ReseñasController_test
         private const string _modelo2 = "Galaxy S23 Ultra";
         private const string _nombreDisp2 = "Galaxy S23 Ultra 512GB";
 
-        public PostReseñas_test()
+        public PostReview_test()
         {
             // Crear modelos
             var modelos = new List<Modelo>()
@@ -48,48 +48,48 @@ namespace AppForSEII2526.UT.ReseñasController_test
         }
 
         // ----------------------------- TEST DE ERROR -----------------------------
-        public static IEnumerable<object[]> TestCasesPostReseña()
+        public static IEnumerable<object[]> TestCasesPostReview()
         {
             // Caso 1: Sin items
-            var reseñaSinItems = new ReseñaForCreateDTO(
+            var ReviewSinItems = new ReviewForCreateDTO(
                 _titulo,
                 _pais,
                 _nombreUsuario,
-                new List<ReseñaItemDTO>()
+                new List<ReviewItemDTO>()
             );
 
             // Caso 2: Usuario no existe
-            var reseñaUsuarioNoExiste = new ReseñaForCreateDTO(
+            var ReviewUsuarioNoExiste = new ReviewForCreateDTO(
                 _titulo,
                 _pais,
                 "Pedro",
-                new List<ReseñaItemDTO>()
+                new List<ReviewItemDTO>()
                 {
-                    new ReseñaItemDTO("iPhone 14 Pro 256GB", "iPhone 14 Pro", 2023, 5, "Bueno")
+                    new ReviewItemDTO("iPhone 14 Pro 256GB", "iPhone 14 Pro", 2023, 5, "Bueno")
                 }
             );
 
             
 
             // Caso 3: Dispositivo no existe
-            var reseñaDispositivoNoExiste = new ReseñaForCreateDTO(
+            var ReviewDispositivoNoExiste = new ReviewForCreateDTO(
                 _titulo,
                 _pais,
                 _nombreUsuario,
-                new List<ReseñaItemDTO>()
+                new List<ReviewItemDTO>()
                 {
-                    new ReseñaItemDTO("ModeloInexistente", "Nada", 2020, 3, "Inexistente")
+                    new ReviewItemDTO("ModeloInexistente", "Nada", 2020, 3, "Inexistente")
                 }
             );
 
             // Caso 4: Comentario inválido
-            var reseñaComentarioInvalido = new ReseñaForCreateDTO(
+            var ReviewComentarioInvalido = new ReviewForCreateDTO(
                 _titulo,
                 _pais,
                 _nombreUsuario,
-                new List<ReseñaItemDTO>()
+                new List<ReviewItemDTO>()
                 {
-                    new ReseñaItemDTO("iPhone 14 Pro 256GB", "iPhone 14 Pro", 2023, 5, "Bueno")
+                    new ReviewItemDTO("iPhone 14 Pro 256GB", "iPhone 14 Pro", 2023, 5, "Bueno")
                 }
             );
 
@@ -99,26 +99,26 @@ namespace AppForSEII2526.UT.ReseñasController_test
 
             return new List<object[]>
             {
-                new object[] { reseñaSinItems, "Error. Debes reseñar al menos un dispositivo" },
-                new object[] { reseñaUsuarioNoExiste, "Error! Usuario no registrado" },
-                new object[] { reseñaDispositivoNoExiste, "Error! No se encontró el dispositivo" },
-                new object[] { reseñaComentarioInvalido, "Error, el comentario de la reseña: debe empezar por Reseña para" }
+                new object[] { ReviewSinItems, "Error. Debes Reviewr al menos un dispositivo" },
+                new object[] { ReviewUsuarioNoExiste, "Error! Usuario no registrado" },
+                new object[] { ReviewDispositivoNoExiste, "Error! No se encontró el dispositivo" },
+                new object[] { ReviewComentarioInvalido, "Error, el comentario de la Review: debe empezar por Review para" }
             };
         }
 
         [Theory]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
-        [MemberData(nameof(TestCasesPostReseña))]
-        public async Task CrearReseña_Error_Test(ReseñaForCreateDTO reseñaDTO, string errorEsperado)
+        [MemberData(nameof(TestCasesPostReview))]
+        public async Task CrearReview_Error_Test(ReviewForCreateDTO ReviewDTO, string errorEsperado)
         {
             // Arrange
-            var mock = new Mock<ILogger<ReseñasController>>();
-            ILogger<ReseñasController> logger = mock.Object;
-            var controller = new ReseñasController(_context, logger);
+            var mock = new Mock<ILogger<ReviewController>>();
+            ILogger<ReviewController> logger = mock.Object;
+            var controller = new ReviewController(_context, logger);
 
             // Act
-            var result = await controller.CrearReseña(reseñaDTO);
+            var result = await controller.CrearReview(ReviewDTO);
 
             // Assert
             var badResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -133,20 +133,20 @@ namespace AppForSEII2526.UT.ReseñasController_test
         [Fact]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
-        public async Task CrearReseña_Success_Test()
+        public async Task CrearReview_Success_Test()
         {
             // Arrange
-            var mock = new Mock<ILogger<ReseñasController>>();
-            ILogger<ReseñasController> logger = mock.Object;
-            var controller = new ReseñasController(_context, logger);
+            var mock = new Mock<ILogger<ReviewController>>();
+            ILogger<ReviewController> logger = mock.Object;
+            var controller = new ReviewController(_context, logger);
 
-            var items = new List<ReseñaItemDTO>()
+            var items = new List<ReviewItemDTO>()
             {
-                new ReseñaItemDTO(_nombreDisp1, _modelo1, 2023, 5, "Reseña para valorar el iPhone 14 Pro"),
-                new ReseñaItemDTO(_nombreDisp2, _modelo2, 2023, 4, "Reseña para valorar el Galaxy S23 Ultra")
+                new ReviewItemDTO(_nombreDisp1, _modelo1, 2023, 5, "Review para valorar el iPhone 14 Pro"),
+                new ReviewItemDTO(_nombreDisp2, _modelo2, 2023, 4, "Review para valorar el Galaxy S23 Ultra")
             };
 
-            var reseñaDTO = new ReseñaForCreateDTO(
+            var ReviewDTO = new ReviewForCreateDTO(
                 _titulo,
                 _pais,
                 _nombreUsuario,
@@ -155,7 +155,7 @@ namespace AppForSEII2526.UT.ReseñasController_test
 
             var fecha = DateTime.Now;
 
-            var expected = new ReseñaDetailDTO(
+            var expected = new ReviewDetailDTO(
                 _nombreUsuario,
                 _pais,
                 _titulo,
@@ -164,17 +164,17 @@ namespace AppForSEII2526.UT.ReseñasController_test
             );
 
             // Act
-            var result = await controller.CrearReseña(reseñaDTO);
+            var result = await controller.CrearReview(ReviewDTO);
 
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-            var actual = Assert.IsType<ReseñaDetailDTO>(createdResult.Value);
+            var actual = Assert.IsType<ReviewDetailDTO>(createdResult.Value);
 
 
             Assert.Equal(expected.NombreUsuario, actual.NombreUsuario);
             Assert.Equal(expected.Pais, actual.Pais);
             Assert.Equal(expected.Titulo, actual.Titulo);
-            Assert.Equal(expected.ItemsReseña, actual.ItemsReseña);
-            Assert.Equal(expected.FechaReseña, actual.FechaReseña, TimeSpan.FromSeconds(1));
+            Assert.Equal(expected.ItemsReview, actual.ItemsReview);
+            Assert.Equal(expected.FechaReview, actual.FechaReview, TimeSpan.FromSeconds(1));
 
 
             

@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppForSEII2526.UT.DispositivosController_test
 {
-    public class GetDispositivosParaReseñar_test : AppForSEII25264SqliteUT
+    public class GetDispositivosParaReview_test : AppForSEII25264SqliteUT
     {
-        public GetDispositivosParaReseñar_test()
+        public GetDispositivosParaReview_test()
         {
             // === MODELOS ===
             var modelos = new List<Modelo>
@@ -74,7 +74,7 @@ namespace AppForSEII2526.UT.DispositivosController_test
         // =====================================================
         // =============== TEST CASES ACTUALIZADOS ==============
         // =====================================================
-        public static IEnumerable<object[]> TestCasesFor_GetDispositivosParaReseñar_OK()
+        public static IEnumerable<object[]> TestCasesFor_GetDispositivosParaReview_OK()
         {
             var testCases = new List<object[]>
             {
@@ -116,9 +116,9 @@ namespace AppForSEII2526.UT.DispositivosController_test
         // TEST PRINCIPAL
         // ===========================
         [Theory]
-        [MemberData(nameof(TestCasesFor_GetDispositivosParaReseñar_OK))]
+        [MemberData(nameof(TestCasesFor_GetDispositivosParaReview_OK))]
         [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetDispositivosParaReseñar_Filtros_Test(
+        public async Task GetDispositivosParaReview_Filtros_Test(
             string? marca,
             int? año,
             int cantidadEsperada)
@@ -127,11 +127,11 @@ namespace AppForSEII2526.UT.DispositivosController_test
             var controller = new DispositivoController(_context, null);
 
             // Act
-            var result = await controller.GetDispositivosParaReseñar(marca, año);
+            var result = await controller.GetDispositivosParaReview(marca, año);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var dispositivos = Assert.IsType<List<DispositivoParaReseñarDTO>>(okResult.Value);
+            var dispositivos = Assert.IsType<List<DispositivoParaReviewDTO>>(okResult.Value);
 
             Assert.Equal(cantidadEsperada, dispositivos.Count);
         }

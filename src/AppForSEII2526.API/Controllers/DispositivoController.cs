@@ -65,13 +65,13 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(IList<DispositivoParaReseñarDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetDispositivosParaReseñar(string? marca = null, int? año = null)
+        [ProducesResponseType(typeof(IList<DispositivoParaReviewDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetDispositivosParaReview(string? marca = null, int? año = null)
         {
             var dispositivos = await _context.Dispositivo
                 .Where(d => (marca == null || d.Marca.Contains(marca)) &&
                             (año == null || d.Año == año))
-                .Select(d => new DispositivoParaReseñarDTO(
+                .Select(d => new DispositivoParaReviewDTO(
                     d.Id,
                     d.NombreDispositivo,
                     d.Marca,

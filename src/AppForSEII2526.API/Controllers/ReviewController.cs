@@ -1,4 +1,4 @@
-using AppForSEII2526.API.DTOs.ReseñaDTOs;
+using AppForSEII2526.API.DTOs.ReviewDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,53 +10,53 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReseñasController : ControllerBase
+    public class ReviewController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<ReseñasController> _logger;
+        private readonly ILogger<ReviewController> _logger;
 
-        public ReseñasController(ApplicationDbContext context, ILogger<ReseñasController> logger)
+        public ReviewController(ApplicationDbContext context, ILogger<ReviewController> logger)
         {
             _context = context;
             _logger = logger;
         }
 
         // =====================================
-        // Obtener detalle de una reseña
+        // Obtener detalle de una Review
         // =====================================
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(ReseñaDetailDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ReviewDetailDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetDetalleReseña(int id)
+        public async Task<ActionResult> GetDetalleReview(int id)
         {
-            if (_context.Reseña == null)
+            if (_context.Review == null)
             {
-                _logger.LogError("Error: La tabla Reseña no existe");
+                _logger.LogError("Error: La tabla Review no existe");
                 return NotFound();
             }
 
-            var reseña = await _context.Reseña
+            var Review = await _context.Review
                 .Include(r => r.ApplicationUser)
-                .Include(r => r.ItemsReseña)
+                .Include(r => r.ItemsReview)
                     .ThenInclude(d => d.Dispositivo)
                         .ThenInclude(m => m.Modelo)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            if (reseña == null)
+            if (Review == null)
             {
-                _logger.LogError($"Error: Reseña con id {id} no existe");
+                _logger.LogError($"Error: Review con id {id} no existe");
                 return NotFound();
             }
 
             // Creamos el DTO de respuesta
-            var reseñaDTO = new ReseñaDetailDTO(
-                reseña.ApplicationUser.NombreUsuario,
-                reseña.Pais,
-                reseña.Titulo,
-                reseña.FechaReseña,
-                reseña.ItemsReseña
-                    .Select(ir => new ReseñaItemDTO(
+            var ReviewDTO = new ReviewDetailDTO(
+                Review.ApplicationUser.NombreUsuario,
+                Review.Pais,
+                Review.Titulo,
+                Review.FechaReview,
+                Review.ItemsReview
+                    .Select(ir => new ReviewItemDTO(
                         ir.Dispositivo.NombreDispositivo,
                         ir.Dispositivo.Modelo.NombreModelo,
                         ir.Dispositivo.Año,
@@ -66,49 +66,49 @@ namespace AppForSEII2526.API.Controllers
                     .ToList()
             );
 
-            return Ok(reseñaDTO);
+            return Ok(ReviewDTO);
         }
 
 
         // =====================================
-        // Crear una reseña nueva
+        // Crear una Review nueva
         // =====================================
         [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        [ProducesResponseType(typeof(ReseñaDetailDTO), (int)HttpStatusCode.Created)]
-        public async Task<ActionResult> CrearReseña(ReseñaForCreateDTO reseñaParaCrear)
+        [ProducesResponseType(typeof(ReviewDetailDTO), (int)HttpStatusCode.Created)]
+        public async Task<ActionResult> CrearReview(ReviewForCreateDTO ReviewParaCrear)
         {
-            // Validar que haya items en la reseña
-            if (reseñaParaCrear.ItemsReseña == null || reseñaParaCrear.ItemsReseña.Count == 0)
+            // Validar que haya items en la Review
+            if (ReviewParaCrear.ItemsReview == null || ReviewParaCrear.ItemsReview.Count == 0)
             {
-                ModelState.AddModelError("ItemsReseña", "Error. Debes reseñar al menos un dispositivo.");
+                ModelState.AddModelError("ItemsReview", "Error. Debes Reviewr al menos un dispositivo.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
             // Buscar el usuario
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.NombreUsuario == reseñaParaCrear.NombreUsuario);
+                .FirstOrDefaultAsync(u => u.NombreUsuario == ReviewParaCrear.NombreUsuario);
 
             if (user == null)
             {
-                ModelState.AddModelError("ReseñaUsuario", "Error! Usuario no registrado");
+                ModelState.AddModelError("ReviewUsuario", "Error! Usuario no registrado");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            // Crear la entidad de reseña (vacía al inicio)
-            var reseña = new Reseña(
+            // Crear la entidad de Review (vacía al inicio)
+            var Review = new Review(
                  0, // EF Core lo asignará automáticamente
-        reseñaParaCrear.Titulo,
-        reseñaParaCrear.Pais,
-        reseñaParaCrear.FechaReseña,
-        new List<ItemReseña>(),
+        ReviewParaCrear.Titulo,
+        ReviewParaCrear.Pais,
+        ReviewParaCrear.FechaReview,
+        new List<ItemReview>(),
         applicationUser: user
             );
 
-            // Procesar cada item de reseña
-            foreach (var itemDTO in reseñaParaCrear.ItemsReseña)
+            // Procesar cada item de Review
+            foreach (var itemDTO in ReviewParaCrear.ItemsReview)
             {
                 // Buscar el dispositivo
                 var dispositivo = await _context.Dispositivo
@@ -129,27 +129,27 @@ namespace AppForSEII2526.API.Controllers
 
                
 
-                if (itemDTO.Comentario != null && !itemDTO.Comentario.StartsWith("Reseña para"))
+                if (itemDTO.Comentario != null && !itemDTO.Comentario.StartsWith("Review para"))
                 {
-                    ModelState.AddModelError("ComentarioInvalido", "Error, el comentario de la reseña: debe empezar por Reseña para");
+                    ModelState.AddModelError("ComentarioInvalido", "Error, el comentario de la Review: debe empezar por Review para");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
-                // Crear el ItemReseña
-                var itemReseña = new ItemReseña(
+                // Crear el ItemReview
+                var itemReview = new ItemReview(
                     itemDTO.Comentario,
                     itemDTO.Puntuacion,
                     dispositivo,
-                    reseña 
+                    Review 
                 );
 
-                reseña.ItemsReseña.Add(itemReseña);
+                Review.ItemsReview.Add(itemReview);
             }
 
             // Log para debugging
-            _logger.LogInformation($"Creando reseña con {reseña.ItemsReseña.Count} items");
+            _logger.LogInformation($"Creando Review con {Review.ItemsReview.Count} items");
 
-            _context.Add(reseña);
+            _context.Add(Review);
 
             try
             {
@@ -158,26 +158,26 @@ namespace AppForSEII2526.API.Controllers
             catch (DbUpdateException ex)
             {
                 var inner = ex.InnerException?.Message ?? "No inner exception";
-                _logger.LogError($"Error al guardar la reseña: {ex}");
+                _logger.LogError($"Error al guardar la Review: {ex}");
                 _logger.LogError($"Inner Exception: {inner}");
-                return Conflict($"Error al guardar la reseña: {ex.Message}. Inner: {inner}");
+                return Conflict($"Error al guardar la Review: {ex.Message}. Inner: {inner}");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error general al guardar la reseña: {ex}");
-                return Conflict("Error al guardar la reseña: " + ex.Message);
+                _logger.LogError($"Error general al guardar la Review: {ex}");
+                return Conflict("Error al guardar la Review: " + ex.Message);
             }
 
             // Crear el DTO de respuesta
-            var reseñaDetail = new ReseñaDetailDTO(
-                reseña.ApplicationUser.NombreUsuario,
-                reseña.Pais,
-                reseña.Titulo,
-                reseña.FechaReseña,
-                reseñaParaCrear.ItemsReseña
+            var ReviewDetail = new ReviewDetailDTO(
+                Review.ApplicationUser.NombreUsuario,
+                Review.Pais,
+                Review.Titulo,
+                Review.FechaReview,
+                ReviewParaCrear.ItemsReview
             );
 
-            return CreatedAtAction("GetDetalleReseña", new { id = reseña.Id }, reseñaDetail);
+            return CreatedAtAction("GetDetalleReview", new { id = Review.Id }, ReviewDetail);
         }
     }
 }

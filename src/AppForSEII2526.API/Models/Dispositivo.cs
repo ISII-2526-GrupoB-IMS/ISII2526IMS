@@ -106,7 +106,7 @@ namespace AppForSEII2526.API.Models
         public IList<ItemCompra> ItemsCompra { get; set; }
 
         public IList<ItemAlquiler> ItemsAlquiler { get; set; }
-        public IList<ItemReseña> ItemsReseña { get; set; }
+        public IList<ItemReview> ItemsReview { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -124,7 +124,7 @@ namespace AppForSEII2526.API.Models
                    Calidad == dispositivo.Calidad &&
                    EqualityComparer<IList<ItemCompra>>.Default.Equals(ItemsCompra, dispositivo.ItemsCompra) &&
                    EqualityComparer<IList<ItemAlquiler>>.Default.Equals(ItemsAlquiler, dispositivo.ItemsAlquiler) &&
-                   EqualityComparer<IList<ItemReseña>>.Default.Equals(ItemsReseña, dispositivo.ItemsReseña);
+                   EqualityComparer<IList<ItemReview>>.Default.Equals(ItemsReview, dispositivo.ItemsReview);
         }
 
         public override int GetHashCode()
@@ -143,7 +143,7 @@ namespace AppForSEII2526.API.Models
             hash.Add(Calidad);
             hash.Add(ItemsCompra);
             hash.Add(ItemsAlquiler);
-            hash.Add(ItemsReseña);
+            hash.Add(ItemsReview);
             return hash.ToHashCode();
         }
     }

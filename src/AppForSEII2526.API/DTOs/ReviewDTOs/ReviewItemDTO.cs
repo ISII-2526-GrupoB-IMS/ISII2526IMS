@@ -1,8 +1,8 @@
-namespace AppForSEII2526.API.DTOs.ReseñaDTOs
+namespace AppForSEII2526.API.DTOs.ReviewDTOs
 {
-    public class ReseñaItemDTO
+    public class ReviewItemDTO
     {
-        public ReseñaItemDTO(string nombreDispositivo, string modelo, double año, int puntuacion, string comentario = "")
+        public ReviewItemDTO(string nombreDispositivo, string modelo, double año, int puntuacion, string comentario = "")
         {
 
 
@@ -38,7 +38,7 @@ namespace AppForSEII2526.API.DTOs.ReseñaDTOs
 
         public override bool Equals(object? obj)
         {
-            return obj is ReseñaItemDTO dTO &&
+            return obj is ReviewItemDTO dTO &&
 
                    NombreDispositivo == dTO.NombreDispositivo &&
                    Modelo == dTO.Modelo &&

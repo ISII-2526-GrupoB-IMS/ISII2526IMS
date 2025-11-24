@@ -220,22 +220,22 @@ namespace AppForSEII2526.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reseña",
+                name: "Review",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titulo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Pais = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    FechaReseña = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaReview = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CalificaciónGeneral = table.Column<double>(type: "float", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reseña", x => x.Id);
+                    table.PrimaryKey("PK_Review", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reseña_AspNetUsers_ApplicationUserId",
+                        name: "FK_Review_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -323,27 +323,27 @@ namespace AppForSEII2526.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ItemReseña",
+                name: "ItemReview",
                 columns: table => new
                 {
                     IdDispositivo = table.Column<int>(type: "int", nullable: false),
-                    IdReseña = table.Column<int>(type: "int", nullable: false),
+                    IdReview = table.Column<int>(type: "int", nullable: false),
                     Comentario = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Puntuacion = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemReseña", x => new { x.IdDispositivo, x.IdReseña });
+                    table.PrimaryKey("PK_ItemReview", x => new { x.IdDispositivo, x.IdReview });
                     table.ForeignKey(
-                        name: "FK_ItemReseña_Dispositivo_IdDispositivo",
+                        name: "FK_ItemReview_Dispositivo_IdDispositivo",
                         column: x => x.IdDispositivo,
                         principalTable: "Dispositivo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ItemReseña_Reseña_IdReseña",
-                        column: x => x.IdReseña,
-                        principalTable: "Reseña",
+                        name: "FK_ItemReview_Review_IdReview",
+                        column: x => x.IdReview,
+                        principalTable: "Review",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -413,13 +413,13 @@ namespace AppForSEII2526.API.Migrations
                 column: "CompraId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItemReseña_IdReseña",
-                table: "ItemReseña",
-                column: "IdReseña");
+                name: "IX_ItemReview_IdReview",
+                table: "ItemReview",
+                column: "IdReview");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reseña_ApplicationUserId",
-                table: "Reseña",
+                name: "IX_Review_ApplicationUserId",
+                table: "Review",
                 column: "ApplicationUserId");
         }
 
@@ -448,7 +448,7 @@ namespace AppForSEII2526.API.Migrations
                 name: "ItemCompra");
 
             migrationBuilder.DropTable(
-                name: "ItemReseña");
+                name: "ItemReview");
 
             migrationBuilder.DropTable(
                 name: "Alquiler");
@@ -463,7 +463,7 @@ namespace AppForSEII2526.API.Migrations
                 name: "Dispositivo");
 
             migrationBuilder.DropTable(
-                name: "Reseña");
+                name: "Review");
 
             migrationBuilder.DropTable(
                 name: "Modelo");

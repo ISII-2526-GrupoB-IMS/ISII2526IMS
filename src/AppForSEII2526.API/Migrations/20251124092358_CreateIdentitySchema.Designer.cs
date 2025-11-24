@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251119175343_CreateIdentitySchema")]
+    [Migration("20251124092358_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -273,12 +273,12 @@ namespace AppForSEII2526.API.Migrations
                     b.ToTable("ItemCompra");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.ItemReseña", b =>
+            modelBuilder.Entity("AppForSEII2526.API.Models.ItemReview", b =>
                 {
                     b.Property<int>("IdDispositivo")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdReseña")
+                    b.Property<int>("IdReview")
                         .HasColumnType("int");
 
                     b.Property<string>("Comentario")
@@ -289,11 +289,11 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<int>("Puntuacion")
                         .HasColumnType("int");
 
-                    b.HasKey("IdDispositivo", "IdReseña");
+                    b.HasKey("IdDispositivo", "IdReview");
 
-                    b.HasIndex("IdReseña");
+                    b.HasIndex("IdReview");
 
-                    b.ToTable("ItemReseña");
+                    b.ToTable("ItemReview");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Modelo", b =>
@@ -314,7 +314,7 @@ namespace AppForSEII2526.API.Migrations
                     b.ToTable("Modelo");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.Reseña", b =>
+            modelBuilder.Entity("AppForSEII2526.API.Models.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -328,7 +328,7 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<double>("CalificaciónGeneral")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("FechaReseña")
+                    b.Property<DateTime>("FechaReview")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Pais")
@@ -345,7 +345,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Reseña");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -550,29 +550,29 @@ namespace AppForSEII2526.API.Migrations
                     b.Navigation("Dispositivo");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.ItemReseña", b =>
+            modelBuilder.Entity("AppForSEII2526.API.Models.ItemReview", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.Dispositivo", "Dispositivo")
-                        .WithMany("ItemsReseña")
+                        .WithMany("ItemsReview")
                         .HasForeignKey("IdDispositivo")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppForSEII2526.API.Models.Reseña", "Reseña")
-                        .WithMany("ItemsReseña")
-                        .HasForeignKey("IdReseña")
+                    b.HasOne("AppForSEII2526.API.Models.Review", "Review")
+                        .WithMany("ItemsReview")
+                        .HasForeignKey("IdReview")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Dispositivo");
 
-                    b.Navigation("Reseña");
+                    b.Navigation("Review");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.Reseña", b =>
+            modelBuilder.Entity("AppForSEII2526.API.Models.Review", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Reseña")
+                        .WithMany("Review")
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
@@ -640,7 +640,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Navigation("Compra");
 
-                    b.Navigation("Reseña");
+                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra", b =>
@@ -654,7 +654,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.Navigation("ItemsCompra");
 
-                    b.Navigation("ItemsReseña");
+                    b.Navigation("ItemsReview");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Modelo", b =>
@@ -662,9 +662,9 @@ namespace AppForSEII2526.API.Migrations
                     b.Navigation("Dispositivos");
                 });
 
-            modelBuilder.Entity("AppForSEII2526.API.Models.Reseña", b =>
+            modelBuilder.Entity("AppForSEII2526.API.Models.Review", b =>
                 {
-                    b.Navigation("ItemsReseña");
+                    b.Navigation("ItemsReview");
                 });
 #pragma warning restore 612, 618
         }

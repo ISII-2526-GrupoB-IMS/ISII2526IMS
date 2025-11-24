@@ -1,8 +1,8 @@
 ﻿namespace AppForSEII2526.API.DTOs.DispositivoDTOs
 {
-    public class DispositivoParaReseñarDTO
+    public class DispositivoParaReviewDTO
     {
-        public DispositivoParaReseñarDTO(int id, string nombreDispositivo, string marca, string color, double año, Modelo modelo)
+        public DispositivoParaReviewDTO(int id, string nombreDispositivo, string marca, string color, double año, Modelo modelo)
         {
             Id = id;
             NombreDispositivo = nombreDispositivo;
