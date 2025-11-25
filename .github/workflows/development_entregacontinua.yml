@@ -2,18 +2,25 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 name: Build and deploy ASP.Net Core app to Azure Web App - entregacontinua
-
 on:
   push:
     branches:
+      #- MiguelAngel-CD
       - development
+    paths:
+      - 'src/AppForSEII2526.API**'
+      
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read #This is required for actions/checkout
+
+    env:
+      API: ./src/AppForSEII2526.API/AppForSEII2526.API.csproj
+      WEB: ./src/AppForSEII2526.Web/AppForSEII2526.Web.csproj
+      UT: ./test/AppForSEII2526.UT/AppForSEII2526.UT.csproj
+      UIT: ./test/AppForSEII2526.UIT/AppForSEII2526.UIT.csproj
 
     steps:
       - uses: actions/checkout@v4
@@ -23,12 +30,31 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      # 1. RESTAURAR 
+      - name: Restore dependencies
+        run: |
+          dotnet restore ${{env.API}}
+          dotnet restore ${{env.WEB}}
+          dotnet restore ${{env.UT}}
+          dotnet restore ${{env.UIT}}
 
+      # 2. COMPILAR TODO 
+      - name: Build the solution
+        run: |
+          dotnet build ${{env.API}} --configuration Release --no-restore
+          dotnet build ${{env.WEB}} --configuration Release --no-restore
+          dotnet build ${{env.UT}} --configuration Release --no-restore
+          dotnet build ${{env.UIT}} --configuration Release --no-restore
+
+      # 3. TESTEAR 
+      - name: Run unit test with report
+        run: dotnet test ${{env.UT}} --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx"
+
+      # 4. PUBLICAR 
       - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish ${{ env.API }} -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
+      # 5. SUBIR ARTEFACTO 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
