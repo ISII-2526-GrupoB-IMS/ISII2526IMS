@@ -5,10 +5,10 @@ name: Build and deploy ASP.Net Core app to Azure Web App - entregacontinua
 on:
   push:
     branches:
-      - MiguelAngel-CD
-     # - development
-    #paths:
-     # - 'src/AppForSEII2526.API**'
+      #- MiguelAngel-CD
+      - development
+    paths:
+      - 'src/AppForSEII2526.API**'
       
   workflow_dispatch:
 
