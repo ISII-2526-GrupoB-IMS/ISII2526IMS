@@ -170,11 +170,7 @@ namespace AppForSEII2526.UT.ReviewController_test
             var actual = Assert.IsType<ReviewDetailDTO>(createdResult.Value);
 
 
-            Assert.Equal(expected.NombreUsuario, actual.NombreUsuario);
-            Assert.Equal(expected.Pais, actual.Pais);
-            Assert.Equal(expected.Titulo, actual.Titulo);
-            Assert.Equal(expected.ItemsReview, actual.ItemsReview);
-            Assert.Equal(expected.FechaReview, actual.FechaReview, TimeSpan.FromSeconds(1));
+            Assert.Equal( expected, actual );
 
 
             
