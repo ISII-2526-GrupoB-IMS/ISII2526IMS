@@ -5,6 +5,7 @@ using AppForSEII2526.Web.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using AppForSEII2526.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 

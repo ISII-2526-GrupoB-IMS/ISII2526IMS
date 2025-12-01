@@ -15,7 +15,19 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 
         }
 
-        
+        public CompraItemDTO(int dispositivoId, string marca, string modelo, string color, double precio, int cantidad, string? descripcion = null)
+        {
+            DispositivoId = dispositivoId;
+            Marca = marca;
+            Modelo = modelo;
+            Color = color;
+            Precio = precio;
+            Cantidad = cantidad;
+            Descripcion = descripcion;
+
+        }
+        public int DispositivoId { get; set; }
+
         [StringLength(50, ErrorMessage = "La marca no puede ser mayor de 50 caracteres")]
         public string Marca { get; set; }
         public string Modelo { get; set; }
