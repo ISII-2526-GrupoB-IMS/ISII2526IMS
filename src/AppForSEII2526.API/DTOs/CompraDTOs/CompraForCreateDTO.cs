@@ -5,6 +5,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
     public class CompraForCreateDTO
     {
+
         public CompraForCreateDTO(string nombreUsuario, string apellidosUsuario, string direccionDeEnvio, TiposMetodoPago metodoDePago, int cantidad, IList<CompraItemDTO> itemsCompra)
         {
             NombreUsuario = nombreUsuario ?? throw new ArgumentNullException(nameof(nombreUsuario));

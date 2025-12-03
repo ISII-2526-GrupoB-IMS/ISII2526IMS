@@ -36,6 +36,24 @@
             </NavLink>
         </div>
 
+        <div class="nav-item px-3">
+            <div class="nav-link" @onclick="ToggleComprarMenu" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <span>
+                    <span class="bi bi-shop" aria-hidden="true" style="margin-right: 10px;"></span> Comprar
+                </span>
+                <span class="bi @(expandComprar ? "bi-chevron-up" : "bi-chevron-down")" style="font-size: 0.8rem;"></span>
+            </div>
+        </div>
+
+        @if (expandComprar)
+        {
+            <div class="nav-item px-3" style="padding-left: 2rem !important">
+                <NavLink class="nav-link" href="comprar-dispositivos">
+                    <span class="bi bi-phone" aria-hidden="true"></span> Móviles
+                </NavLink>
+            </div>
+        }
+
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
@@ -71,7 +89,7 @@
 
 @code {
     private string? currentUrl;
-
+    private bool expandComprar = false;
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -82,6 +100,10 @@
     {
         currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
+    }
+    private void ToggleComprarMenu()
+    {
+        expandComprar = !expandComprar;
     }
 
     public void Dispose()
