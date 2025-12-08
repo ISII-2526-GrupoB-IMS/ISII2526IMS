@@ -125,7 +125,7 @@ namespace AppForSEII2526.API.Controllers
                     else
                     {
                         // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                        alquiler.ItemsAlquiler.Add(new ItemAlquiler(dispositivo.Id, alquiler.Id, dispositivo.PrecioParaAlquiler));
+                        alquiler.ItemsAlquiler.Add(new ItemAlquiler(dispositivo.Id, alquiler.Id, dispositivo.PrecioParaAlquiler) { Cantidad = 1 });
                         item.PrecioParaAlquiler = dispositivo.PrecioParaAlquiler;
                     }
                 }
