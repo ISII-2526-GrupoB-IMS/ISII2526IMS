@@ -164,13 +164,8 @@ namespace AppForSEII2526.API.Controllers
                     alquiler.MetodoPago,
                     alquiler.FechaAlquilerDesde,
                     alquiler.FechaAlquilerHasta,
-                    alquiler.ItemsAlquiler
-                        .Select(ia => new ItemAlquilerDTO(
-                            ia.Dispositivo.Id,
-                            ia.Dispositivo.Modelo.NombreModelo,
-                            ia.Dispositivo.NombreDispositivo,
-                            ia.Dispositivo.Marca,
-                            ia.Dispositivo.PrecioParaAlquiler)).ToList()
+                    alquilerForCreate.ItemsAlquiler
+
                 );
 
             return CreatedAtAction("CrearAlquiler", new { id = alquiler.Id }, rentalDetail);
