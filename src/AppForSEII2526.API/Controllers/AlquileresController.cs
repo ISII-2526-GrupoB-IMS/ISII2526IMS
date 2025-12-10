@@ -62,7 +62,7 @@ namespace AppForSEII2526.API.Controllers
 
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        [ProducesResponseType(typeof(AlquilerForCreateDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(AlquilerDetailDTO), (int)HttpStatusCode.Created)]
         public async Task<ActionResult> CrearAlquiler(AlquilerForCreateDTO alquilerForCreate)
         {
 
@@ -153,11 +153,27 @@ namespace AppForSEII2526.API.Controllers
                     return Conflict("Error" + ex.Message);
 
                 }
+                
 
-                var rentalDetail = new AlquilerForCreateDTO(alquiler.ApplicationUser.NombreUsuario, alquiler.ApplicationUser.ApellidosUsuario,
-                alquiler.DireccionEntrega, alquiler.MetodoPago, alquiler.FechaAlquilerDesde, alquiler.FechaAlquilerHasta, alquilerForCreate.ItemsAlquiler);
+                var rentalDetail = new AlquilerDetailDTO(
+                    alquiler.Id,
+                    alquiler.FechaAlquiler,
+                    alquiler.ApplicationUser.NombreUsuario,
+                    alquiler.ApplicationUser.ApellidosUsuario,
+                    alquiler.DireccionEntrega,
+                    alquiler.MetodoPago,
+                    alquiler.FechaAlquilerDesde,
+                    alquiler.FechaAlquilerHasta,
+                    alquiler.ItemsAlquiler
+                        .Select(ia => new ItemAlquilerDTO(
+                            ia.Dispositivo.Id,
+                            ia.Dispositivo.Modelo.NombreModelo,
+                            ia.Dispositivo.NombreDispositivo,
+                            ia.Dispositivo.Marca,
+                            ia.Dispositivo.PrecioParaAlquiler)).ToList()
+                );
 
-                return CreatedAtAction("CrearAlquiler", new { id = alquiler.Id }, rentalDetail);
+            return CreatedAtAction("CrearAlquiler", new { id = alquiler.Id }, rentalDetail);
 
 
             }
