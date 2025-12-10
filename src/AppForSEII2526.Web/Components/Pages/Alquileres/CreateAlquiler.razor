@@ -1,0 +1,235 @@
+﻿@page "/Alquileres/CreateAlquiler"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
+
+@inject AppForSEII2526APIClient apiclient
+@inject AlquilerStateContainer rentalState
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<h3>Create Rental</h3>
+
+<EditForm Model="rental" OnValidSubmit="AlquilarDirecto" OnInvalidSubmit="ShowValidationErrors">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="row alert alert-danger" />
+    </div>
+    
+    @if (!string.IsNullOrEmpty(messageError))
+    {
+        <div class="row alert alert-danger" role="alert">
+            <p>Error: @messageError</p>
+        </div>
+    }
+
+    <div class="row g-3">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="rental.NombreUsuario" class="form-control" id="Name" />
+                <label for="Name">Name</label>
+                <ValidationMessage For="@(() => rental.NombreUsuario)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="rental.ApellidosUsuario" class="form-control" id="Surname" />
+                <label for="Surname">Surname</label>
+                <ValidationMessage For="@(() => rental.ApellidosUsuario)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="rental.DireccionEntrega" class="form-control" id="DeliveryAddress" />
+                <label for="DeliveryAddress">Address (Must include 'Calle')</label>
+                <ValidationMessage For="@(() => rental.DireccionEntrega)" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-2">
+        <div class="col-md">
+            <div class="form-floating">
+                <InputSelect class="form-select" @bind-Value="@rental.MetodoPago" id="PaymentMethod">
+                    @foreach (var metodo in Enum.GetValues(typeof(TiposMetodoPago)))
+                    {
+                        <option value="@metodo">@metodo</option>
+                    }
+                </InputSelect>
+                <label for="PaymentMethod">Payment Method</label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <button class="btn btn-primary" type="submit" id="Submit" disabled="@rentalButtonDisabled">
+                    Alquilar dispositivos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mt-4">Rental detail</h4>
+    <p><b>Date from:</b> @rental.FechaAlquilerDesde.ToString("dd/MM/yyyy") <b>to:</b> @rental.FechaAlquilerHasta.ToString("dd/MM/yyyy")</p>
+    <p>
+        <b>Total price:</b> @TotalCost.ToString("C")
+        <button class="btn btn-outline-primary ms-3" type="button" @onclick="ModifyRentalItems">
+            Modify items
+        </button>
+    </p>
+    
+    <div class="mh-100 table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Brand</th>
+                    <th>Price/Day</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in rental.ItemsAlquiler) {
+                    <tr>
+                        <td>@item.NombreDispositivo</td>
+                        <td>@item.Marca</td>
+                        <td>@item.PrecioParaAlquiler.ToString("C")</td>
+                        <td>@item.Modelo</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+@if (DialogIsOpen)
+{
+    <Dialog Caption="Confirm Rental"
+            Message="Do you want to proceed to rent the selected devices?"
+            OnClose="@OnDialogClose"
+            Type="Dialog.Category.SaveNot">
+    </Dialog>
+}
+
+@code {
+    private string messageError = "";
+    
+    // Validar si el botón debe estar deshabilitado
+    private bool rentalButtonDisabled => rental.ItemsAlquiler == null || rental.ItemsAlquiler.Count == 0;
+    
+    private bool DialogIsOpen = false;
+
+    // Corrección del cálculo de coste
+    private decimal TotalCost { 
+        get {
+            if (rental.ItemsAlquiler == null) return 0;
+            
+            var diff = rental.FechaAlquilerHasta - rental.FechaAlquilerDesde;
+            int days = diff.Days;
+            
+            if (days <= 0) days = 1; // Mínimo 1 día de cobro
+
+            double price = rental.ItemsAlquiler.Sum(ri => ri.PrecioParaAlquiler * days);
+            return Convert.ToDecimal(price);
+        }
+    }
+
+    private AlquilerForCreateDTO rental => rentalState.Alquiler;
+
+    private void ModifyRentalItems() {
+        Navigation.NavigateTo("/Alquileres/SelectDispositivosAlquiler");
+    }
+
+    private void OpenDialog()
+    {
+        messageError = ""; // Limpiar errores previos
+        DialogIsOpen = true;
+    }
+
+    private void ShowValidationErrors()
+    {
+        messageError = "Hay errores en el formulario. Por favor revisa los campos (Dirección debe contener 'Calle', Fechas válidas, etc).";
+    }
+
+    private async Task OnDialogClose(bool isOk) {
+        DialogIsOpen = false;
+        if (isOk) {
+            if (rental.ItemsAlquiler.Count > 0) {
+                try {
+                    var rented = await apiclient.CrearAlquilerAsync(rental);
+                    rentalState.RentalProcessed();
+                    //Navigation.NavigateTo($"/Alquileres/DetalleAlquiler/?RentalID={rented.Id}");
+                }
+                catch (ApiException<ValidationProblemDetails> ex) {
+                    // Captura errores de validación que vienen de la API
+                    messageError = "Error del servidor: ";
+                    if (ex.Result.Errors != null) {
+                        foreach (var errorList in ex.Result.Errors.Values) {
+                            messageError += string.Join(", ", errorList) + ". ";
+                        }
+                    }
+                }
+                catch (Exception ex) {
+                    messageError = $"Error procesando solicitud: {ex.Message}";
+                }
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync() {
+        if (authenticationState is not null) {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null && user.Identity is not null && user.Identity.IsAuthenticated) {
+                rental.NombreUsuario = user.Identity.Name ?? "";
+            }
+            
+            // Inicializar cadenas vacías para evitar null reference en el form
+            rental.NombreUsuario ??= "";
+            rental.ApellidosUsuario ??= "";
+            rental.DireccionEntrega ??= "";
+            
+            // Inicializar método de pago por defecto si no está set
+            if (rental.MetodoPago == 0) rental.MetodoPago = TiposMetodoPago.TarjetaCredito;
+        }
+    }
+    private async Task AlquilarDirecto()
+    {
+        // Bloqueamos el botón para que no le den dos veces
+        messageError = "Procesando alquiler...";
+
+        if (rental.ItemsAlquiler.Count > 0)
+        {
+            try
+            {
+                // Llamada directa a la API
+                var rented = await apiclient.CrearAlquilerAsync(rental);
+
+                rentalState.RentalProcessed();
+
+                // Si funciona, nos llevará a la siguiente página
+                //Navigation.NavigateTo($"/Alquileres/DetalleAlquiler/?RentalID={rented.Id}");
+            }
+            catch (ApiException<ValidationProblemDetails> ex)
+            {
+                messageError = "Error de validación: ";
+                if (ex.Result.Errors != null)
+                {
+                    foreach (var errorList in ex.Result.Errors.Values)
+                    {
+                        messageError += string.Join(", ", errorList) + ". ";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                messageError = $"Error del sistema: {ex.Message}";
+            }
+        }
+        else
+        {
+            messageError = "El carrito está vacío.";
+        }
+    }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+}
