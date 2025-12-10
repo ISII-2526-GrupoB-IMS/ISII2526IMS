@@ -1,0 +1,80 @@
+﻿@page "/Compras/DetalleCompra"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
+@inject ComprasStateContainer CompraState
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Compra Realizada</PageTitle>
+
+<div class="container mt-5 text-center">
+
+    <div class="mb-4">
+        <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+    </div>
+
+    <h2 class="mb-3">¡Gracias por tu compra, @CompraState.Compra.NombreUsuario!</h2>
+    <p class="lead text-muted">Tu pedido ha sido procesado correctamente.</p>
+
+    <div class="card shadow-sm mt-5 mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Resumen del Pedido</h5>
+        </div>
+        <div class="card-body text-start">
+            <div class="row mb-2">
+                <div class="col-6 text-muted">Dirección de envío:</div>
+                <div class="col-6 fw-bold text-end">@CompraState.Compra.DireccionDeEnvio</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6 text-muted">Método de pago:</div>
+                <div class="col-6 fw-bold text-end">@CompraState.Compra.MetodoDePago</div>
+            </div>
+
+            <hr />
+
+            <h6>Artículos:</h6>
+            <ul class="list-group list-group-flush mb-3">
+                @foreach (var item in CompraState.Compra.ItemsCompra)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <div>
+                            <span>@item.Marca @item.Modelo</span>
+                            <br />
+                            <small class="text-muted">@item.Color (x @item.Cantidad)</small>
+                        </div>
+                        <span>@((item.Precio * item.Cantidad).ToString("C2"))</span>
+                    </li>
+                }
+            </ul>
+
+            <div class="d-flex justify-content-between alert alert-success mb-0">
+                <span class="fw-bold">TOTAL PAGADO</span>
+                <span class="fw-bold">@CompraState.TotalPrice.ToString("C2")</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 mb-5">
+        <button class="btn btn-primary btn-lg px-5" @onclick="VolverAlInicio">
+            <i class="bi bi-shop"></i> Volver a la Tienda
+        </button>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        
+        if (CompraState.Compra.ItemsCompra.Count == 0)
+        {
+            Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
+        }
+    }
+
+    private void VolverAlInicio()
+    {
+        
+        CompraState.ResetCompra();
+        Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
+    }
+}
