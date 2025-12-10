@@ -240,7 +240,9 @@ namespace AppForSEII2526.UT.AlquileresController_test
             );
 
             // DTO esperado de respuesta (AlquilerForCreateDTO)
-            var expectedAlquilerDTO = new AlquilerForCreateDTO(
+            var expectedAlquilerDTO = new AlquilerDetailDTO(
+                1,
+                DateTime.Now,
                 _nombreUsuario,
                 _apellidosUsuario,
                 _direccionEnvio,
@@ -255,7 +257,7 @@ namespace AppForSEII2526.UT.AlquileresController_test
 
             // Assert
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-            var actualAlquilerDTO = Assert.IsType<AlquilerForCreateDTO>(createdResult.Value);
+            var actualAlquilerDTO = Assert.IsType<AlquilerDetailDTO>(createdResult.Value);
 
             Assert.Equal(expectedAlquilerDTO, actualAlquilerDTO);
         }
