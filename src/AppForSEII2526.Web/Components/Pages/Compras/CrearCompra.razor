@@ -136,11 +136,11 @@
         try
         {
             // Llamada a la API para guardar en base de datos (Azure)
-            await ApiClient.CrearCompraAsync(CompraState.Compra);
+            var compraRealizada = await ApiClient.CrearCompraAsync(CompraState.Compra);
 
-            
+
             // Redirigimos a la nueva página de detalles
-            Navigation.NavigateTo("/Compras/DetalleCompra");
+            Navigation.NavigateTo($"/Compras/DetalleCompra/{compraRealizada.Id}");
         }
         catch (Exception ex)
         {
