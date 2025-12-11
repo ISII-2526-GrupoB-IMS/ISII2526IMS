@@ -1,4 +1,4 @@
-﻿@page "/Compras/DetalleCompra"
+﻿@page "/Compras/DetalleCompra/{IdCompra:int}"
 @using AppForSEII2526.Web.API
 @using AppForSEII2526.Web
 @inject ComprasStateContainer CompraState
@@ -14,11 +14,15 @@
     </div>
 
     <h2 class="mb-3">¡Gracias por tu compra, @CompraState.Compra.NombreUsuario!</h2>
+
+    <h4 class="text-primary mb-4">Número de Pedido: #@IdCompra</h4>
+
     <p class="lead text-muted">Tu pedido ha sido procesado correctamente.</p>
 
     <div class="card shadow-sm mt-5 mx-auto" style="max-width: 600px;">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Resumen del Pedido</h5>
+            <span class="badge bg-secondary">Ref: @IdCompra</span>
         </div>
         <div class="card-body text-start">
             <div class="row mb-2">
@@ -62,9 +66,12 @@
 </div>
 
 @code {
+    // 3. CAPTURAMOS EL ID DE LA URL
+    [Parameter]
+    public int IdCompra { get; set; }
+
     protected override void OnInitialized()
     {
-        
         if (CompraState.Compra.ItemsCompra.Count == 0)
         {
             Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
@@ -73,7 +80,6 @@
 
     private void VolverAlInicio()
     {
-        
         CompraState.ResetCompra();
         Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
     }

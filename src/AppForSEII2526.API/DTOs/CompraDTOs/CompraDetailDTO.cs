@@ -19,6 +19,8 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 
         }
 
+        public int Id { get; set; }
+
         //NOMBRE USUARIO
 
         [StringLength(40, ErrorMessage = "El nombre del usuario no puede ser superior a 40 carecteres")]
