@@ -156,7 +156,7 @@
                 try {
                     var rented = await apiclient.CrearAlquilerAsync(rental);
                     rentalState.RentalProcessed();
-                    //Navigation.NavigateTo($"/Alquileres/DetalleAlquiler/?RentalID={rented.Id}");
+                    Navigation.NavigateTo($"/Alquileres/DetalleAlquiler/?RentalID={rented.Id}");
                 }
                 catch (ApiException<ValidationProblemDetails> ex) {
                     // Captura errores de validación que vienen de la API
@@ -207,7 +207,7 @@
                 rentalState.RentalProcessed();
 
                 // Si funciona, nos llevará a la siguiente página
-                //Navigation.NavigateTo($"/Alquileres/DetalleAlquiler/?RentalID={rented.Id}");
+                Navigation.NavigateTo($"/Alquileres/DetalleAlquiler/?RentalID={rented.Id}");
             }
             catch (ApiException<ValidationProblemDetails> ex)
             {
