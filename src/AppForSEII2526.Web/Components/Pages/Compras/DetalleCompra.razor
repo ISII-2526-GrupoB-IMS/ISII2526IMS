@@ -13,7 +13,7 @@
         <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
     </div>
 
-    <h2 class="mb-3">¡Gracias por tu compra, @CompraState.Compra.NombreUsuario!</h2>
+    <h2 class="mb-3">¡Gracias por tu compra, @CompraState.Compra.NombreUsuario @CompraState.Compra.ApellidosUsuario!</h2>
 
     <h4 class="text-primary mb-4">Número de Pedido: #@IdCompra</h4>
 
@@ -25,13 +25,19 @@
             <span class="badge bg-secondary">Ref: @IdCompra</span>
         </div>
         <div class="card-body text-start">
+
+            <div class="row mb-2">
+                <div class="col-6 text-muted">Fecha del pedido:</div>
+                <div class="col-6 fw-bold text-end">
+                    @(CompraState.Compra.FechaCompra == default
+                                        ? DateTime.Now.ToShortDateString()
+                                        : CompraState.Compra.FechaCompra.DateTime.ToShortDateString())
+                </div>
+            </div>
+
             <div class="row mb-2">
                 <div class="col-6 text-muted">Dirección de envío:</div>
                 <div class="col-6 fw-bold text-end">@CompraState.Compra.DireccionDeEnvio</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-6 text-muted">Método de pago:</div>
-                <div class="col-6 fw-bold text-end">@CompraState.Compra.MetodoDePago</div>
             </div>
 
             <hr />
@@ -45,6 +51,14 @@
                             <span>@item.Marca @item.Modelo</span>
                             <br />
                             <small class="text-muted">@item.Color (x @item.Cantidad)</small>
+
+                            @if (!string.IsNullOrEmpty(item.Descripcion))
+                            {
+                                <br />
+                                <small class="text-info fst-italic">
+                                    <i class="bi bi-chat-left-text"></i> Descripcion: @item.Descripcion
+                                </small>
+                            }
                         </div>
                         <span>@((item.Precio * item.Cantidad).ToString("C2"))</span>
                     </li>
@@ -66,7 +80,6 @@
 </div>
 
 @code {
-    // 3. CAPTURAMOS EL ID DE LA URL
     [Parameter]
     public int IdCompra { get; set; }
 
