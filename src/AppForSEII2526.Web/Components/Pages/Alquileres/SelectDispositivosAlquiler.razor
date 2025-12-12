@@ -228,6 +228,11 @@
 
     private void IrCrearAlquiler()
     {
+        // 1. IMPORTANTE: Guardamos las fechas seleccionadas en el estado antes de irnos
+        AlquilerState.Alquiler.FechaAlquilerDesde = new DateTimeOffset(_from);
+        AlquilerState.Alquiler.FechaAlquilerHasta = new DateTimeOffset(_to);
+
+        // 2. Navegamos a la siguiente página
         Navigation.NavigateTo("/Alquileres/CreateAlquiler");
     }
 }

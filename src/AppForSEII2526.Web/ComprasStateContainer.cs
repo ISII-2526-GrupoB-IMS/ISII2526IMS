@@ -15,7 +15,7 @@ namespace AppForSEII2526.Web
 
         public void ResetCompra()
         {
-            // Inicializamos sin constructor (Estilo "Like Them")
+            
             Compra = new CompraForCreateDTO
             {
                 NombreUsuario = string.Empty,
@@ -39,11 +39,10 @@ namespace AppForSEII2526.Web
 
         public void AñadirDispositivo(DispositivoParaComprarDTO dispositivo)
         {
-            // LÓGICA SIN ID: Comparamos por las características visuales
-            // Asumimos que si Marca, Modelo y Color son iguales, es el mismo ítem.
+           
             var itemExistente = Compra.ItemsCompra.FirstOrDefault(ic =>
                 ic.Marca == dispositivo.Marca &&
-                ic.Modelo == dispositivo.Modelo.NombreModelo && // Ojo: verifica si es .NombreModelo o .ToString() en el generado
+                ic.Modelo == dispositivo.Modelo.NombreModelo && 
                 ic.Color == dispositivo.Color
             );
 
@@ -53,11 +52,11 @@ namespace AppForSEII2526.Web
             }
             else
             {
-                // Creamos el nuevo item sin ID
+               
                 var nuevoItem = new CompraItemDTO
                 {
                     Marca = dispositivo.Marca,
-                    Modelo = dispositivo.Modelo.NombreModelo, // Ajusta según tu DTO generado
+                    Modelo = dispositivo.Modelo.NombreModelo, 
                     Color = dispositivo.Color,
                     Precio = dispositivo.PrecioParaCompra,
                     Cantidad = 1,

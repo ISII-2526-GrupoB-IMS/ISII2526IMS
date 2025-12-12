@@ -1,4 +1,4 @@
-﻿@page "/comprar-dispositivos"
+﻿@page "/Compras/SelectDispositivosComprar"
 @using AppForSEII2526.Web.API
 @using AppForSEII2526.Web
 @inject AppForSEII2526APIClient ApiClient
@@ -150,7 +150,7 @@
     private void IrAlCheckout()
     {
         // Redirige a la página de finalizar compra (la crearemos luego)
-        Navigation.NavigateTo("/checkout");
+        Navigation.NavigateTo("/Compras/CrearCompra");
     }
 
     // Importante: Desuscribirse para evitar fugas de memoria

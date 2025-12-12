@@ -63,7 +63,11 @@ namespace AppForSEII2526.API.Controllers
                         ci.Descripcion
                     ))
                     .ToList()
-            );
+            )
+            {
+                Id = compra.Id  
+            }; 
+
 
             return Ok(compraDTO);
         }
@@ -213,7 +217,10 @@ namespace AppForSEII2526.API.Controllers
                 compra.PrecioTotal,
                 compra.CantidadTotal,
                 compraParaCrear.ItemsCompra
-            );
+            )
+            {
+                Id = compra.Id 
+            };
 
             return CreatedAtAction("GetDetalleCompra", new { id = compra.Id }, compraDetail);
         }

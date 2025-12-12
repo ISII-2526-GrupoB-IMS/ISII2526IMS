@@ -1,0 +1,164 @@
+﻿@page "/Compras/CrearCompra"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
+@inject ComprasStateContainer CompraState
+@inject AppForSEII2526APIClient ApiClient
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Finalizar Compra</PageTitle>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0"><i class="bi bi-person-lines-fill"></i> Datos de Envío</h4>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="CompraState.Compra" OnValidSubmit="ProcesarPedido">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label">Nombre</label>
+                                <InputText @bind-Value="CompraState.Compra.NombreUsuario" class="form-control" placeholder="Ej. Juan" />
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="form-label">Apellidos</label>
+                                <InputText @bind-Value="CompraState.Compra.ApellidosUsuario" class="form-control" placeholder="Ej. Pérez" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Dirección de Entrega</label>
+                                <InputText @bind-Value="CompraState.Compra.DireccionDeEnvio" class="form-control" placeholder="Calle, número, ciudad..." />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Método de Pago</label>
+                                <InputSelect @bind-Value="CompraState.Compra.MetodoDePago" class="form-select">
+                                    @foreach (var metodo in Enum.GetValues(typeof(TiposMetodoPago)))
+                                    {
+                                        <option value="@metodo">@metodo</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <button class="btn btn-success w-100 btn-lg" type="submit" disabled="@enviando">
+                            @if (enviando)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span> Procesando...</span>
+                            }
+                            else
+                            {
+                                <span><i class="bi bi-check-circle"></i> Confirmar Compra</span>
+                            }
+                        </button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-cart3"></i> Tu Pedido</h4>
+                </div>
+                <div class="card-body">
+                    @if (!CompraState.Compra.ItemsCompra.Any())
+                    {
+                        <div class="alert alert-warning">
+                            Tu carrito está vacío.
+                            <br />
+                            <a href="/" class="alert-link">Volver al catálogo</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush mb-3">
+                            @foreach (var item in CompraState.Compra.ItemsCompra)
+                            {
+                                <li class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between lh-sm">
+                                        <div>
+                                            <h6 class="my-0">@item.Marca @item.Modelo</h6>
+                                            <small class="text-muted">@item.Color (x @item.Cantidad)</small>
+
+                                            <div class="mt-2">
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       placeholder="Descripción opcional (motivo compra)..."
+                                                       @bind="item.Descripcion" />
+                                            </div>
+                                        </div>
+                                        <span class="text-muted">@((item.Precio * item.Cantidad).ToString("C2"))</span>
+                                    </div>
+                                    <button class="btn btn-link btn-sm text-danger text-decoration-none p-0 mt-1"
+                                            @onclick="() => EliminarItem(item)">
+                                        <small>Eliminar</small>
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="d-flex justify-content-between p-3 bg-light rounded">
+                            <span class="h5">Total (EUR)</span>
+                            <strong class="h4">@CompraState.TotalPrice.ToString("C2")</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool enviando = false;
+
+    protected override void OnInitialized()
+    {
+        // Si el carrito está vacío, lo mandamos de vuelta al catálogo para evitar errores
+        if (CompraState.Compra.ItemsCompra.Count == 0)
+        {
+            Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
+        }
+    }
+
+    private async Task ProcesarPedido()
+    {
+        enviando = true;
+        try
+        {
+            // Llamada a la API para guardar en base de datos (Azure)
+            var compraRealizada = await ApiClient.CrearCompraAsync(CompraState.Compra);
+
+
+            // Redirigimos a la nueva página de detalles
+            Navigation.NavigateTo($"/Compras/DetalleCompra/{compraRealizada.Id}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al comprar: {ex.Message}");
+            
+        }
+        finally
+        {
+            enviando = false;
+        }
+    }
+
+    private void EliminarItem(CompraItemDTO item)
+    {
+        CompraState.QuitarItemParaComprar(item);
+        if (CompraState.Compra.ItemsCompra.Count == 0)
+        {
+            Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
+        }
+    }
+}
