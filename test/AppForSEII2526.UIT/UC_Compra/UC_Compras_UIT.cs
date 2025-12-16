@@ -105,34 +105,27 @@ namespace AppForSEII2526.UIT.UC_Compra
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC_Compra_Carrito_Vacio_Oculta_Tramitar()
         {
-            // Arrange
+            // --- ARRANGE ---
             InitialStepsForCompra();
 
-            // Act & Assert 1: Al entrar, el carrito debería estar vacío (botón oculto)
-            // Nota: Asumimos que es una sesión nueva o limpia
-            bool botonOcultoAlInicio = _selectPO.IsTramitarPedidoHidden();
+            // 1. Añadimos algo primero (para que aparezca el botón)
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone");
 
-            // Si por alguna razón hay cosas, lo vaciamos
-            if (!botonOcultoAlInicio)
-            {
-                _selectPO.VaciarCarrito();
-                botonOcultoAlInicio = _selectPO.IsTramitarPedidoHidden();
-            }
+            // Comprobamos que AHORA sí se ve (debería ser false que esté oculto)
+            Assert.False(_selectPO.IsTramitarPedidoHidden(), "El botón debería verse con items.");
 
-            Assert.True(botonOcultoAlInicio, "El botón 'Tramitar Pedido' debería estar oculto con el carrito vacío.");
-
-            // Act 2: Añadimos un producto
-            // Primero buscamos sin filtros para asegurar que sale algo
-            _selectPO.SearchDispositivos("", "");
-            _selectPO.AddDispositivoToCart(movilPrueba); 
-
-            // Assert 2: El botón debe aparecer
-            Assert.False(_selectPO.IsTramitarPedidoHidden(), "El botón 'Tramitar Pedido' debería aparecer tras añadir un producto.");
-
-            // Act 3: Vaciamos el carrito
+            // --- ACT ---
+            // 2. Vaciamos el carrito
+            
             _selectPO.VaciarCarrito();
 
-            // Assert 3: El botón debe desaparecer de nuevo
+            
+            // Esto asegura que la interfaz se ha actualizado.
+            Thread.Sleep(1000); // Espera explícita de seguridad
+
+            // --- ASSERT ---
+           
             Assert.True(_selectPO.IsTramitarPedidoHidden(), "El botón 'Tramitar Pedido' debería ocultarse tras vaciar el carrito.");
         }
     }

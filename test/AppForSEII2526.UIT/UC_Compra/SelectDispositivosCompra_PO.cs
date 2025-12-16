@@ -131,18 +131,27 @@ namespace AppForSEII2526.UIT.UC_Compra
         }
 
         // 5. Verificar estado del botón Tramitar (si está oculto es que el carro está vacío)
+        private By btnTramitar = By.XPath("//button[contains(., 'Tramitar Pedido')]");
+
         public bool IsTramitarPedidoHidden()
         {
-            try
-            {
-                // En Blazor, si usas @if, el elemento desaparece del DOM, no solo se oculta.
-                var elements = _driver.FindElements(buttonTramitar);
-                return elements.Count == 0 || !elements[0].Displayed;
-            }
-            catch (NoSuchElementException)
-            {
-                return true;
-            }
+            // CAMBIO CLAVE: Usamos FindElements (plural)
+            // Esto nos devuelve una lista. Si la lista está vacía (Count == 0),
+            // significa que el botón NO EXISTE en la página (que es lo que queremos).
+
+            // 1. Bajamos el tiempo de espera temporalmente para que no tarde mucho en decidir que no está
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
+
+            var elementos = _driver.FindElements(btnTramitar);
+
+            // 2. Restauramos el tiempo de espera normal (IMPORTANTE)
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10); // O el tiempo que tengas configurado
+
+            // Si hay 0 elementos, es que está oculto/borrado -> true
+            if (elementos.Count == 0) return true;
+
+            // Si existe, comprobamos si es visible -> false si se ve, true si está oculto por CSS
+            return !elementos[0].Displayed;
         }
         // Selector para el botón de eliminar (papelera o texto "Eliminar") dentro del carrito
         // Buscamos un botón que contenga "Eliminar" dentro de un <li> que contenga el nombre del móvil
