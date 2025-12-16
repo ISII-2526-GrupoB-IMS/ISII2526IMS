@@ -12,13 +12,14 @@ namespace AppForSEII2526.UIT.UC_Alquileres
     {
         private SelectDispositivosAlquiler_PO _selectPO;
         private CreateAlquiler_PO _createPO; // PO Añadido para las pruebas de Create
-
+        private DetalleAlquiler_PO _detallePO;
         private const string dispNombre1 = "Galaxy A54";
-
+        private const string dispPrecioDia = "44,00 €"; // Precio base para validación
         public UC_Alquileres_UIT(ITestOutputHelper output) : base(output)
         {
             _selectPO = new SelectDispositivosAlquiler_PO(_driver, _output);
             _createPO = new CreateAlquiler_PO(_driver, _output); // Inicializamos el PO de Create
+            _detallePO = new DetalleAlquiler_PO(_driver, _output);
         }
 
         private void Precondition_perform_login()
@@ -204,6 +205,52 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             string errorEsperado = " Error! Device with name'Galaxy S23 Ultra 512GB' is not available for being rented from ";
             Assert.True(_createPO.HayMensajeDeError(errorEsperado),
                 "Se esperaba un error de disponibilidad al intentar alquilar.");
+        }
+
+        // =====================================================================
+        // PRUEBAS DE DETALLE (UC_Detalle_1 a UC_Detalle_3)
+        // =====================================================================
+
+        [Theory]
+        [InlineData("TarjetaCredito", "Galaxy A54")] // UC2_1
+        [InlineData("PayPal", "Galaxy A54")]         // UC2_2
+        [InlineData("Efectivo", "Galaxy A54")]       // UC2_3
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC_Detalle_1_2_3(string metodoPago, string dispositivoEsperado)
+        {
+            // 1. ARRANGE: Navegar y Seleccionar
+            _driver.Navigate().GoToUrl(_URI + "Alquileres/SelectDispositivosAlquiler");
+
+            // Fechas válidas (Mañana a Pasado mañana = 1 día)
+            DateTime fechaInicio = DateTime.Today.AddDays(1);
+            DateTime fechaFin = DateTime.Today.AddDays(3);
+
+            _selectPO.SearchDispositivos(dispositivoEsperado, "", fechaInicio, fechaFin);
+            _selectPO.AddDispositivoToCart(dispositivoEsperado);
+            _selectPO.ClickCrearReserva();
+
+            // 2. ACT: Rellenar Formulario Create y Alquilar
+            string nombreUser = "Juan";
+            string apellidosUser = "Pérez García";
+            string direccionUser = "Calle Mayor 123";
+
+            _createPO.RellenarFormulario(nombreUser, apellidosUser, direccionUser, metodoPago);
+            _createPO.ClickAlquilar();
+
+            // 3. ASSERT: Validar página de Detalle
+
+            // Calculamos precio esperado: 2 día * 22€ = 44,00 €
+            string precioTotalEsperado = dispPrecioDia;
+
+            Assert.True(_detallePO.VerificarDetallesCabecera(
+                $"{nombreUser} {apellidosUser}",
+                direccionUser,
+                metodoPago,
+                precioTotalEsperado),
+                "Los datos de la cabecera del detalle (Nombre, Dirección, Pago o Precio) son incorrectos.");
+
+            Assert.True(_detallePO.VerificarDispositivoEnTabla(dispositivoEsperado),
+                $"El dispositivo '{dispositivoEsperado}' no aparece en la tabla de detalles.");
         }
     }
 }

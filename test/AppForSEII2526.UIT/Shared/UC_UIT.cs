@@ -17,13 +17,7 @@ namespace AppForSEII2526.UIT.Shared {
         protected readonly ITestOutputHelper _output;
 
 
-        // En Shared/UC_UIT.cs https://localhost:7081/
 
-        // ... dentro de la clase ...
-
-        //protected const string _URI = "http://localhost:5000/"; // Puerto estándar Kestrel para Linux
-
-        // O si prefieres una lógica automática que detecte si estás en el servidor:
 
         public string _URI
         {
@@ -114,8 +108,7 @@ namespace AppForSEII2526.UIT.Shared {
                 AcceptInsecureCertificates = true
             };
 
-            // Detectamos si estamos en un servidor (Pipeline) o en tu PC local
-            // Si la variable _pipeline es true O si existe la variable de entorno "CI" (común en GitHub Actions/Azure)
+
             bool isServerEnvironment = _pipeline || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
 
             if (isServerEnvironment)
@@ -129,9 +122,7 @@ namespace AppForSEII2526.UIT.Shared {
             }
             else
             {
-                // --- CONFIGURACIÓN PARA TU PC LOCAL (Visible) ---
-                // Aquí NO ponemos headless, para que puedas ver lo que pasa.
-                // A veces ayuda maximizar la ventana al inicio:
+
                 optionsEdge.AddArgument("--start-maximized");
             }
 
