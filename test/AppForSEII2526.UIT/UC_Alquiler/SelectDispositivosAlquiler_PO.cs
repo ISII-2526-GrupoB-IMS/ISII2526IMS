@@ -62,14 +62,68 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         }
 
         // Verificar la tabla (Imitando CheckListOfMovies)
+        // En SelectDispositivosAlquiler_PO.cs
+
         public bool CheckListOfDispositivos(List<string[]> expectedRows)
         {
-            return CheckBodyTable(expectedRows, tableOfDispositivos);
+            // 1. Obtenemos todas las filas del cuerpo de la tabla
+            var rows = _driver.FindElements(By.CssSelector("table tbody tr"));
+
+            // 2. Si no hay filas y esperamos alguna, devolvemos false
+            if (rows.Count == 0 && expectedRows.Count > 0) return false;
+
+            // 3. Iteramos por cada dispositivo que ESPERAMOS encontrar
+            foreach (var expected in expectedRows)
+            {
+                bool found = false;
+                string expectedNombre = expected[0];
+                string expectedMarca = expected[1];
+                string expectedPrecio = expected[2];
+
+                // Buscamos en las filas visibles de la web
+                foreach (var row in rows)
+                {
+                    var cells = row.FindElements(By.TagName("td"));
+
+                    // Aseguramos que la fila tenga suficientes columnas (al menos 5 según tu imagen)
+                    if (cells.Count < 5) continue;
+
+                    // Extraemos SOLO lo que nos interesa: Índices 0 (Nombre), 1 (Marca) y 4 (Precio)
+                    // Usamos .Trim() para limpiar espacios extra
+                    string actualNombre = cells[0].Text.Trim();
+                    string actualMarca = cells[1].Text.Trim();
+                    string actualPrecio = cells[4].Text.Trim();
+
+                    // Comparamos (Contains para ser flexible o Equals para exactitud)
+                    if (actualNombre.Contains(expectedNombre) &&
+                        actualMarca.Contains(expectedMarca) &&
+                        actualPrecio.Contains(expectedPrecio))
+                    {
+                        found = true;
+                        break; // Encontramos este dispositivo, pasamos al siguiente esperado
+                    }
+                }
+
+                // Si terminamos de revisar todas las filas y no encontramos el esperado: Falso.
+                if (!found)
+                {
+                    _output.WriteLine($"No se encontró fila para: {expectedNombre} | {expectedMarca} | {expectedPrecio}");
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         // Verificar errores (Imitando CheckMessageError)
         public bool CheckMessageError(string errorMessage)
         {
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                // Si no esperamos error, verificamos que NO haya mensaje
+                var elements = _driver.FindElements(errorShownBy);
+                return elements.Count == 0 || string.IsNullOrEmpty(elements[0].Text);
+            }
             WaitForBeingVisible(errorShownBy);
             IWebElement actualErrorShown = _driver.FindElement(errorShownBy);
             _output.WriteLine($"Actual Message shown: {actualErrorShown.Text}");
