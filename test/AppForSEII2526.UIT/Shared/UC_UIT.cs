@@ -108,9 +108,20 @@ namespace AppForSEII2526.UIT.Shared {
                 PageLoadStrategy = PageLoadStrategy.Normal,
                 AcceptInsecureCertificates = true
             };
-
-            //For pipelines use this option for hiding the browser
             if (_pipeline) optionsEdge.AddArgument("--headless");
+
+            // Necesario para evitar errores de permisos en contenedores Docker/Linux
+            optionsEdge.AddArgument("--no-sandbox");
+
+            // Evita que el navegador se quede sin memoria compartida y crashee
+            optionsEdge.AddArgument("--disable-dev-shm-usage");
+
+            // Asegura un tamaño de ventana estándar para que los elementos sean visibles
+            optionsEdge.AddArgument("--window-size=1920,1080");
+
+            // Ignorar errores de certificados (común en entornos de prueba locales/dev)
+            optionsEdge.AddArgument("--ignore-certificate-errors");            //For pipelines use this option for hiding the browser
+            
 
             _driver = new EdgeDriver(optionsEdge);
 
