@@ -11,8 +11,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
     {
         private SelectDispositivosAlquiler_PO _selectPO;
 
-        private const string dispNombre1 = "Galaxy A54 5G 128GB";
-        private const string dispNombre2 = "Oppo Find X5 Pro 256GB"; // Usamos el segundo disp para la prueba de modificación
+        private const string dispNombre1 = "Galaxy A54";
 
 
         public UC_Alquileres_UIT(ITestOutputHelper output) : base(output)

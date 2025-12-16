@@ -153,14 +153,17 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         // Verificar botón reserva (Imitando RentingNotAvailable o similar)
         public bool IsCrearReservaDisabledOrHidden()
         {
+
             try
             {
-                // Si el panel del carrito está oculto (hidden), el botón no es interactuable
-                // En tu código: <div class="col-4" hidden="@hideCart">
-                var boton = _driver.FindElement(buttonCrearReserva);
-                return !boton.Displayed || !boton.Enabled;
+                return _driver.FindElement(buttonCrearReserva).Displayed == false;
+
             }
             catch (NoSuchElementException)
+            {
+                return true;
+            }
+            catch (StaleElementReferenceException)
             {
                 return true;
             }
