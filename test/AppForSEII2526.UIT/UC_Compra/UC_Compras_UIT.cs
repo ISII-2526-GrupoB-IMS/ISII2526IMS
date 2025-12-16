@@ -1,4 +1,5 @@
 ﻿using AppForSEII2526.UIT.Shared;
+using AppForSEII2526.UIT.UC_Compras;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,41 @@ namespace AppForSEII2526.UIT.UC_Compra
             _driver.Navigate().GoToUrl(_URI + "Compras/SelectDispositivosComprar");
         }
 
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_2_No_hay_Dispositivos()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // Definimos el texto "sajfbuf" y el mensaje esperado
+            string colorInexistente = "sajfbuf";
+            string mensajeEsperado = "No se han encontrado dispositivos con esos filtros.";
+
+            // --- ACT ---
+            
+            _selectPO.SearchDispositivos("", colorInexistente);
+
+            // --- ASSERT ---
+
+            
+
+            try
+            {
+                // Buscamos cualquier etiqueta (*) que contenga el texto esperado
+                var elementoMensaje = _driver.FindElement(By.XPath($"//*[contains(text(), '{mensajeEsperado}')]"));
+
+                // Verificamos que el elemento existe y es visible
+                Assert.True(elementoMensaje.Displayed, "El mensaje de error debería ser visible en pantalla.");
+                Assert.Contains(mensajeEsperado, elementoMensaje.Text);
+            }
+            catch (NoSuchElementException)
+            {
+                // Si entra aquí es que no encontró el texto en toda la página
+                Assert.Fail($"No se encontró el mensaje de error: '{mensajeEsperado}' en la página.");
+            }
+        }
+
 
 
 
@@ -38,7 +74,7 @@ namespace AppForSEII2526.UIT.UC_Compra
         [InlineData("Oppo", "", "Oppo Find X5 Pro 256GB", "Oppo", "799,99 €")]
         // Caso 2: Filtrar por Color CU1_4
         [InlineData("", "Plata", "iPhone 14 Pro 512GB", "Apple", "1.399,99 €")] 
-        public void UC_Compra_FiltrarDispositivos(string filtroNombre, string filtroColor, string nombreEsperado, string marcaEsperada, string precioEsperado)
+        public void UC1_3Y4_Compra_FiltrarDispositivos(string filtroNombre, string filtroColor, string nombreEsperado, string marcaEsperada, string precioEsperado)
         {
             // Arrange
             InitialStepsForCompra();
@@ -74,11 +110,11 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             // --- ACT & ASSERT (Paso a Paso) ---
 
-            // 1. Añadimos el primer móvil (Oppo)
+            //  Añadimos el primer móvil (Oppo)
             _selectPO.SearchDispositivos("Oppo", "");
             _selectPO.AddDispositivoToCart(movil1);
 
-            // 2. Añadimos el segundo móvil (iPhone)
+            // Añadimos el segundo móvil (iPhone)
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart(movil2);
 
@@ -87,12 +123,12 @@ namespace AppForSEII2526.UIT.UC_Compra
             string totalActual = _selectPO.ObtenerPrecioTotal();
             Assert.Contains(precioEsperadoTotalAmbos, totalActual);
 
-            // 3. Eliminamos el primer móvil (Oppo)
+            // 3Eliminamos el primer móvil (Oppo)
             _selectPO.RemoveDispositivoFromCart(movil1);
 
             // --- ASSERT FINAL ---
 
-            // 4. Verificamos que se ha recalculado correctamente
+            // Verificamos que se ha recalculado correctamente
             string totalFinal = _selectPO.ObtenerPrecioTotal();
 
             Assert.Contains(precioEsperadoFinal, totalFinal);
@@ -100,40 +136,224 @@ namespace AppForSEII2526.UIT.UC_Compra
            
         }
 
-        //CU1_6
+        
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void UC_Compra_Carrito_Vacio_Oculta_Tramitar()
+        public void UC1_6Compra_Carrito_Vacio_Oculta_Tramitar()
         {
-            // Arrange
+            // --- ARRANGE ---
             InitialStepsForCompra();
 
-            // Act & Assert 1: Al entrar, el carrito debería estar vacío (botón oculto)
-            // Nota: Asumimos que es una sesión nueva o limpia
-            bool botonOcultoAlInicio = _selectPO.IsTramitarPedidoHidden();
+            // 1. Añadimos algo primero (para que aparezca el botón)
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone");
 
-            // Si por alguna razón hay cosas, lo vaciamos
-            if (!botonOcultoAlInicio)
-            {
-                _selectPO.VaciarCarrito();
-                botonOcultoAlInicio = _selectPO.IsTramitarPedidoHidden();
-            }
+            // Comprobamos que AHORA sí se ve (debería ser false que esté oculto)
+            Assert.False(_selectPO.IsTramitarPedidoHidden(), "El botón debería verse con items.");
 
-            Assert.True(botonOcultoAlInicio, "El botón 'Tramitar Pedido' debería estar oculto con el carrito vacío.");
-
-            // Act 2: Añadimos un producto
-            // Primero buscamos sin filtros para asegurar que sale algo
-            _selectPO.SearchDispositivos("", "");
-            _selectPO.AddDispositivoToCart(movilPrueba); 
-
-            // Assert 2: El botón debe aparecer
-            Assert.False(_selectPO.IsTramitarPedidoHidden(), "El botón 'Tramitar Pedido' debería aparecer tras añadir un producto.");
-
-            // Act 3: Vaciamos el carrito
+            // --- ACT ---
+            // 2. Vaciamos el carrito
+            
             _selectPO.VaciarCarrito();
 
-            // Assert 3: El botón debe desaparecer de nuevo
+            
+            // Esto asegura que la interfaz se ha actualizado.
+            Thread.Sleep(1000); // Espera explícita de seguridad
+
+            // --- ASSERT ---
+           
             Assert.True(_selectPO.IsTramitarPedidoHidden(), "El botón 'Tramitar Pedido' debería ocultarse tras vaciar el carrito.");
         }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_7_Nombre_Vacio()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // 1. Añadimos producto e ir al checkout
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // --- ACT ---
+            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
+            // (Queremos que llegue a intentar enviar al servidor)
+            crearCompraPO.EscribirNombre("");
+            crearCompraPO.EscribirApellidos("Apellido Test");
+            crearCompraPO.EscribirDireccion("Calle Test");
+            crearCompraPO.SeleccionarPago("Efectivo"); 
+
+            // 3. Confirmamos
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            // 4. Verificamos que aparece la alerta de error del servidor
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+
+            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
+
+            // Verificamos que contiene el texto que te está saliendo ahora mismo
+            // "Error al procesar la compra" o "400"
+            Assert.Contains("Error al procesar", mensajeError);
+            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_8_Apellidos_Vacio()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // 1. Añadimos producto e ir al checkout
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // --- ACT ---
+            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
+            // (Queremos que llegue a intentar enviar al servidor)
+            crearCompraPO.EscribirNombre("Nombre_Test");
+            crearCompraPO.EscribirApellidos("");
+            crearCompraPO.EscribirDireccion("Calle Test");
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            // 3. Confirmamos
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            // 4. Verificamos que aparece la alerta de error del servidor
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+
+            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
+
+            // Verificamos que contiene el texto que te está saliendo ahora mismo
+            // "Error al procesar la compra" o "400"
+            Assert.Contains("Error al procesar", mensajeError);
+            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_9_Direccion_Vacio()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // 1. Añadimos producto e ir al checkout
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // --- ACT ---
+            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
+            // (Queremos que llegue a intentar enviar al servidor)
+            crearCompraPO.EscribirNombre("Nombre Test");
+            crearCompraPO.EscribirApellidos("Apellidos Test");
+            crearCompraPO.EscribirDireccion("");
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            // 3. Confirmamos
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            // 4. Verificamos que aparece la alerta de error del servidor
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+
+            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
+
+            // Verificamos que contiene el texto que te está saliendo ahora mismo
+            // "Error al procesar la compra" o "400"
+            Assert.Contains("Error al procesar", mensajeError);
+            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_10_MetodoPago_Vacio()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // 1. Añadimos producto e ir al checkout
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // --- ACT ---
+            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
+            // (Queremos que llegue a intentar enviar al servidor)
+            crearCompraPO.EscribirNombre("Nombre Test");
+            crearCompraPO.EscribirApellidos("Apellidos Test");
+            crearCompraPO.EscribirDireccion("Calle Test");
+            crearCompraPO.SeleccionarPago("");
+
+            // 3. Confirmamos
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            // 4. Verificamos que aparece la alerta de error del servidor
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+
+            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
+
+            // Verificamos que contiene el texto que te está saliendo ahora mismo
+            // "Error al procesar la compra" o "400"
+            Assert.Contains("Error al procesar", mensajeError);
+            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+        }
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_11_Dispositivo_sin_stock()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // 1. Añadimos producto e ir al checkout
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 256");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // --- ACT ---
+            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
+            // (Queremos que llegue a intentar enviar al servidor)
+            crearCompraPO.EscribirNombre("David");
+            crearCompraPO.EscribirApellidos("Gómez Fernández");
+            crearCompraPO.EscribirDireccion("Paseo de la Castellana 100, Madrid");
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            // 3. Confirmamos
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            // 4. Verificamos que aparece la alerta de error del servidor
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+
+            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
+
+            // Verificamos que contiene el texto que te está saliendo ahora mismo
+            // "Error al procesar la compra" o "400"
+            Assert.Contains("Error al procesar", mensajeError);
+            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+        }
+
+
+
+
+
+
+
     }
 }

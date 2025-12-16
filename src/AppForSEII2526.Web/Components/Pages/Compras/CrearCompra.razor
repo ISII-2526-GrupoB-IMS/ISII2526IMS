@@ -1,8 +1,8 @@
 ﻿@page "/Compras/CrearCompra"
-@using System.Net 
+@using System.Net
 
-@using AppForSEII2526.Web.API 
-@using AppForSEII2526.Web 
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
 
 @inject ComprasStateContainer CompraState
 @inject AppForSEII2526APIClient ApiClient
@@ -14,12 +14,14 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-7">
-            
+
             @if (!string.IsNullOrEmpty(mensajeError))
             {
                 <div class="alert alert-danger d-flex align-items-center mb-3" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <div>@mensajeError</div>
+                    <div>
+                        <strong>Atención:</strong> @mensajeError
+                    </div>
                 </div>
             }
 
@@ -28,10 +30,9 @@
                     <h4 class="mb-0"><i class="bi bi-person-lines-fill"></i> Datos de Envío</h4>
                 </div>
                 <div class="card-body">
-                    
-                    <EditForm Model="CompraState.Compra" OnValidSubmit="ProcesarPedido">
+
+                    <EditForm Model="CompraState.Compra" OnSubmit="ProcesarPedido">
                         <DataAnnotationsValidator />
-                        <ValidationSummary class="alert alert-light text-danger" />
 
                         <div class="row g-3">
                             <div class="col-sm-6">
@@ -42,19 +43,19 @@
 
                             <div class="col-sm-6">
                                 <label class="form-label">Apellidos *</label>
-                                <InputText @bind-Value="CompraState.Compra.ApellidosUsuario" class="form-control" placeholder="Ej. Pérez" />
+                                <InputText id="InputApellidos" @bind-Value="CompraState.Compra.ApellidosUsuario" class="form-control" placeholder="Ej. Pérez" />
                                 <ValidationMessage For="@(() => CompraState.Compra.ApellidosUsuario)" />
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label">Dirección de Entrega *</label>
-                                <InputText @bind-Value="CompraState.Compra.DireccionDeEnvio" class="form-control" placeholder="Calle, número, ciudad..." />
+                                <InputText id="InputDireccion" @bind-Value="CompraState.Compra.DireccionDeEnvio" class="form-control" placeholder="Calle, número, ciudad..." />
                                 <ValidationMessage For="@(() => CompraState.Compra.DireccionDeEnvio)" />
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label">Método de Pago *</label>
-                                <InputSelect @bind-Value="CompraState.Compra.MetodoDePago" class="form-select">
+                                <InputSelect id="InputPago" @bind-Value="CompraState.Compra.MetodoDePago" class="form-select">
                                     @foreach (var metodo in Enum.GetValues(typeof(TiposMetodoPago)))
                                     {
                                         <option value="@metodo">@metodo</option>
@@ -64,21 +65,24 @@
                         </div>
 
                         <hr class="my-4">
-                        <a href="/Compras/SelectDispositivosComprar" class="btn btn-secondary w-20 btn-lg">
-                            <i class="bi bi-arrow-left"></i> Volver
-                        </a>
 
-                        <button class="btn btn-success w-100 btn-lg" type="submit" disabled="@enviando">
-                            @if (enviando)
-                            {
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                <span> Procesando...</span>
-                            }
-                            else
-                            {
-                                <span><i class="bi bi-check-circle"></i> Confirmar Compra</span>
-                            }
-                        </button>
+                        <div class="d-flex gap-2">
+                            <a href="/Compras/SelectDispositivosComprar" class="btn btn-secondary w-50 btn-lg">
+                                <i class="bi bi-arrow-left"></i> Volver
+                            </a>
+
+                            <button class="btn btn-success w-50 btn-lg" type="submit" disabled="@enviando">
+                                @if (enviando)
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span> Procesando...</span>
+                                }
+                                else
+                                {
+                                    <span><i class="bi bi-check-circle"></i> Confirmar</span>
+                                }
+                            </button>
+                        </div>
                     </EditForm>
                 </div>
             </div>
@@ -96,7 +100,7 @@
                     }
                     else
                     {
-                         <ul class="list-group list-group-flush mb-3">
+                        <ul class="list-group list-group-flush mb-3">
                             @foreach (var item in CompraState.Compra.ItemsCompra)
                             {
                                 <li class="list-group-item px-0">
@@ -127,31 +131,35 @@
 
     protected override void OnInitialized()
     {
-        // Si no hay items, fuera
         if (CompraState.Compra.ItemsCompra == null || !CompraState.Compra.ItemsCompra.Any())
         {
             Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
         }
     }
 
-    private async Task ProcesarPedido()
+    // Recibimos el EditContext para comprobar manualmente
+    private async Task ProcesarPedido(EditContext context)
     {
-        // 1. Si entramos aquí, es porque los campos YA están rellenos (OnValidSubmit funciona)
+        // 1. COMPROBAMOS SI HAY CAMPOS VACÍOS
+        if (!context.Validate())
+        {
+            // SI FALLA LA VALIDACIÓN, MOSTRAMOS TU MENSAJE Y PARAMOS
+            mensajeError = "Hay que rellenar los campos obligatorios.";
+            return;
+        }
+
+        // 2. Si llegamos aquí, está todo relleno
         enviando = true;
-        mensajeError = ""; 
+        mensajeError = "";
 
         try
         {
-            // 2. LLAMADA DIRECTA A LA API (Sin simulaciones raras)
             var compraRealizada = await ApiClient.CrearCompraAsync(CompraState.Compra);
-            
-            // 3. REDIRECCIÓN
             Navigation.NavigateTo($"/Compras/DetalleCompra/{compraRealizada.Id}");
         }
         catch (Exception ex)
         {
-            // Capturamos errores reales de conexión
-            mensajeError = "No se pudo procesar la compra. Inténtalo de nuevo. Detalle: " + ex.Message;
+            mensajeError = "Error al procesar la compra: " + ex.Message;
         }
         finally
         {
