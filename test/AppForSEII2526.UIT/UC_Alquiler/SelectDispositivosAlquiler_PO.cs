@@ -58,7 +58,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             _driver.FindElement(buttonSearch).Click();
 
             // Espera implícita para que la tabla refresque (opcional, pero recomendada)
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
         }
 
         // Verificar la tabla (Imitando CheckListOfMovies)
