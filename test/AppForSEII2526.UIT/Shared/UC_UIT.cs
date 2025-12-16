@@ -3,7 +3,7 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 
 
-namespace AppForMovies.UIT.Shared {
+namespace AppForSEII2526.UIT.Shared {
     public class UC_UIT : IDisposable {
 
         private bool _pipeline = false;
@@ -17,13 +17,24 @@ namespace AppForMovies.UIT.Shared {
         protected readonly ITestOutputHelper _output;
 
 
-        public string _URI {
-            get {
+        // En Shared/UC_UIT.cs https://localhost:7081/
+
+        // ... dentro de la clase ...
+
+        //protected const string _URI = "http://localhost:5000/"; // Puerto estándar Kestrel para Linux
+
+        // O si prefieres una lógica automática que detecte si estás en el servidor:
+
+        public string _URI
+        {
+            get
+            {
                 //set url of your web page 
-                return "https://localhost:7083/";
+                return "https://localhost:7081/";
 
             }
         }
+
 
         public UC_UIT(ITestOutputHelper output) {
 
@@ -95,27 +106,37 @@ namespace AppForMovies.UIT.Shared {
 
         }
 
-        protected void SetUp_EdgeFor4UIT() {
-            //var edgeDriverService = Microsoft.Edge.SeleniumTools.EdgeDriverService.CreateChromiumService();
-            //var edgeOptions = new Microsoft.Edge.SeleniumTools.EdgeOptions();
-            //edgeOptions.PageLoadStrategy = PageLoadStrategy.Normal;
-            //edgeOptions.UseChromium = true;
-            //if (_pipeline) edgeOptions.AddArguments("--headless");
-
-            //_driver = new Microsoft.Edge.SeleniumTools.EdgeDriver(edgeDriverService, edgeOptions);
-
-            var optionsEdge = new EdgeOptions {
+        protected void SetUp_EdgeFor4UIT()
+        {
+            var optionsEdge = new EdgeOptions
+            {
                 PageLoadStrategy = PageLoadStrategy.Normal,
                 AcceptInsecureCertificates = true
             };
 
-            //For pipelines use this option for hiding the browser
-            if (_pipeline) optionsEdge.AddArgument("--headless");
+            // Detectamos si estamos en un servidor (Pipeline) o en tu PC local
+            // Si la variable _pipeline es true O si existe la variable de entorno "CI" (común en GitHub Actions/Azure)
+            bool isServerEnvironment = _pipeline || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
+
+            if (isServerEnvironment)
+            {
+                // --- CONFIGURACIÓN SOLO PARA EL SERVIDOR (No visible) ---
+                optionsEdge.AddArgument("--headless=new");
+                optionsEdge.AddArgument("--no-sandbox");
+                optionsEdge.AddArgument("--disable-dev-shm-usage");
+                optionsEdge.AddArgument("--window-size=1920,1080");
+                optionsEdge.AddArgument("--ignore-certificate-errors");
+            }
+            else
+            {
+                // --- CONFIGURACIÓN PARA TU PC LOCAL (Visible) ---
+                // Aquí NO ponemos headless, para que puedas ver lo que pasa.
+                // A veces ayuda maximizar la ventana al inicio:
+                optionsEdge.AddArgument("--start-maximized");
+            }
 
             _driver = new EdgeDriver(optionsEdge);
-
         }
-
 
         public void Dispose() {
             _driver.Close();
