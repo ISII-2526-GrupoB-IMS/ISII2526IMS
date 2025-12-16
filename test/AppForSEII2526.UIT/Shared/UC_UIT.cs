@@ -17,33 +17,24 @@ namespace AppForSEII2526.UIT.Shared {
         protected readonly ITestOutputHelper _output;
 
 
-        // En Shared/UC_UIT.cs
+        // En Shared/UC_UIT.cs https://localhost:7081/
 
         // ... dentro de la clase ...
 
         //protected const string _URI = "http://localhost:5000/"; // Puerto estándar Kestrel para Linux
 
         // O si prefieres una lógica automática que detecte si estás en el servidor:
-        
-        protected string _URI 
+
+        public string _URI
         {
-            get 
+            get
             {
-                // Si hay una variable de entorno de URL (típico en pipelines), úsala
-                var urlEnv = Environment.GetEnvironmentVariable("APP_URL");
-                if (!string.IsNullOrEmpty(urlEnv)) return urlEnv;
+                //set url of your web page 
+                return "https://localhost:7081/";
 
-                // Si estamos en el pipeline (Linux), usa el puerto 5000
-                if (_pipeline || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI")))
-                {
-                    return "http://localhost:5000/";
-                }
-
-                // En local (tu PC), usa el puerto que tengas configurado (ej. el de IIS Express)
-                return "https://localhost:7081/"; // <--- PON AQUÍ TU PUERTO LOCAL EXACTO
             }
         }
-        
+
 
         public UC_UIT(ITestOutputHelper output) {
 
