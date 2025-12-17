@@ -1,0 +1,108 @@
+﻿@page "/Reviews/DetalleReview"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
+@inject ReviewStateContainer ReviewState
+@inject NavigationManager Navigation
+
+<PageTitle>Resumen de la Reseña</PageTitle>
+
+<div class="container mt-5">
+    @if (ReviewState.UltimaReseñaProcesada == null)
+    {
+        <div class="alert alert-info shadow-sm text-center">
+            <h4><i class="bi bi-info-circle"></i> No hay datos recientes</h4>
+            <p>No se ha encontrado ninguna reseña recién procesada. Vuelve al catálogo para crear una.</p>
+            <button class="btn btn-primary mt-3" @onclick="@(() => Navigation.NavigateTo("/Reviews/SelectDispositivosReview"))">
+                Ir al Catálogo
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0"><i class="bi bi-check-all"></i> ¡Reseña Publicada con Éxito!</h3>
+                    <span class="badge bg-white text-success px-3 py-2">
+                        ID de Sistema: @(new Random().Next(1000, 9999)) @* Simulación de ID *@
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="row mb-4">
+                    <div class="col-md-7">
+                        <h4 class="text-primary">@ReviewState.UltimaReseñaProcesada.Titulo</h4>
+                        <p class="text-muted mb-1"><i class="bi bi-person"></i> <b>Autor:</b> @(string.IsNullOrEmpty(ReviewState.UltimaReseñaProcesada.NombreUsuario) ? "Anónimo" : ReviewState.UltimaReseñaProcesada.NombreUsuario)</p>
+                        <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> <b>Ubicación:</b> @ReviewState.UltimaReseñaProcesada.Pais</p>
+                        <p class="text-muted">
+                            <i class="bi bi-calendar-event"></i> <b>Fecha:</b> @(ReviewState.UltimaReseñaProcesada.FechaReview == default
+                                                    ? DateTime.Now.ToShortDateString()
+                                                    : ReviewState.UltimaReseñaProcesada.FechaReview.DateTime.ToShortDateString())
+                    </p>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <div class="p-3 bg-light rounded border">
+                        <h6 class="text-uppercase small text-muted">Estado del Registro</h6>
+                        <span class="text-success font-weight-bold"><i class="bi bi-cloud-check"></i> Sincronizado con Base de Datos</span>
+                    </div>
+                </div>
+            </div>
+
+                <hr />
+
+                <h5 class="mb-3 text-secondary"><i class="bi bi-laptop"></i> Dispositivos Valorados</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Dispositivo / Modelo</th>
+                                <th class="text-center">Calificación</th>
+                                <th>Comentario del Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in ReviewState.UltimaReseñaProcesada.ItemsReview)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">@item.NombreDispositivo</div>
+                                        <div class="small text-muted">@item.Modelo (@item.Año.ToString("0"))</div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="bi @(i <= item.Puntuacion ? "bi-star-fill text-warning" : "bi-star text-muted") mx-1"></i>
+                                            }
+                                            <span class="ms-2 fw-bold">(@item.Puntuacion/5)</span>
+                                        </div>
+                                    </td>
+                                    <td class="fst-italic text-break" style="max-width: 300px;">
+                                        "@item.Comentario"
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer bg-white border-top-0 p-4 text-center">
+                <button class="btn btn-primary px-5 py-2" @onclick="Finalizar">
+                    <i class="bi bi-arrow-left-circle"></i> Volver al Catálogo
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private void Finalizar()
+    {
+        // Limpiamos la última reseña del estado para dejarlo listo para la siguiente
+        ReviewState.UltimaReseñaProcesada = null;
+        Navigation.NavigateTo("/Reviews/SelectDispositivosReview");
+    }
+}
+
