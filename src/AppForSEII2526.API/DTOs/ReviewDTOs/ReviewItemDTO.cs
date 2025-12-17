@@ -2,6 +2,7 @@
 {
     public class ReviewItemDTO
     {
+        public ReviewItemDTO() { }
         public ReviewItemDTO(string nombreDispositivo, string modelo, double año, int puntuacion, string comentario = "")
         {
 
@@ -29,7 +30,7 @@
         [Display(Name = "Puntuación")]
         public int Puntuacion { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El comentario no puede estar vacío")]
         [StringLength(300, ErrorMessage = "El comentario no puede ser mayor de 300 caracteres")]
         [Display(Name = "Comentario del dispositivo")]
         public string Comentario { get; set; }
