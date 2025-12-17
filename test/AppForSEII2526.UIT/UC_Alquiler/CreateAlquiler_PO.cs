@@ -87,7 +87,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             _driver.FindElement(btnConfirmar).Click();
         }
 
-        // MÉTODO ACTUALIZADO: Busca solo en los contenedores de error
+        
         public bool HayMensajeDeError(string textoEsperado)
         {
             try
@@ -96,10 +96,10 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 var errorLocators = new List<By> { alertError, fieldValidation };
                 bool encontrado = false;
 
-                // Intentamos esperar brevemente a que aparezca algún error (opcional, pero recomendado si el test va rápido)
+                // Intentamos esperar brevemente a que aparezca algún error
                 try
                 {
-                    // Esperamos a que aparezca al menos una alerta O un mensaje de validación
+                    
                     var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
                     wait.Until(d => d.FindElements(alertError).Count > 0 || d.FindElements(fieldValidation).Count > 0);
                 }
