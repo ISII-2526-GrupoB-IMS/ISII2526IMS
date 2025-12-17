@@ -4,6 +4,7 @@
 @inject AppForSEII2526APIClient ApiClient
 @inject ReviewStateContainer ReviewState
 @inject NavigationManager Navigation
+@implements IDisposable
 @rendermode InteractiveServer
 
 <PageTitle>Seleccionar Dispositivos para Reseña</PageTitle>
@@ -19,14 +20,14 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <span>Ítems para reseñar:</span>
-                    <strong>@ReviewState.Review.ItemsReview.Count</strong>
+                    <strong>@ReviewState.Reseña.ItemsReview.Count</strong>
                 </div>
 
-                @if (ReviewState.HasDevicesSelected)
+                @if (ReviewState.Reseña.ItemsReview != null && ReviewState.Reseña.ItemsReview.Any())
                 {
                     <hr />
                     <button class="btn btn-success w-100 mb-2" @onclick="IrACrearReview">
-                        Reseñar Dispositivos (@ReviewState.Review.ItemsReview.Count) <i class="bi bi-arrow-right"></i>
+                        Reseñar Dispositivos (@ReviewState.Reseña.ItemsReview.Count) <i class="bi bi-arrow-right"></i>
                     </button>
                     <button class="btn btn-outline-danger btn-sm w-100" @onclick="ReviewState.ClearReviewCart">
                         Vaciar Carrito
@@ -80,8 +81,9 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             @foreach (var dispositivo in dispositivos)
             {
-                // Verifica si el dispositivo ya está seleccionado para cambiar el botón
-                var isSelected = ReviewState.Review.ItemsReview.Any(i => i.IdDispositivo == dispositivo.Id);
+                // CORREGIDO: La verificación isSelected usa el NombreDispositivo como clave
+                var isSelected = ReviewState.Reseña.ItemsReview
+                .Any(i => i.NombreDispositivo == dispositivo.NombreDispositivo);
 
                 <div class="col">
                     <div class="card h-100 shadow-sm">
@@ -98,7 +100,7 @@
                         <div class="card-footer bg-white border-top-0 pb-3">
                             @if (isSelected)
                             {
-                                <button class="btn btn-outline-danger w-100" @onclick="() => Remover(dispositivo.Id)">
+                                <button class="btn btn-outline-danger w-100" @onclick="() => Remover(dispositivo.NombreDispositivo)">
                                     <i class="bi bi-x-circle"></i> Quitar de la Selección
                                 </button>
                             }
@@ -123,25 +125,21 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Suscribirse al evento para que el carrito se actualice si cambia en otra parte
-        ReviewState.OnChange += StateHasChanged;
+        // El evento OnChange es correcto y se suscribe
+        ReviewState.OnStateChange += StateHasChanged;
 
-        // Carga inicial de datos
         await CargarDispositivos();
     }
 
     public void Dispose()
     {
-        // Desuscribirse para evitar fugas de memoria
-        ReviewState.OnChange -= StateHasChanged;
+        ReviewState.OnStateChange -= StateHasChanged;
     }
 
     private async Task CargarDispositivos()
     {
         try
         {
-
-            // Llamada a la API con los filtros de Marca y Año
             dispositivos = await ApiClient.GetDispositivosParaReviewAsync(filtroMarca, filtroAño);
         }
         catch (Exception ex)
@@ -151,20 +149,27 @@
         }
     }
 
+    
     private void Agregar(DispositivoParaReviewDTO dispositivo)
     {
         ReviewState.AddDispositivoForReview(dispositivo);
     }
 
-    private void Remover(int dispositivoId)
+    // Método corregido: usa QuitarItemParaReview (el DTO completo)
+    private void Remover(string dispositivoNombre)
     {
-        ReviewState.RemoveDispositivoForReview(dispositivoId);
+        // Buscamos el ReviewItemDTO completo que corresponde al nombre
+        var itemToRemove = ReviewState.Reseña.ItemsReview.FirstOrDefault(i => i.NombreDispositivo == dispositivoNombre);
+
+        if (itemToRemove != null)
+        {
+            // QuitarItemParaReview requiere el objeto DTO completo.
+            ReviewState.RemoveDispositivoForReview(itemToRemove);
+        }
     }
 
     private void IrACrearReview()
     {
-        // Navega al siguiente componente donde se rellenará el formulario de reseña
         Navigation.NavigateTo("/Reviews/CrearReview");
     }
-}
 }

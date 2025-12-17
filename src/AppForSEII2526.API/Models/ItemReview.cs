@@ -7,14 +7,13 @@ namespace AppForSEII2526.API.Models
     {
         public ItemReview() { }
 
-        public ItemReview(string comentario, int puntuacion, Dispositivo dispositivo, Review Review)
+        public ItemReview(string comentario, int puntuacion, Dispositivo dispositivo, Review review)
         {
             Comentario = comentario;
             Puntuacion = puntuacion;
             Dispositivo = dispositivo;
-            IdDispositivo = dispositivo.Id;
-            Review = Review;
-            IdReview = Review.Id;
+            Review = review; 
+            IdReview = review.Id;
         }
 
 

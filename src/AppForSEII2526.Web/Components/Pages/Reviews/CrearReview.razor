@@ -1,0 +1,174 @@
+﻿@page "/Reviews/CrearReview"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
+
+@inject AppForSEII2526APIClient apiclient
+@inject ReviewStateContainer reviewState
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Finalizar Reseña</PageTitle>
+
+<h3>Finalizar Reseña</h3>
+
+<EditForm Model="review" OnValidSubmit="GuardarReviewDirecto" OnInvalidSubmit="ShowValidationErrors">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="row alert alert-danger" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(messageError))
+    {
+        <div class="row alert alert-danger" role="alert">
+            <p>@messageError</p>
+        </div>
+    }
+
+    <div class="row g-3">
+        <div class="col-md-12">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="review.Titulo" class="form-control" id="Title" />
+                <label for="Title">Título de la Reseña *</label>
+                <ValidationMessage For="@(() => review.Titulo)" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="review.Pais" class="form-control" id="Country" />
+                <label for="Country">País *</label>
+                <ValidationMessage For="@(() => review.Pais)" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="review.NombreUsuario" class="form-control" id="UserName" />
+                <label for="UserName">Tu Nombre</label>
+                <ValidationMessage For="@(() => review.NombreUsuario)" />
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mt-4">Detalles de los Dispositivos</h4>
+    <p>
+        <b>Dispositivos seleccionados:</b> @review.ItemsReview.Count
+        <button class="btn btn-outline-warning ms-3" type="button" @onclick="ModifyReviewItems">
+            <i class="bi bi-pencil"></i> Modificar selección
+        </button>
+    </p>
+
+    <div class="mh-100 table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>Dispositivo</th>
+                    <th>Modelo</th>
+                    <th style="width: 150px;">Puntuación (1-5)</th>
+                    <th>Comentario (Debe empezar por "Review para")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in review.ItemsReview)
+                {
+                    <tr>
+                        <td><b>@item.NombreDispositivo</b><br /></td>
+                        <td>@item.Modelo (@item.Año.ToString("0"))</td>
+                        <td>
+                            <InputNumber @bind-Value="item.Puntuacion" class="form-control" min="1" max="5" />
+                            <ValidationMessage For="@(() => item.Puntuacion)" />
+                        </td>
+                        <td>
+                            <InputTextArea @bind-Value="item.Comentario" class="form-control" rows="2" placeholder="Review para..." />
+                            <ValidationMessage For="@(() => item.Comentario)" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-end">
+            <button class="btn btn-success btn-lg" type="submit" id="Submit" disabled="@reviewButtonDisabled">
+                <i class="bi bi-star-fill"></i> Publicar Reseña
+            </button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private string messageError = "";
+
+    private bool reviewButtonDisabled => review.ItemsReview == null || review.ItemsReview.Count == 0;
+
+    private ReviewForCreateDTO review => reviewState.Reseña;
+
+    private void ModifyReviewItems()
+    {
+        Navigation.NavigateTo("/Reviews/SelectDispositivosReview");
+    }
+
+    private void ShowValidationErrors()
+    {
+        messageError = "Hay errores en el formulario. Por favor, asegúrate de que todos los dispositivos tengan puntuación (1-5) y el comentario empiece por 'Review para'.";
+    }
+
+    private async Task GuardarReviewDirecto()
+    {
+        messageError = "Procesando reseña...";
+
+        if (review.ItemsReview.Count > 0)
+        {
+            try
+            {
+                // 1. Llamada a la API (devuelve ReviewDetailDTO)
+                var createdReview = await apiclient.CrearReviewAsync(review);
+
+                // 2. Guardamos el detalle en el contenedor y reiniciamos el formulario
+                reviewState.ReviewProcessed(createdReview);
+
+                // 3. Navegamos a la página de detalle (sin parámetros de URL)
+                Navigation.NavigateTo("/Reviews/DetalleReview");
+            }
+            catch (ApiException<ValidationProblemDetails> ex)
+            {
+                messageError = "Error de validación del servidor: ";
+                if (ex.Result.Errors != null)
+                {
+                    foreach (var errorList in ex.Result.Errors.Values)
+                    {
+                        messageError += string.Join(", ", errorList) + ". ";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                messageError = $"Error del sistema: {ex.Message}";
+            }
+        }
+        else
+        {
+            messageError = "No hay dispositivos seleccionados para reseñar.";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null && user.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                review.NombreUsuario = user.Identity.Name ?? "";
+            }
+
+            review.Titulo ??= "";
+            review.Pais ??= "";
+            review.NombreUsuario ??= "";
+        }
+    }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+}
