@@ -62,7 +62,7 @@ namespace AppForSEII2526.API.Controllers
 
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        [ProducesResponseType(typeof(AlquilerForCreateDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(AlquilerDetailDTO), (int)HttpStatusCode.Created)]
         public async Task<ActionResult> CrearAlquiler(AlquilerForCreateDTO alquilerForCreate)
         {
 
@@ -75,6 +75,9 @@ namespace AppForSEII2526.API.Controllers
             if (alquilerForCreate.ItemsAlquiler.Count == 0)
                 ModelState.AddModelError("RentalItems", "Error! You must include at least one device to be rented");
 
+            if (alquilerForCreate.DireccionEntrega == null || (!alquilerForCreate.DireccionEntrega.Contains("Calle") && !alquilerForCreate.DireccionEntrega.Contains("Carretera")))
+                ModelState.AddModelError("Rental dirección", "Error en la dirección de envío. Por favor,introduce una dirección válida incluyendo las palabras Calle o Carretera");
+            
             //we must relate the Rental to the User
             var user = await _context.Users.FirstOrDefaultAsync(au => au.NombreUsuario == alquilerForCreate.NombreUsuario);
             if (user == null)
@@ -122,7 +125,7 @@ namespace AppForSEII2526.API.Controllers
                     else
                     {
                         // rental does not exist in the database yet and does not have a valid Id, so we must relate rentalitem to the object rental
-                        alquiler.ItemsAlquiler.Add(new ItemAlquiler(dispositivo.Id, alquiler.Id, dispositivo.PrecioParaAlquiler));
+                        alquiler.ItemsAlquiler.Add(new ItemAlquiler(dispositivo.Id, alquiler.Id, dispositivo.PrecioParaAlquiler) { Cantidad = 1 });
                         item.PrecioParaAlquiler = dispositivo.PrecioParaAlquiler;
                     }
                 }
@@ -150,11 +153,22 @@ namespace AppForSEII2526.API.Controllers
                     return Conflict("Error" + ex.Message);
 
                 }
+                
 
-                var rentalDetail = new AlquilerForCreateDTO(alquiler.ApplicationUser.NombreUsuario, alquiler.ApplicationUser.ApellidosUsuario,
-                alquiler.DireccionEntrega, alquiler.MetodoPago, alquiler.FechaAlquilerDesde, alquiler.FechaAlquilerHasta, alquilerForCreate.ItemsAlquiler);
+                var rentalDetail = new AlquilerDetailDTO(
+                    alquiler.Id,
+                    alquiler.FechaAlquiler,
+                    alquiler.ApplicationUser.NombreUsuario,
+                    alquiler.ApplicationUser.ApellidosUsuario,
+                    alquiler.DireccionEntrega,
+                    alquiler.MetodoPago,
+                    alquiler.FechaAlquilerDesde,
+                    alquiler.FechaAlquilerHasta,
+                    alquilerForCreate.ItemsAlquiler
 
-                return CreatedAtAction("CrearAlquiler", new { id = alquiler.Id }, rentalDetail);
+                );
+
+            return CreatedAtAction("CrearAlquiler", new { id = alquiler.Id }, rentalDetail);
 
 
             }

@@ -1,0 +1,139 @@
+﻿@page "/Alquileres/DetalleAlquiler"
+
+
+@using AppForSEII2526.Web.API
+
+@inject AppForSEII2526APIClient apiclient
+
+<h3>DetailRental</h3>
+
+
+
+@if (rental == null)
+{
+    <p>@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Name and Surname</th>
+            <td id="NameSurname">@rental.NombreUsuario @rental.ApellidosUsuario</td>
+        </tr>
+        <tr>
+            <th>Delivery Address</th>
+            <td id="DeliveryAddress">@rental.DireccionEntrega</td>
+        </tr>
+        <tr>
+            <th>Payment Method</th>
+            <td id="PaymentMethod">@rental.MetodoPago</td>
+        </tr>
+        <tr>
+            <th>Fecha alquiler</th>
+            <td id="PaymentMethod">@rental.FechaAlquiler</td>
+        </tr>
+        <tr>
+            <th>Rental period</th>
+            <td id="RentalPeriod">@rental.FechaAlquilerDesde.DateTime.ToString("dd/MM/yyyy") - @rental.FechaAlquilerHasta.DateTime.ToString("dd/MM/yyyy")</td>
+        </tr>
+    </table>
+
+    <h4>Rented Movies</h4>
+
+    <table class="table" id="RentedMovies">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Precio para alquiler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ItemAlquilerDTO item in rental.ItemsAlquiler)
+            {
+                <tr id="RentalItem_@item.NombreDispositivo">
+                    <td>@item.NombreDispositivo</td>
+                    <td>@item.Modelo</td>
+                    <td>@item.Marca</td>
+                    <td>@item.PrecioParaAlquiler €</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                @* Ajustamos colspan a 3 para alinear con la columna de precio *@
+                <th scope="row" colspan="3" class="text-end">Total Price (@DiasAlquiler days):</th>
+                <td id="TotalPrice" class="fw-bold">@PrecioTotal.ToString("C")</td>
+            </tr>
+        </tfoot>
+
+    </table>
+
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int RentalID { get; set; }
+    private AlquilerDetailDTO rental;
+    private string error = "";
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private int DiasAlquiler 
+    {
+        get 
+        {
+            if (rental == null) return 0;
+            var dias = (rental.FechaAlquilerHasta - rental.FechaAlquilerDesde).Days;
+            return dias <= 0 ? 1 : dias; // Mínimo 1 día de cobro
+        }
+    }
+    private decimal PrecioTotal
+    {
+        get
+        {
+            if (rental == null || rental.ItemsAlquiler == null) return 0;
+            // Suma: Precio de cada item * Número de días
+            double total = rental.ItemsAlquiler.Sum(i => i.PrecioParaAlquiler * DiasAlquiler);
+            return (decimal)total;
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        //we check the user is logged in
+        string userName = "";
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            //we retrieve the id of the user logged in
+            if (user is not null)
+            {
+                if (user.Identity is not null && user.Identity.IsAuthenticated && user.IsInRole("User"))
+                {
+                    userName = user.Identity.Name;
+                }
+            }
+        }
+
+        try
+        {
+            rental = await apiclient.GetDetalleAlquilerAsync(RentalID);
+        }
+        catch (ApiException exception)
+        {
+            rental = null;
+        }
+        if ((rental == null) || (rental.NombreUsuario != userName))
+        {
+            error = $"Error! You are not authorized to see this rental or there is not a rental with id={RentalID}";
+        }
+
+
+    }
+
+}

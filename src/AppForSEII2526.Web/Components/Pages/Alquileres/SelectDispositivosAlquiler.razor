@@ -1,0 +1,236 @@
+﻿@page "/Alquileres/SelectDispositivosAlquiler"
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient ApiClient
+@inject ILogger<SelectDispositivosAlquiler> logger
+@inject AlquilerStateContainer AlquilerState
+@inject NavigationManager Navigation
+
+<h3>Seleccionar dispositivos para alquiler</h3>
+
+<div class="container-fluid">
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errores: @errors</p>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">Nombre modelo</span>
+                <input class="form-control" @bind="filtroNombre" placeholder="ej. iPhone" />
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-text">Precio máx. (€)</span>
+                <input type="number" class="form-control" @bind="filtroPrecioMaximo" step="0.01" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="input-group">
+                <span class="input-group-text">Desde</span>
+                <InputDate @bind-Value="_from" class="form-control" />
+                <span class="input-group-text">Hasta</span>
+                <InputDate @bind-Value="_to" class="form-control" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-primary" @onclick="SearchDispositivos">Buscar</button>
+            <button class="btn btn-outline-secondary ms-2" @onclick="ResetFiltros">Limpiar</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            @if (dispositivos == null)
+            {
+                <p>Cargando dispositivos...</p>
+            }
+            else if (!dispositivos.Any())
+            {
+                <div class="alert alert-warning">No se han encontrado dispositivos.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Color</th>
+                                <th>Modelo</th>
+                                <th>Precio /día</th>
+                                <th>Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in dispositivos)
+                            {
+                                <tr>
+                                    <td>@d.NombreDispositivo</td>
+                                    <td>@d.Marca</td>
+                                    <td>@d.Color</td>
+                                    <td>@d.Modelo?.NombreModelo</td>
+                                    <td>@d.PrecioParaAlquiler.ToString("C2")</td>
+                                    <td>
+                                        @if (IsSelected(d))
+                                        {
+                                            <button class="btn btn-sm btn-outline-danger" @onclick="() => RemoveDispositivo(d)">Quitar</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm btn-outline-primary" @onclick="() => AddDispositivo(d)">Añadir</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        <div class="col-4" hidden="@hideCart">
+            <div class="card">
+                <div class="card-header bg-primary text-white">Mi selección</div>
+                <div class="card-body">
+                    @if (!AlquilerState.Alquiler.ItemsAlquiler.Any())
+                    {
+                        <div class="text-muted">No hay dispositivos seleccionados.</div>
+                    }
+                    else
+                    {
+                        @foreach (var item in AlquilerState.Alquiler.ItemsAlquiler)
+                        {
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <strong>@item.NombreDispositivo</strong><br />
+                                    <small class="text-muted">@item.Modelo — @item.Marca</small>
+                                </div>
+                                <div class="text-end">
+                                    <div>@item.PrecioParaAlquiler.ToString("C2")</div>
+                                    <button class="btn btn-sm btn-link text-danger" @onclick="() => RemoveRentalItem(item)">Eliminar</button>
+                                </div>
+                            </div>
+                        }
+                        <hr />
+                        <div class="d-flex justify-content-between">
+                            <div>Total estimado:</div>
+                            <div><strong>@AlquilerTotal.ToString("C2")</strong></div>
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-success w-100" @onclick="IrCrearAlquiler">Crear reserva</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ICollection<DispositivoParaAlquilarDTO>? dispositivos;
+    private string? filtroNombre;
+    private double? filtroPrecioMaximo;
+    private string errors = "";
+    private DateTime _from = DateTime.Today.AddDays(1);
+    private DateTime _to = DateTime.Today.AddDays(2);
+
+    private bool hideErrors => string.IsNullOrEmpty(errors);
+    private bool hideCart => !AlquilerState.Alquiler.ItemsAlquiler.Any();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // inicializamos fechas en el contenedor
+        AlquilerState.Alquiler.FechaAlquilerDesde = new DateTimeOffset(_from);
+        AlquilerState.Alquiler.FechaAlquilerHasta = new DateTimeOffset(_to);
+
+        await SearchDispositivos();
+        AlquilerState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AlquilerState.OnChange -= StateHasChanged;
+    }
+
+    private async Task SearchDispositivos()
+    {
+        // Validaciones de fechas
+        if (new DateTimeOffset(_from) >= new DateTimeOffset(_to))
+        {
+            errors = "La fecha de fin debe ser posterior a la de inicio.";
+            return;
+        }
+        if (new DateTimeOffset(_from) <= DateTimeOffset.Now || new DateTimeOffset(_to) <= DateTimeOffset.Now)
+        {
+            errors = "Las fechas de alquiler deben ser futuras.";
+            return;
+        }
+
+        // Actualizamos las fechas en el contenedor y vaciamos la selección para evitar inconsistencias
+        AlquilerState.Alquiler.FechaAlquilerDesde = new DateTimeOffset(_from);
+        AlquilerState.Alquiler.FechaAlquilerHasta = new DateTimeOffset(_to);
+        AlquilerState.ClearRentingCart();
+
+        try
+        {
+            dispositivos = await ApiClient.GetDispositivosParaAlquilarAsync(filtroNombre, filtroPrecioMaximo);
+            errors = "";
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"Error al obtener dispositivos: {ex}");
+            errors = "Error al conectar con el servicio.";
+            dispositivos = new List<DispositivoParaAlquilarDTO>();
+        }
+    }
+
+    private void ResetFiltros()
+    {
+        filtroNombre = null;
+        filtroPrecioMaximo = null;
+        _from = DateTime.Today.AddDays(1);
+        _to = DateTime.Today.AddDays(2);
+    }
+
+    private void AddDispositivo(DispositivoParaAlquilarDTO d)
+    {
+        AlquilerState.AddDispositivoForRental(d);
+    }
+
+    private void RemoveDispositivo(DispositivoParaAlquilarDTO d)
+    {
+        var item = AlquilerState.Alquiler.ItemsAlquiler.FirstOrDefault(i => i.IdDispositivo == d.Id);
+        if (item != null) AlquilerState.RemoveDispositivoForRental(item);
+    }
+
+    private void RemoveRentalItem(ItemAlquilerDTO item)
+    {
+        AlquilerState.RemoveDispositivoForRental(item);
+    }
+
+    private bool IsSelected(DispositivoParaAlquilarDTO d) =>
+        AlquilerState.Alquiler.ItemsAlquiler.Any(i => i.IdDispositivo == d.Id);
+
+    private decimal AlquilerTotal
+    {
+        get
+        {
+            var days = (decimal)(AlquilerState.Alquiler.FechaAlquilerHasta - AlquilerState.Alquiler.FechaAlquilerDesde).TotalDays;
+            if (days < 1) days = 1;
+            return Convert.ToDecimal(AlquilerState.Alquiler.ItemsAlquiler.Sum(i => i.PrecioParaAlquiler)) * days;
+        }
+    }
+
+    private void IrCrearAlquiler()
+    {
+        AlquilerState.Alquiler.FechaAlquilerDesde = new DateTimeOffset(_from);
+        AlquilerState.Alquiler.FechaAlquilerHasta = new DateTimeOffset(_to);
+
+        Navigation.NavigateTo("/Alquileres/CreateAlquiler");
+    }
+}

@@ -21,7 +21,7 @@ public class ApplicationUser : IdentityUser {
 
     public IList<Compra> Compra { get; set; }
     public IList<Alquiler> Alquiler { get; set; }
-    public IList<Reseña> Reseña { get; set; }
+    public IList<Review> Review { get; set; }
 
 
     public ApplicationUser(string id, string nombreUsuario, string? apellidosUsuario, string direccionDeEnvio)

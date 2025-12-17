@@ -12,8 +12,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ItemCompra> ItemCompra { get; set; }
     public DbSet<ItemAlquiler> AlquilarDispositivo { get; set; }
     public DbSet<Alquiler> Alquiler { get; set; }
-    public DbSet<ItemReseña> ItemReseña { get; set; }
-    public DbSet<Reseña> Reseña { get; set; }
+    public DbSet<ItemReview> ItemReview { get; set; }
+    public DbSet<Review> Review { get; set; }
     public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
 }

@@ -15,7 +15,7 @@ namespace AppForSEII2526.UT.AlquileresController_test
         private const string _usuarioEmail = "cliente1@test.com";
         private const string _nombreUsuario = "Juan";
         private const string _apellidosUsuario = "García López";
-        private const string _direccionEnvio = "Avenida Libertad 45, Barcelona";
+        private const string _direccionEnvio = "Calle Libertad 45, Barcelona";
 
         private const string _marcaValida = "Samsung";
         private const string _modeloValido = "Galaxy S24 Ultra";
@@ -132,6 +132,27 @@ namespace AppForSEII2526.UT.AlquileresController_test
                 itemsValidos
             );
 
+            // CASO 7: Dirección no contiene ni Calle ni Carretera
+            var alquilerDireccionInvalida = new AlquilerForCreateDTO(
+                _nombreUsuario,
+                _apellidosUsuario,
+                "avenida de la libertad",
+                TiposMetodoPago.TarjetaCredito,
+                DateTime.Now.AddDays(5.0), 
+                DateTime.Now.AddDays(10.0),  
+                itemsValidos
+            );
+            // CASO 8: Dirección nula
+            var alquilerDireccionNula = new AlquilerForCreateDTO(
+                _nombreUsuario,
+                _apellidosUsuario,
+                null,
+                TiposMetodoPago.TarjetaCredito,
+                DateTime.Now.AddDays(5.0),
+                DateTime.Now.AddDays(10.0),
+                itemsValidos
+            );
+
             var allTests = new List<object[]>
             {
                 // Caso 1: sin items
@@ -151,6 +172,13 @@ namespace AppForSEII2526.UT.AlquileresController_test
 
                 // Caso 6: fecha inicio >= fecha fin
                 new object[] { alquilerFechasInvalidas, "Error! Your rental must end later than it starts" },
+
+                // CASO 7: Dirección no contiene ni Calle ni Carretera
+                new object[] { alquilerDireccionInvalida, "Error en la dirección de envío. Por favor,introduce una dirección válida incluyendo las palabras Calle o Carretera" },
+
+                // CASO 8: Dirección nula
+                new object[] { alquilerDireccionNula, "Error en la dirección de envío. Por favor,introduce una dirección válida incluyendo las palabras Calle o Carretera" },
+
             };
 
             return allTests;
@@ -212,7 +240,9 @@ namespace AppForSEII2526.UT.AlquileresController_test
             );
 
             // DTO esperado de respuesta (AlquilerForCreateDTO)
-            var expectedAlquilerDTO = new AlquilerForCreateDTO(
+            var expectedAlquilerDTO = new AlquilerDetailDTO(
+                1,
+                DateTime.Now,
                 _nombreUsuario,
                 _apellidosUsuario,
                 _direccionEnvio,
@@ -227,7 +257,7 @@ namespace AppForSEII2526.UT.AlquileresController_test
 
             // Assert
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-            var actualAlquilerDTO = Assert.IsType<AlquilerForCreateDTO>(createdResult.Value);
+            var actualAlquilerDTO = Assert.IsType<AlquilerDetailDTO>(createdResult.Value);
 
             Assert.Equal(expectedAlquilerDTO, actualAlquilerDTO);
         }

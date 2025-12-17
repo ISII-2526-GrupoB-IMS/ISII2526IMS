@@ -63,7 +63,11 @@ namespace AppForSEII2526.API.Controllers
                         ci.Descripcion
                     ))
                     .ToList()
-            );
+            )
+            {
+                Id = compra.Id  
+            }; 
+
 
             return Ok(compraDTO);
         }
@@ -129,6 +133,14 @@ namespace AppForSEII2526.API.Controllers
                 {
                     ModelState.AddModelError("DispositivoNoDisponible",
                         $"Error! No hay suficiente stock del dispositivo '{itemDTO.Modelo}'. Disponible: {dispositivo.CantidadParaCompra}, Solicitado: {itemDTO.Cantidad}");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+
+                // Validar marca
+                if (itemDTO.Marca.Contains("Xiaomi") || itemDTO.Marca.Contains("Huawei"))
+                {
+                    ModelState.AddModelError("TecnologiaNoDisponible",
+                        $"Error! Las tecnologias de estas marcas ya no estan disponibles, siguiendo recomendaciones de las autoridades competentes en materia de seguridad");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
 
@@ -205,7 +217,10 @@ namespace AppForSEII2526.API.Controllers
                 compra.PrecioTotal,
                 compra.CantidadTotal,
                 compraParaCrear.ItemsCompra
-            );
+            )
+            {
+                Id = compra.Id 
+            };
 
             return CreatedAtAction("GetDetalleCompra", new { id = compra.Id }, compraDetail);
         }

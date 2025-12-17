@@ -1,0 +1,170 @@
+﻿@page "/Reviews/SelectDispositivosReview"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web
+@inject AppForSEII2526APIClient ApiClient
+@inject ReviewStateContainer ReviewState
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Seleccionar Dispositivos para Reseña</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-star"></i> Catálogo de Dispositivos para Reseñas</h2>
+
+        <div class="card border-warning mb-3" style="min-width: 280px;">
+            <div class="card-header bg-warning text-dark">
+                <i class="bi bi-card-list"></i> Mi Carrito de Reseñas
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <span>Ítems para reseñar:</span>
+                    <strong>@ReviewState.Review.ItemsReview.Count</strong>
+                </div>
+
+                @if (ReviewState.HasDevicesSelected)
+                {
+                    <hr />
+                    <button class="btn btn-success w-100 mb-2" @onclick="IrACrearReview">
+                        Reseñar Dispositivos (@ReviewState.Review.ItemsReview.Count) <i class="bi bi-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm w-100" @onclick="ReviewState.ClearReviewCart">
+                        Vaciar Carrito
+                    </button>
+                }
+                else
+                {
+                    <p class="text-muted mt-2">Aún no has añadido ningún dispositivo. Añade al menos uno para reseñar.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 bg-light">
+        <div class="card-body">
+            <h5 class="card-title">Filtrar búsqueda</h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Marca (ej. Samsung)..."
+                           @bind="filtroMarca" />
+                </div>
+                <div class="col-md-4">
+                    <input type="number" class="form-control" placeholder="Año (ej. 2024)..."
+                           @bind="filtroAño" />
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100" @onclick="CargarDispositivos">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (dispositivos == null)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Cargando catálogo...</p>
+        </div>
+    }
+    else if (!dispositivos.Any())
+    {
+        <div class="alert alert-warning d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>No se han encontrado dispositivos con esos filtros.</div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var dispositivo in dispositivos)
+            {
+                // Verifica si el dispositivo ya está seleccionado para cambiar el botón
+                var isSelected = ReviewState.Review.ItemsReview.Any(i => i.IdDispositivo == dispositivo.Id);
+
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@dispositivo.NombreDispositivo</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@dispositivo.Marca</h6>
+
+                            <div class="mb-2">
+                                <span class="badge bg-secondary">@dispositivo.Color</span>
+                                <span class="badge bg-info text-dark">@dispositivo.Modelo?.NombreModelo</span>
+                                <span class="badge bg-light text-secondary">Año: @dispositivo.Año.ToString("0")</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 pb-3">
+                            @if (isSelected)
+                            {
+                                <button class="btn btn-outline-danger w-100" @onclick="() => Remover(dispositivo.Id)">
+                                    <i class="bi bi-x-circle"></i> Quitar de la Selección
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-warning w-100" @onclick="() => Agregar(dispositivo)">
+                                    <i class="bi bi-plus-circle"></i> Añadir a la Cesta
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private ICollection<DispositivoParaReviewDTO>? dispositivos;
+    private string? filtroMarca;
+    private int? filtroAño;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Suscribirse al evento para que el carrito se actualice si cambia en otra parte
+        ReviewState.OnChange += StateHasChanged;
+
+        // Carga inicial de datos
+        await CargarDispositivos();
+    }
+
+    public void Dispose()
+    {
+        // Desuscribirse para evitar fugas de memoria
+        ReviewState.OnChange -= StateHasChanged;
+    }
+
+    private async Task CargarDispositivos()
+    {
+        try
+        {
+
+            // Llamada a la API con los filtros de Marca y Año
+            dispositivos = await ApiClient.GetDispositivosParaReviewAsync(filtroMarca, filtroAño);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cargando API: {ex.Message}");
+            dispositivos = new List<DispositivoParaReviewDTO>();
+        }
+    }
+
+    private void Agregar(DispositivoParaReviewDTO dispositivo)
+    {
+        ReviewState.AddDispositivoForReview(dispositivo);
+    }
+
+    private void Remover(int dispositivoId)
+    {
+        ReviewState.RemoveDispositivoForReview(dispositivoId);
+    }
+
+    private void IrACrearReview()
+    {
+        // Navega al siguiente componente donde se rellenará el formulario de reseña
+        Navigation.NavigateTo("/Reviews/CrearReview");
+    }
+}
+}

@@ -3,6 +3,7 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 {
     public class CompraItemDTO
     {
+        public CompraItemDTO() { }
         public CompraItemDTO(string marca, string modelo, string color, double precio, int cantidad , string? descripcion = null)
         {
             
@@ -15,7 +16,8 @@ namespace AppForSEII2526.API.DTOs.CompraDTOs
 
         }
 
-        
+ 
+
         [StringLength(50, ErrorMessage = "La marca no puede ser mayor de 50 caracteres")]
         public string Marca { get; set; }
         public string Modelo { get; set; }
