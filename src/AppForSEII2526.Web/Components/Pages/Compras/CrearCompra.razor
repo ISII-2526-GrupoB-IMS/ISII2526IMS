@@ -1,9 +1,7 @@
 ﻿@page "/Compras/CrearCompra"
 @using System.Net
-
 @using AppForSEII2526.Web.API
 @using AppForSEII2526.Web
-
 @inject ComprasStateContainer CompraState
 @inject AppForSEII2526APIClient ApiClient
 @inject NavigationManager Navigation
@@ -15,10 +13,11 @@
     <div class="row">
         <div class="col-md-7">
 
+            @* AQUÍ APARECE EL MENSAJE SI LA VALIDACIÓN MANUAL FALLA *@
             @if (!string.IsNullOrEmpty(mensajeError))
             {
                 <div class="alert alert-danger d-flex align-items-center mb-3" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
                     <div>
                         <strong>Atención:</strong> @mensajeError
                     </div>
@@ -31,26 +30,23 @@
                 </div>
                 <div class="card-body">
 
+                    @* Usamos OnSubmit para controlar manualmente el proceso *@
                     <EditForm Model="CompraState.Compra" OnSubmit="ProcesarPedido">
-                        <DataAnnotationsValidator />
-
+                        
                         <div class="row g-3">
                             <div class="col-sm-6">
                                 <label class="form-label">Nombre *</label>
                                 <InputText id="InputNombre" @bind-Value="CompraState.Compra.NombreUsuario" class="form-control" placeholder="Ej. Juan" />
-                                <ValidationMessage For="@(() => CompraState.Compra.NombreUsuario)" />
                             </div>
 
                             <div class="col-sm-6">
                                 <label class="form-label">Apellidos *</label>
                                 <InputText id="InputApellidos" @bind-Value="CompraState.Compra.ApellidosUsuario" class="form-control" placeholder="Ej. Pérez" />
-                                <ValidationMessage For="@(() => CompraState.Compra.ApellidosUsuario)" />
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label">Dirección de Entrega *</label>
                                 <InputText id="InputDireccion" @bind-Value="CompraState.Compra.DireccionDeEnvio" class="form-control" placeholder="Calle, número, ciudad..." />
-                                <ValidationMessage For="@(() => CompraState.Compra.DireccionDeEnvio)" />
                             </div>
 
                             <div class="col-12">
@@ -131,26 +127,61 @@
 
     protected override void OnInitialized()
     {
+        // Si el carrito está vacío, redirigimos al catálogo
         if (CompraState.Compra.ItemsCompra == null || !CompraState.Compra.ItemsCompra.Any())
         {
             Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
         }
     }
 
-    // Recibimos el EditContext para comprobar manualmente
-    private async Task ProcesarPedido(EditContext context)
+   
+    private async Task ProcesarPedido()
     {
-        // 1. COMPROBAMOS SI HAY CAMPOS VACÍOS
-        if (!context.Validate())
+        // 1. Limpiamos errores
+        mensajeError = "";
+
+        // 2. VALIDACIONES DE OBLIGATORIEDAD (Vacíos)
+        if (string.IsNullOrWhiteSpace(CompraState.Compra.NombreUsuario))
         {
-            // SI FALLA LA VALIDACIÓN, MOSTRAMOS TU MENSAJE Y PARAMOS
-            mensajeError = "Hay que rellenar los campos obligatorios.";
+            mensajeError = "Por favor, introduce tu Nombre.";
             return;
         }
 
-        // 2. Si llegamos aquí, está todo relleno
+        if (string.IsNullOrWhiteSpace(CompraState.Compra.ApellidosUsuario))
+        {
+            mensajeError = "Por favor, introduce tus Apellidos.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(CompraState.Compra.DireccionDeEnvio))
+        {
+            mensajeError = "Es obligatorio introducir una Dirección de entrega.";
+            return;
+        }
+
+        // 3. NUEVAS VALIDACIONES DE LONGITUD MÁXIMA
+        // Comprobamos la propiedad .Length de cada cadena
+
+        if (CompraState.Compra.NombreUsuario.Length > 50)
+        {
+            mensajeError = "El Nombre es demasiado largo (máximo 50 caracteres).";
+            return;
+        }
+
+        if (CompraState.Compra.ApellidosUsuario.Length > 70)
+        {
+            mensajeError = "Los Apellidos son demasiado largos (máximo 70 caracteres).";
+            return;
+        }
+
+        if (CompraState.Compra.DireccionDeEnvio.Length > 100)
+        {
+            mensajeError = "La Dirección es demasiado larga (máximo 100 caracteres).";
+            return;
+        }
+
+        // 4. ENVÍO
         enviando = true;
-        mensajeError = "";
 
         try
         {
@@ -159,7 +190,7 @@
         }
         catch (Exception ex)
         {
-            mensajeError = "Error al procesar la compra: " + ex.Message;
+            mensajeError = "Ocurrió un error al procesar la compra: " + ex.Message;
         }
         finally
         {

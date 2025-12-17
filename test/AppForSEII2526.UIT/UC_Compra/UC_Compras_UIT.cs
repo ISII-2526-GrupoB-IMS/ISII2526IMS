@@ -93,7 +93,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             // Usamos Contains por si hay símbolos de moneda o espacios extraños
             Assert.Contains(precioEsperado, precioFinal);
 
-            _output.WriteLine("¡Prueba de Flujo Básico COMPLETADA! La compra se realizó y verificó correctamente.");
+           
         }
 
         [Fact]
@@ -247,26 +247,23 @@ namespace AppForSEII2526.UIT.UC_Compra
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             // --- ACT ---
-            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
-            // (Queremos que llegue a intentar enviar al servidor)
+            // 2. Dejamos el Nombre vacío pero rellenamos lo demás
             crearCompraPO.EscribirNombre("");
-            crearCompraPO.EscribirApellidos("Apellido Test");
-            crearCompraPO.EscribirDireccion("Calle Test");
+            crearCompraPO.EscribirApellidos("Pérez García");
+            crearCompraPO.EscribirDireccion("Calle Mayor 123, Madrid");
             crearCompraPO.SeleccionarPago("Efectivo");
 
-            // 3. Confirmamos
+            // 3. Confirmamos (Aquí saltará la validación manual del Razor, NO va al servidor)
             crearCompraPO.ClickConfirmar();
 
             // --- ASSERT ---
-            // 4. Verificamos que aparece la alerta de error del servidor
+            // 4. Verificamos el mensaje de validación manual
             string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-
             _output.WriteLine($"Mensaje encontrado: {mensajeError}");
 
-            // Verificamos que contiene el texto que te está saliendo ahora mismo
-            // "Error al procesar la compra" o "400"
-            Assert.Contains("Error al procesar", mensajeError);
-            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+            // El mensaje debe coincidir con el que pusimos en el Razor:
+            // if (string.IsNullOrWhiteSpace(CompraState.Compra.NombreUsuario)) mensajeError = "Por favor, introduce tu Nombre.";
+            Assert.Contains("Por favor, introduce tu Nombre", mensajeError);
         }
 
         [Fact]
@@ -284,26 +281,21 @@ namespace AppForSEII2526.UIT.UC_Compra
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             // --- ACT ---
-            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
-            // (Queremos que llegue a intentar enviar al servidor)
-            crearCompraPO.EscribirNombre("Nombre_Test");
+            // 2. Dejamos Apellidos vacíos
+            crearCompraPO.EscribirNombre("Juan");
             crearCompraPO.EscribirApellidos("");
-            crearCompraPO.EscribirDireccion("Calle Test");
+            crearCompraPO.EscribirDireccion("Calle Mayor 123, Madrid");
             crearCompraPO.SeleccionarPago("Efectivo");
 
             // 3. Confirmamos
             crearCompraPO.ClickConfirmar();
 
             // --- ASSERT ---
-            // 4. Verificamos que aparece la alerta de error del servidor
             string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-
             _output.WriteLine($"Mensaje encontrado: {mensajeError}");
 
-            // Verificamos que contiene el texto que te está saliendo ahora mismo
-            // "Error al procesar la compra" o "400"
-            Assert.Contains("Error al procesar", mensajeError);
-            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+            // Validamos el mensaje específico de apellidos
+            Assert.Contains("Por favor, introduce tus Apellidos", mensajeError);
         }
 
         [Fact]
@@ -321,10 +313,9 @@ namespace AppForSEII2526.UIT.UC_Compra
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             // --- ACT ---
-            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
-            // (Queremos que llegue a intentar enviar al servidor)
-            crearCompraPO.EscribirNombre("Nombre Test");
-            crearCompraPO.EscribirApellidos("Apellidos Test");
+            // 2. Dejamos Dirección vacía
+            crearCompraPO.EscribirNombre("Juan");
+            crearCompraPO.EscribirApellidos("Pérez García");
             crearCompraPO.EscribirDireccion("");
             crearCompraPO.SeleccionarPago("Efectivo");
 
@@ -332,20 +323,17 @@ namespace AppForSEII2526.UIT.UC_Compra
             crearCompraPO.ClickConfirmar();
 
             // --- ASSERT ---
-            // 4. Verificamos que aparece la alerta de error del servidor
             string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-
             _output.WriteLine($"Mensaje encontrado: {mensajeError}");
 
-            // Verificamos que contiene el texto que te está saliendo ahora mismo
-            // "Error al procesar la compra" o "400"
-            Assert.Contains("Error al procesar", mensajeError);
-            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+            // Validamos el mensaje específico de dirección
+            Assert.Contains("Es obligatorio introducir una Dirección de entrega", mensajeError);
         }
+
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU1_10_MetodoPago_Vacio()
+        public void CU1_10_Usuario_No_Existe()
         {
             // --- ARRANGE ---
             InitialStepsForCompra();
@@ -358,12 +346,11 @@ namespace AppForSEII2526.UIT.UC_Compra
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             // --- ACT ---
-            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
-            // (Queremos que llegue a intentar enviar al servidor)
-            crearCompraPO.EscribirNombre("Nombre Test");
-            crearCompraPO.EscribirApellidos("Apellidos Test");
-            crearCompraPO.EscribirDireccion("Calle Test");
-            crearCompraPO.SeleccionarPago("");
+            // 2. Rellenamos datos (usamos "x" para simular datos rápidos pero "válidos" para el cliente)
+            crearCompraPO.EscribirNombre("x");
+            crearCompraPO.EscribirApellidos("x");
+            crearCompraPO.EscribirDireccion("x");
+            crearCompraPO.SeleccionarPago("Efectivo");
 
             // 3. Confirmamos
             crearCompraPO.ClickConfirmar();
@@ -374,10 +361,12 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _output.WriteLine($"Mensaje encontrado: {mensajeError}");
 
-            // Verificamos que contiene el texto que te está saliendo ahora mismo
-            // "Error al procesar la compra" o "400"
-            Assert.Contains("Error al procesar", mensajeError);
-            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+            // CORRECCIÓN: Usamos 'error' en minúscula para coincidir con "Ocurrió un error..."
+            // O convertimos todo a minúsculas para evitar problemas futuros:
+            Assert.Contains("error al procesar", mensajeError.ToLower());
+
+            // Verificamos el código de estado
+            Assert.Contains("400", mensajeError);
         }
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
@@ -386,16 +375,22 @@ namespace AppForSEII2526.UIT.UC_Compra
             // --- ARRANGE ---
             InitialStepsForCompra();
 
-            // 1. Añadimos producto e ir al checkout
+            // 1. Añadimos producto hasta agotar stock (11 veces)
+            // Nota: Podrías usar un bucle for aquí para que quede más limpio, pero así funciona igual.
+            string dispositivo = "iPhone 14 Pro 256";
             _selectPO.SearchDispositivos("iPhone", "");
-            _selectPO.AddDispositivoToCart("iPhone 14 Pro 256");
+
+            for (int i = 0; i < 11; i++)
+            {
+                _selectPO.AddDispositivoToCart(dispositivo);
+            }
+
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             // --- ACT ---
-            // 2. Rellenamos los campos para que NO salte el error de "Campos obligatorios"
-            // (Queremos que llegue a intentar enviar al servidor)
+            // 2. Rellenamos los campos correctamente
             crearCompraPO.EscribirNombre("David");
             crearCompraPO.EscribirApellidos("Gómez Fernández");
             crearCompraPO.EscribirDireccion("Paseo de la Castellana 100, Madrid");
@@ -410,10 +405,11 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _output.WriteLine($"Mensaje encontrado: {mensajeError}");
 
-            // Verificamos que contiene el texto que te está saliendo ahora mismo
-            // "Error al procesar la compra" o "400"
-            Assert.Contains("Error al procesar", mensajeError);
-            Assert.Contains("400", mensajeError); // Confirmamos que es el error que esperas
+            // CORRECCIÓN: Usamos "error" en minúscula porque la frase es "Ocurrió un error..."
+            Assert.Contains("error al procesar", mensajeError);
+
+            // Verificamos el código 400
+            Assert.Contains("400", mensajeError);
         }
 
         [Fact]
@@ -462,8 +458,104 @@ namespace AppForSEII2526.UIT.UC_Compra
             var cuerpoPagina = _driver.FindElement(By.TagName("body")).Text;
             Assert.Contains(movilPrueba, cuerpoPagina);
 
-            _output.WriteLine("Prueba CU1_12 Éxitosa: Se regresó al catálogo y el carrito conserva el ítem.");
+            
         }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_13_Nombre_Excede_Longitud()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            // Preparar carrito e ir al checkout
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // Generamos un nombre de 51 caracteres (el límite es 50)
+            string nombreLargo = new string('a', 51);
+
+            // --- ACT ---
+            crearCompraPO.EscribirNombre(nombreLargo);
+            crearCompraPO.EscribirApellidos("Gómez Fernández");
+            crearCompraPO.EscribirDireccion("Paseo de la Castellana 100, Madrid");
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+            _output.WriteLine($"Mensaje: {mensajeError}");
+
+            Assert.Contains("máximo 50 caracteres", mensajeError);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_14_Apellidos_Excede_Longitud()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // Generamos apellidos de 71 caracteres (el límite es 70)
+            string apellidosLargos = new string('a', 71);
+
+            // --- ACT ---
+            crearCompraPO.EscribirNombre("David");
+            crearCompraPO.EscribirApellidos(apellidosLargos);
+            crearCompraPO.EscribirDireccion("Paseo de la Castellana 100, Madrid");
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+            _output.WriteLine($"Mensaje: {mensajeError}");
+
+            Assert.Contains("máximo 70 caracteres", mensajeError);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_15_Direccion_Excede_Longitud()
+        {
+            // --- ARRANGE ---
+            InitialStepsForCompra();
+
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            // Generamos dirección de 101 caracteres (el límite es 100)
+            string direccionLarga = new string('a', 101);
+
+            // --- ACT ---
+            crearCompraPO.EscribirNombre("Nombre Válido");
+            crearCompraPO.EscribirApellidos("Gómez Fernández");
+            crearCompraPO.EscribirDireccion(direccionLarga);
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            crearCompraPO.ClickConfirmar();
+
+            // --- ASSERT ---
+            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+            _output.WriteLine($"Mensaje: {mensajeError}");
+
+            Assert.Contains("máximo 100 caracteres", mensajeError);
+        }
+
+
 
 
 
