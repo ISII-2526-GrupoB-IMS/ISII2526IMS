@@ -83,7 +83,7 @@ namespace AppForSEII2526.API.Controllers
             // Validar que haya items en la Review
             if (ReviewParaCrear.ItemsReview == null || ReviewParaCrear.ItemsReview.Count == 0)
             {
-                ModelState.AddModelError("ItemsReview", "Error. Debes Review al menos un dispositivo.");
+                ModelState.AddModelError("ItemsReview", "Error. Debes Reviewr al menos un dispositivo.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
