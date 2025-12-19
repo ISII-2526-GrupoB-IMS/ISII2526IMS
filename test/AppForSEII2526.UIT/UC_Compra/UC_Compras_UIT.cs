@@ -555,6 +555,64 @@ namespace AppForSEII2526.UIT.UC_Compra
             Assert.Contains("máximo 100 caracteres", mensajeError);
         }
 
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_examen()
+        {
+            
+            InitialStepsForCompra();
+
+            // Datos de prueba
+            string movilNombre = "Oppo";       
+            string movilColor = "iPhone";
+            string movilNombre2 = "Galaxy";
+            string nombreCompletoMovil2 = "iPhone 14 Pro 256GB"; 
+
+            
+
+            // Filtrar por NOMBRE y añadir al carrito
+            _selectPO.SearchDispositivos(movilNombre, "");
+            _selectPO.AddDispositivoToCart(movilNombre);
+
+            // Filtrar por COLOR y añadir al carrito
+            _selectPO.SearchDispositivos("", "Negro");
+            
+            _selectPO.AddDispositivoToCart(nombreCompletoMovil2);
+
+            // Filtrar por NOMBRE y añadir al carrito
+            _selectPO.SearchDispositivos(movilNombre2, "");
+            _selectPO.AddDispositivoToCart(movilNombre2);
+
+            // Eliminar el PRIMER dispositivo (El Oppo)
+            _selectPO.RemoveDispositivoFromCart(movilNombre);
+
+            Thread.Sleep(1000);
+            // Ir a Crear Compra 
+            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            //RELLENAR EL FORMULARIO
+            crearCompraPO.EscribirNombre("David");
+            crearCompraPO.EscribirApellidos("Gómez Fernández");
+            crearCompraPO.EscribirDireccion("Paseo de la Castellana 100, Madrid");
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            crearCompraPO.ClickConfirmar();
+
+            
+
+            // Comprobamos que llegamos a la página de detalle
+            var detallePO = new DetalleCompra_PO(_driver, _output);
+            Assert.True(detallePO.EstamosEnPaginaDetalle(), "La compra debería haberse completado correctamente tras el flujo complejo.");
+
+
+            
+        }
+        
+
+        
+
 
 
 
