@@ -379,6 +379,53 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
             Assert.True(errorGenericoForm, "No apareció el banner genérico de errores en el formulario.");
         }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU_Rev_15_Examen_Sprint3()
+        {
+            
+            InitialStepsForReview();
+            Thread.Sleep(1000);
+
+            string marcaBusqueda = "Apple";
+            string dispositivo1 = "iPhone 14 Pro 256GB";
+            string dispositivo2 = "iPhone 14 Pro 512GB";
+
+            // Datos del formulario
+            string tituloReseña = "Excelente experiencia con iPhone";
+            string paisReseña = "España";
+            string nombreAutor = "Juan";
+            string comentario = "Review para el iPhone 14 Pro 512 GB: muy bueno";
+
+            _selectPO.AddDispositivoToReview(dispositivo1);
+
+            _selectPO.SearchDispositivos(marcaBusqueda, "");
+
+            _selectPO.AddDispositivoToReview(dispositivo2);
+
+            _selectPO.RemoveDispositivoFromReview(dispositivo1);
+
+            _selectPO.ClickReseñarDispositivos();
+
+            _crearPO.RellenarCabecera(tituloReseña, paisReseña, nombreAutor);
+
+            _crearPO.RellenarDetalleDispositivo(dispositivo2, "4", comentario);
+
+            _crearPO.ClickPublicarReseña();
+
+            // Verificamos que estamos en la página de éxito
+            Assert.True(_detallePO.VerificarExitoPublicacion(), "No se mostró el banner de éxito.");
+
+            // Verificamos que el autor y ubicación coinciden
+            Assert.True(_detallePO.VerificarDatosAutor(nombreAutor, paisReseña), "Los datos del autor no coinciden.");
+
+            // Verificamos que los dispositivos aparecen valorados (con su calificacion X/5)
+            Assert.True(_detallePO.VerificarDispositivoValorado(dispositivo2, "(4/5)", comentario));
+
+            // Verificamos que el registro está sincronizado
+            Assert.True(_detallePO.VerificarSincronizacion(), "El registro no aparece como sincronizado.");
+        }
     }
 }
 
