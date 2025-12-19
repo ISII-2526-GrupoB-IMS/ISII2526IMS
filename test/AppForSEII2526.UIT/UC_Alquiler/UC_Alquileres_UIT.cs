@@ -252,5 +252,49 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             Assert.True(_detallePO.VerificarDispositivoEnTabla(dispositivoEsperado),
                 $"El dispositivo '{dispositivoEsperado}' no aparece en la tabla de detalles.");
         }
+
+
+        // =====================================================================
+        // PRUEBAS EXAMEN
+        // =====================================================================
+
+      
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC_Alq_Examen()
+        {
+            InitialStepsForAlquiler();
+            string item1_Nombre = "Galaxy A54 5G 256GB";    
+
+            string item2_Nombre = "iPhone 13 256GB";
+
+            Thread.Sleep(1000);
+
+
+            _selectPO.AddDispositivoToCart(item1_Nombre);
+
+            _selectPO.SearchDispositivos("iPhone 13", "", null, null);
+
+            _selectPO.AddDispositivoToCart(item2_Nombre);
+            Thread.Sleep(1000);
+
+
+            _selectPO.ClickCrearReserva();
+
+
+            Assert.True(_createPO.ContieneDispositivo(item2_Nombre), "El Item 2 debería estar en el resumen.");
+
+
+
+
+            _createPO.RellenarFormulario("Juan", "Pérez García", "Calle Industria 55", "PayPal");
+            _createPO.ClickAlquilar();
+
+
+            Thread.Sleep(1000);
+
+            Assert.True(_detallePO.VerificarDispositivoEnTabla(item2_Nombre), "El Item 2 alquilado debería estar en el detalle final.");
+        }
     }
+
 }
