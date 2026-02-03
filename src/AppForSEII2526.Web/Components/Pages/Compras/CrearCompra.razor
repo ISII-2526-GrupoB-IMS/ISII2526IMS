@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-7">
 
-            @* AQUÍ APARECE EL MENSAJE SI LA VALIDACIÓN MANUAL FALLA *@
+            
             @if (!string.IsNullOrEmpty(mensajeError))
             {
                 <div class="alert alert-danger d-flex align-items-center mb-3" role="alert">
@@ -30,7 +30,7 @@
                 </div>
                 <div class="card-body">
 
-                    @* Usamos OnSubmit para controlar manualmente el proceso *@
+                   
                     <EditForm Model="CompraState.Compra" OnSubmit="ProcesarPedido">
                         
                         <div class="row g-3">
@@ -127,7 +127,7 @@
 
     protected override void OnInitialized()
     {
-        // Si el carrito está vacío, redirigimos al catálogo
+        // Si el carrito está vacio se redirige al paso anterior
         if (CompraState.Compra.ItemsCompra == null || !CompraState.Compra.ItemsCompra.Any())
         {
             Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
@@ -137,10 +137,10 @@
    
     private async Task ProcesarPedido()
     {
-        // 1. Limpiamos errores
+        
         mensajeError = "";
 
-        // 2. VALIDACIONES DE OBLIGATORIEDAD (Vacíos)
+        
         if (string.IsNullOrWhiteSpace(CompraState.Compra.NombreUsuario))
         {
             mensajeError = "Por favor, introduce tu Nombre.";
@@ -159,8 +159,6 @@
             return;
         }
 
-        // 3. NUEVAS VALIDACIONES DE LONGITUD MÁXIMA
-        // Comprobamos la propiedad .Length de cada cadena
 
         if (CompraState.Compra.NombreUsuario.Length > 50)
         {
@@ -180,7 +178,7 @@
             return;
         }
 
-        // 4. ENVÍO
+       
         enviando = true;
 
         try
