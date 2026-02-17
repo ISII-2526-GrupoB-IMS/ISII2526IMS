@@ -17,6 +17,8 @@ namespace AppForSEII2526.UIT.UC_Compra
         private By btnTramitar = By.XPath("//button[contains(., 'Tramitar Pedido')]");
         private By alertMessage = By.CssSelector(".alert");
 
+
+        private IWebElement _rentButton() => _driver.FindElement(btnTramitar);
         public SelectDispositivosCompra_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
@@ -168,6 +170,18 @@ namespace AppForSEII2526.UIT.UC_Compra
                 _output.WriteLine("Error: No se encontró el elemento del precio total en el tiempo límite.");
                 return "0,00 €";
             }
+        }
+
+        public bool CheckRentMoviesDisabled()
+        {
+            //we return true if the button is disabled
+            return !(_rentButton().Enabled);
+        }
+
+        public bool CheckMessageErrorNotAvaibleMovies(string expectedError)
+        {
+            return _driver.PageSource.Contains(expectedError);
+
         }
 
 

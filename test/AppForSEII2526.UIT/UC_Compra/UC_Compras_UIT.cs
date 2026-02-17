@@ -44,9 +44,9 @@ namespace AppForSEII2526.UIT.UC_Compra
             _selectPO.SearchDispositivos("", colorInexistente);
 
             // ASSERT 
-             var elementoMensaje = _driver.FindElement(By.XPath($"//*[contains(text(), '{mensajeEsperado}')]"));
+             
 
-             Assert.True(elementoMensaje.Displayed, "El mensaje de error debería ser visible en pantalla.");
+             Assert.True(_selectPO.CheckMessageErrorNotAvaibleMovies(mensajeEsperado), "El mensaje de error debería ser visible en pantalla.");
  
             
         }
@@ -227,7 +227,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             //  ARRANGE 
             InitialStepsForCompra();
 
-            /
+            
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
