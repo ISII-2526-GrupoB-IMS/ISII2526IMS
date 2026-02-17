@@ -4,6 +4,7 @@ using AppForSEII2526.UIT.UC_Compras;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -163,6 +164,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             Assert.Contains("Por favor, introduce tu Nombre", mensajeError);
         }
 
+
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
         public void CU1_8_Apellidos_Vacio()
@@ -262,7 +264,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             string dispositivo = "iPhone 14 Pro 256";
             _selectPO.SearchDispositivos("iPhone", "");
 
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 20; i++)
             {
                 _selectPO.AddDispositivoToCart(dispositivo);
             }
@@ -270,6 +272,8 @@ namespace AppForSEII2526.UIT.UC_Compra
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
+
+            string mensajeEsperado = "Atención: Ocurrió un error al procesar la compra: Bad Request Status: 400 Response:";
 
             // ACT 
             crearCompraPO.EscribirNombre("David");
@@ -280,13 +284,10 @@ namespace AppForSEII2526.UIT.UC_Compra
             crearCompraPO.ClickConfirmar();
 
             // ASSERT 
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeEsperado), "El mensaje de error debería ser visible en pantalla.");
 
-            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
 
-            Assert.Contains("error al procesar", mensajeError);
-           
-            Assert.Contains("400", mensajeError);
+
         }
 
         [Fact]

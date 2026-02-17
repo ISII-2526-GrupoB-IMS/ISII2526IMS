@@ -122,7 +122,14 @@ namespace AppForSEII2526.UIT.UC_Compras
             }
         }
 
-       
+        public bool CheckMessageErrorNotAvaibleMovies(string expectedError)
+        {
+            return ObtenerMensajeAlertaGeneral().Contains(expectedError);
+
+        }
+
+
+
         public void LimpiarFormulario()
         {
             EscribirNombre("");
