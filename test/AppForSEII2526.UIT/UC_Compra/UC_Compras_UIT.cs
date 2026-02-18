@@ -398,6 +398,12 @@ namespace AppForSEII2526.UIT.UC_Compra
             //  ARRANGE 
             InitialStepsForCompra();
             string movil1 = "Real";
+
+            string nombreEsperado = "Realme GT3";
+            string marcaEsperada = "Realme";
+            string colorEsperado = "Negro";
+            string precioEsperado = "649,99";
+
             _selectPO.SearchDispositivos("Real", "");
             _selectPO.AddDispositivoToCart(movil1);
             _selectPO.TramitarPedido();
@@ -428,8 +434,10 @@ namespace AppForSEII2526.UIT.UC_Compra
                 precioTotalEsperado),
                 "Los datos de la cabecera del detalle (Nombre, Dirección, Pago o Precio) son incorrectos.");
 
-            Assert.True(_detallePO.VerificarDispositivoEnTabla(movil1),
-               $"El dispositivo '{movil1}' no aparece en la tabla de detalles.");
+            Assert.True(
+            _detallePO.CheckListOfDispositivos(nombreEsperado, marcaEsperada, colorEsperado, precioEsperado),
+            $"El dispositivo '{nombreEsperado}' no aparece en la tabla de detalles."
+            );
 
 
         }
