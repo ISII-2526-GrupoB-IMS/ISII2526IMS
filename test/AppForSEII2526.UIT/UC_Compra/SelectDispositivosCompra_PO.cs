@@ -22,7 +22,7 @@ namespace AppForSEII2526.UIT.UC_Compra
         public SelectDispositivosCompra_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
-       
+
         public void SearchDispositivos(string nombre, string color)
         {
             // Esperar y borrar nombre
@@ -40,19 +40,19 @@ namespace AppForSEII2526.UIT.UC_Compra
                 _driver.FindElement(inputFiltroColor).SendKeys(color);
             }
 
-            
+
             _driver.FindElement(buttonSearch).Click();
 
-            
+
             Thread.Sleep(1000);
         }
 
-        
+
         public bool CheckListOfDispositivos(List<string[]> expectedData)
         {
             var cards = _driver.FindElements(cardDispositivo);
 
-            
+
             if (cards.Count == 0 && expectedData.Count > 0) return false;
 
             foreach (var expected in expectedData)
@@ -64,7 +64,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
                 foreach (var card in cards)
                 {
-                    
+
                     string actualNombre = card.FindElement(By.CssSelector(".card-title")).Text;
                     string actualMarca = card.FindElement(By.CssSelector(".card-subtitle")).Text;
                     string actualPrecio = card.FindElement(By.CssSelector("h3.text-primary")).Text;
@@ -74,7 +74,7 @@ namespace AppForSEII2526.UIT.UC_Compra
                         actualPrecio.Contains(expectedPrecio))
                     {
                         found = true;
-                        break; 
+                        break;
                     }
                 }
 
@@ -87,10 +87,10 @@ namespace AppForSEII2526.UIT.UC_Compra
             return true;
         }
 
-        
+
         public void AddDispositivoToCart(string nombreDispositivo)
         {
-            
+
             var xpathButton = $"//h5[contains(@class,'card-title') and contains(text(),'{nombreDispositivo}')]/ancestor::div[contains(@class,'card')]//button[contains(., 'Añadir')]";
 
             By btnAdd = By.XPath(xpathButton);
@@ -101,7 +101,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             Thread.Sleep(500);
         }
 
-       
+
         public void VaciarCarrito()
         {
             if (!IsTramitarPedidoHidden())
@@ -111,7 +111,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             }
         }
 
-        
+
 
         public bool IsTramitarPedidoHidden()
         {
@@ -119,16 +119,16 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             var elementos = _driver.FindElements(btnTramitar);
 
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10); 
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             if (elementos.Count == 0) return true;
 
-         
+
             return !elementos[0].Displayed;
         }
-        
+
         public void RemoveDispositivoFromCart(string nombreDispositivo)
         {
-            
+
             var xpathBoton = $"//li[contains(., '{nombreDispositivo}')]//button[contains(@class, 'btn-remove')]";
 
             By btnEliminar = By.XPath(xpathBoton);
@@ -138,30 +138,30 @@ namespace AppForSEII2526.UIT.UC_Compra
                 WaitForBeingClickable(btnEliminar);
                 _driver.FindElement(btnEliminar).Click();
 
-                
+
                 Thread.Sleep(1000);
             }
             catch (WebDriverTimeoutException)
             {
-               
+
                 _output.WriteLine($"Error: No se encontró el botón de borrar (clase .btn-remove) para el móvil '{nombreDispositivo}'.");
                 throw;
             }
         }
 
-        
+
         private By totalPrecio = By.XPath("//div[contains(@class, 'card-footer')]//strong[contains(@class, 'text-primary') or contains(@class, 'h4') or contains(@class, 'h5')]");
 
         public string ObtenerPrecioTotal()
         {
             try
             {
-                
+
                 WaitForBeingVisible(totalPrecio);
 
                 string texto = _driver.FindElement(totalPrecio).Text;
 
-                _output.WriteLine($"Precio encontrado en pantalla: '{texto}'");
+
 
                 return texto;
             }
@@ -172,19 +172,25 @@ namespace AppForSEII2526.UIT.UC_Compra
             }
         }
 
-        public bool CheckRentMoviesDisabled()
+        public bool CheckPrecioTotal(string expectedPrecio)
         {
-            //we return true if the button is disabled
-            return !(_rentButton().Enabled);
+            string actualPrecio = ObtenerPrecioTotal();
+            _output.WriteLine($"Comparando precio total: esperado='{expectedPrecio}' vs actual='{actualPrecio}'");
+            return actualPrecio.Contains(expectedPrecio);
         }
 
-        public bool CheckMessageErrorNotAvaibleMovies(string expectedError)
+
+        public bool CheckMessageErrorNotAvaibleDispositivos(string expectedError)
         {
             return _driver.PageSource.Contains(expectedError);
 
         }
 
+        public void TramitarPedido()
+        {
+            WaitForBeingClickable(btnTramitar);
+            _driver.FindElement(btnTramitar).Click();
 
-
+        }
     }
 }

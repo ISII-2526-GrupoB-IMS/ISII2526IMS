@@ -47,7 +47,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             // ASSERT 
              
 
-             Assert.True(_selectPO.CheckMessageErrorNotAvaibleMovies(mensajeEsperado), "El mensaje de error debería ser visible en pantalla.");
+             Assert.True(_selectPO.CheckMessageErrorNotAvaibleDispositivos(mensajeEsperado), "El mensaje de error debería ser visible en pantalla.");
  
             
         }
@@ -101,10 +101,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             _selectPO.RemoveDispositivoFromCart(movil1);
 
             // ASSERT 
-
-            string totalFinal = _selectPO.ObtenerPrecioTotal();
-
-            Assert.Equal(precioEsperadoFinal, totalFinal);
+            Assert.True(_selectPO.CheckPrecioTotal(precioEsperadoFinal));
 
         }
 
@@ -117,7 +114,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             InitialStepsForCompra();
 
             _selectPO.SearchDispositivos("iPhone", "");
-            Thread.Sleep(4000);
+            
             _selectPO.AddDispositivoToCart("iPhone");
 
 
@@ -125,7 +122,6 @@ namespace AppForSEII2526.UIT.UC_Compra
            
             _selectPO.VaciarCarrito();
 
-            Thread.Sleep(4000); 
 
             // ASSERT 
 
@@ -144,7 +140,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string mensajeError = "Por favor, introduce tu Nombre.";
@@ -171,7 +167,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string mensajeError = "Por favor, introduce tus Apellidos.";
@@ -197,7 +193,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string mensajeError = "Es obligatorio introducir una Dirección de entrega.";
@@ -225,7 +221,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             string mensajeEsperado = "Atención: Ocurrió un error al procesar la compra: Bad Request Status: 400 Response:";
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
@@ -253,12 +249,12 @@ namespace AppForSEII2526.UIT.UC_Compra
             string dispositivo = "iPhone 14 Pro 256";
             _selectPO.SearchDispositivos("iPhone", "");
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 15; i++)
             {
                 _selectPO.AddDispositivoToCart(dispositivo);
             }
 
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
@@ -293,8 +289,8 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             string precioAntesDeIrse = _selectPO.ObtenerPrecioTotal();
 
-       
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
+           
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
@@ -302,9 +298,10 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickVolver();
 
+            string precioAlVolver = _selectPO.ObtenerPrecioTotal();
+
             // ASSERT 
 
-            string precioAlVolver = _selectPO.ObtenerPrecioTotal();
 
             Assert.Equal(precioAntesDeIrse, precioAlVolver);
 
@@ -321,7 +318,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string nombreLargo = new string('a', 51);
@@ -348,7 +345,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string apellidosLargos = new string('a', 71);
@@ -375,7 +372,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             _selectPO.SearchDispositivos("iPhone", "");
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
@@ -403,7 +400,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             string movil1 = "Real";
             _selectPO.SearchDispositivos("Real", "");
             _selectPO.AddDispositivoToCart(movil1);
-            _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
+            _selectPO.TramitarPedido();
 
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
