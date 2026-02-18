@@ -147,9 +147,10 @@ namespace AppForSEII2526.UIT.UC_Compra
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
+            string mensajeError = "Por favor, introduce tu Nombre.";
 
             // ACT 
-            
+
             crearCompraPO.EscribirNombre("");
             crearCompraPO.EscribirApellidos("Pérez García");
             crearCompraPO.EscribirDireccion("Calle Mayor 123, Madrid");
@@ -157,11 +158,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             crearCompraPO.ClickConfirmar();
 
             // ASSERT 
-            
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
-
-            Assert.Contains("Por favor, introduce tu Nombre", mensajeError);
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeError), "El mensaje de error debería ser visible en pantalla.");
         }
 
 
@@ -177,6 +174,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
+            string mensajeError = "Por favor, introduce tus Apellidos.";
 
             // ACT 
             crearCompraPO.EscribirNombre("Juan");
@@ -186,11 +184,8 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickConfirmar();
 
-            //  ASSERT
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
-
-            Assert.Contains("Por favor, introduce tus Apellidos", mensajeError);
+            // ASSERT 
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeError), "El mensaje de error debería ser visible en pantalla.");
         }
 
         [Fact]
@@ -205,6 +200,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
+            string mensajeError = "Es obligatorio introducir una Dirección de entrega.";
 
             // ACT 
             crearCompraPO.EscribirNombre("Juan");
@@ -214,11 +210,8 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickConfirmar();
 
-            //ASSERT 
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
-
-            Assert.Contains("Es obligatorio introducir una Dirección de entrega", mensajeError);
+            // ASSERT 
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeError), "El mensaje de error debería ser visible en pantalla.");
         }
 
 
@@ -234,6 +227,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             _selectPO.AddDispositivoToCart("iPhone 14 Pro 512GB");
             _driver.FindElement(By.XPath("//button[contains(., 'Tramitar Pedido')]")).Click();
 
+            string mensajeEsperado = "Atención: Ocurrió un error al procesar la compra: Bad Request Status: 400 Response:";
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             //  ACT 
@@ -245,13 +239,8 @@ namespace AppForSEII2526.UIT.UC_Compra
             crearCompraPO.ClickConfirmar();
 
             // ASSERT 
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeEsperado), "El mensaje de error debería ser visible en pantalla.");
 
-            _output.WriteLine($"Mensaje encontrado: {mensajeError}");
-
-            Assert.Contains("error al procesar", mensajeError.ToLower());
-
-            Assert.Contains("400", mensajeError);
         }
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
@@ -336,6 +325,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string nombreLargo = new string('a', 51);
+            string mensajeError = "El Nombre es demasiado largo (máximo 50 caracteres).";
 
             //ACT 
             crearCompraPO.EscribirNombre(nombreLargo);
@@ -346,10 +336,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             crearCompraPO.ClickConfirmar();
 
             // ASSERT 
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-            _output.WriteLine($"Mensaje: {mensajeError}");
-
-            Assert.Contains("máximo 50 caracteres", mensajeError);
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeError), "El mensaje de error debería ser visible en pantalla.");
         }
 
         [Fact]
@@ -365,6 +352,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
             string apellidosLargos = new string('a', 71);
+            string mensajeError = "Los Apellidos son demasiado largos (máximo 70 caracteres).";
 
             //  ACT 
             crearCompraPO.EscribirNombre("David");
@@ -374,11 +362,8 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickConfirmar();
 
-            //  ASSERT 
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-            _output.WriteLine($"Mensaje: {mensajeError}");
-
-            Assert.Contains("máximo 70 caracteres", mensajeError);
+            // ASSERT 
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeError), "El mensaje de error debería ser visible en pantalla.");
         }
 
         [Fact]
@@ -395,6 +380,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             var crearCompraPO = new CrearCompra_PO(_driver, _output);
 
             string direccionLarga = new string('a', 101);
+            string mensajeError = "La Dirección es demasiado larga (máximo 100 caracteres).";
 
             // ACT 
             crearCompraPO.EscribirNombre("Nombre Válido");
@@ -405,10 +391,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             crearCompraPO.ClickConfirmar();
 
             // ASSERT 
-            string mensajeError = crearCompraPO.ObtenerMensajeAlertaGeneral();
-            _output.WriteLine($"Mensaje: {mensajeError}");
-
-            Assert.Contains("máximo 100 caracteres", mensajeError);
+            Assert.True(crearCompraPO.CheckMessageErrorNotAvaibleMovies(mensajeError), "El mensaje de error debería ser visible en pantalla.");
         }
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
