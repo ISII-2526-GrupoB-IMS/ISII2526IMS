@@ -113,71 +113,8 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             return true;
         }
-
-
-
-
-
-        public bool CheckListOfDispositivos1(string nombre, string marca, string color, string precio)
-        {
-            WaitForBeingVisible(tableMovies);
-
-            CultureInfo culturaES = new CultureInfo("es-ES");
-
-            var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
-
-            // 👉 Normalizamos el precio esperado a 2 decimales (STRING)
-            decimal precioDecimalEsperado = Math.Round(decimal.Parse(precio, culturaES), 2);
-            string precioEsperado = precioDecimalEsperado.ToString("F2", culturaES);
-
-            foreach (var fila in filas)
-            {
-                var columnas = fila.FindElements(By.TagName("td"));
-
-                string nombreTabla = columnas[0].Text.Trim();
-                string marcaTabla = columnas[1].Text.Trim();
-                string colorTabla = columnas[2].Text.Trim();
-                string precioTexto = columnas[3].Text.Replace("€", "").Trim(); //quita €
-
-                // Redondeamos  2 decimales
-                decimal precioDecimalTabla = Math.Round(decimal.Parse(precioTexto, culturaES), 2);
-                string precioTabla = precioDecimalTabla.ToString("F2", culturaES);
-
-                _output.WriteLine($"DATOS EN LA WEB: {nombreTabla} | {marcaTabla} | {colorTabla} | {precioTabla}");
-                _output.WriteLine($"DATOS ESPERADOS: {nombre} | {marca} | {color} | {precio}");
-
-                if (nombreTabla == nombre &&
-                    marcaTabla == marca &&
-                    colorTabla == color &&
-                    precioTabla == precioEsperado)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         
-        public bool VerificarDispositivoEnTabla(string nombreDispositivo)
-        {
-            try
-            {
-                WaitForBeingVisible(tableMovies);
-                
-                var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
-
-                foreach (var fila in filas)
-                {
-                    if (fila.Text.Contains(nombreDispositivo)) return true;
-                }
-                return false;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-        }
+       
     }
 
 }
