@@ -56,9 +56,69 @@ namespace AppForSEII2526.UIT.UC_Compra
             }
         }
 
-        
+        public bool CheckListOfDispositivos(List<string[]> expectedData)
+        {
+            WaitForBeingVisible(tableMovies);
 
-            public bool CheckListOfDispositivos(string nombre, string marca, string color, string precio)
+            CultureInfo culturaES = new CultureInfo("es-ES");
+
+            var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
+
+            if (filas.Count == 0 && expectedData.Count > 0) return false;
+
+            foreach (var expected in expectedData)
+            {
+                bool found = false;
+
+                string expectedNombre = expected[0];
+                string expectedMarca = expected[1];
+                string expectedColor = expected[2];
+                string expectedPrecio = Math.Round(
+                    decimal.Parse(expected[3], culturaES), 2)
+                    .ToString("F2", culturaES);
+
+                foreach (var fila in filas)
+                {
+                    var columnas = fila.FindElements(By.TagName("td"));
+
+                    string actualNombre = columnas[0].Text.Trim();
+                    string actualMarca = columnas[1].Text.Trim();
+                    string actualColor = columnas[2].Text.Trim();
+
+                    string precioTexto = columnas[3].Text.Replace("€", "").Trim();
+
+                    string actualPrecio = Math.Round(
+                        decimal.Parse(precioTexto, culturaES), 2)
+                        .ToString("F2", culturaES);
+
+                    _output.WriteLine($"DATOS EN LA WEB: {actualNombre} | {actualMarca} | {actualColor} | {actualPrecio}");
+                    _output.WriteLine($"DATOS ESPERADOS: {expectedNombre} | {expectedMarca} | {expectedColor} | {expectedPrecio}");
+
+                    if (actualNombre.Contains(expectedNombre, StringComparison.OrdinalIgnoreCase) &&
+                        actualMarca.Contains(expectedMarca, StringComparison.OrdinalIgnoreCase) &&
+                        actualColor.Contains(expectedColor, StringComparison.OrdinalIgnoreCase) &&
+                        actualPrecio.Contains(expectedPrecio))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    _output.WriteLine($"No se encontró FILA para: {expectedNombre} | {expectedMarca} | {expectedColor} | {expectedPrecio}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+
+
+
+        public bool CheckListOfDispositivos1(string nombre, string marca, string color, string precio)
         {
             WaitForBeingVisible(tableMovies);
 

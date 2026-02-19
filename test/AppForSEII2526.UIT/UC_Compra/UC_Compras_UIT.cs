@@ -398,14 +398,22 @@ namespace AppForSEII2526.UIT.UC_Compra
             //  ARRANGE 
             InitialStepsForCompra();
             string movil1 = "Real";
+            string movil2 = "iPhone";
 
             string nombreEsperado = "Realme GT3";
             string marcaEsperada = "Realme";
             string colorEsperado = "Negro";
             string precioEsperado = "649,99";
 
+            string nombreEsperado2 = "iPhone 14 Pro";
+            string marcaEsperada2 = "Apple";
+            string colorEsperado2 = "Negro";
+            string precioEsperado2 = "1199,99";
+
             _selectPO.SearchDispositivos("Real", "");
             _selectPO.AddDispositivoToCart(movil1);
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart(movil2);
             _selectPO.TramitarPedido();
 
 
@@ -424,7 +432,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickConfirmar();
 
-            string precioTotalEsperado = "649,99 €";
+            string precioTotalEsperado = "1.849,98 €";
             string fechaEsperada = DateTime.Now.ToString("dd/MM/yyyy");
 
             Assert.True(_detallePO.VerificarDetallesCabecera(
@@ -434,11 +442,16 @@ namespace AppForSEII2526.UIT.UC_Compra
                 precioTotalEsperado),
                 "Los datos de la cabecera del detalle (Nombre, Dirección, Pago o Precio) son incorrectos.");
 
-            Assert.True(
-            _detallePO.CheckListOfDispositivos(nombreEsperado, marcaEsperada, colorEsperado, precioEsperado),
-            $"El dispositivo '{nombreEsperado}' no aparece en la tabla de detalles."
-            );
+            List<string[]> dispositivosEsperados = new List<string[]>
+            {
+                new string[] { nombreEsperado, marcaEsperada, colorEsperado, precioEsperado },
+                new string[] { nombreEsperado2, marcaEsperada2, colorEsperado2, precioEsperado2 }
+            };
 
+            Assert.True(
+                _detallePO.CheckListOfDispositivos(dispositivosEsperados),
+                $"El dispositivo '{nombreEsperado}' no aparece en la tabla de detalles."
+            );
 
         }
 
