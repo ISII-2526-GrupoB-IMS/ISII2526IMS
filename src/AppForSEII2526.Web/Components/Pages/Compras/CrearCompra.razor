@@ -49,6 +49,7 @@
                                 <InputText id="InputDireccion" @bind-Value="CompraState.Compra.DireccionDeEnvio" class="form-control" placeholder="Calle, número, ciudad..." />
                             </div>
 
+
                             <div class="col-12">
                                 <label class="form-label">Método de Pago *</label>
                                 <InputSelect id="InputPago" @bind-Value="CompraState.Compra.MetodoDePago" class="form-select">
@@ -104,6 +105,10 @@
                                         <div>
                                             <h6 class="my-0">@item.Marca @item.Modelo</h6>
                                             <small class="text-muted">@item.Color (x @item.Cantidad)</small>
+                                            <div class="col-12">
+                                                <label class="form-label">Descripcion*</label>
+                                                <InputText id="descripcion" @bind-Value="item.Descripcion" class="form-control" placeholder="Compra web..." />
+                                            </div>
                                         </div>
                                         <span class="text-muted">@((item.Precio * item.Cantidad).ToString("C2"))</span>
                                     </div>
