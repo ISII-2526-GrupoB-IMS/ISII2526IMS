@@ -15,7 +15,7 @@ namespace AppForSEII2526.Web
 
         public void ResetCompra()
         {
-            
+
             Compra = new CompraForCreateDTO
             {
                 NombreUsuario = string.Empty,
@@ -39,10 +39,10 @@ namespace AppForSEII2526.Web
 
         public void AñadirDispositivo(DispositivoParaComprarDTO dispositivo)
         {
-           
+
             var itemExistente = Compra.ItemsCompra.FirstOrDefault(ic =>
                 ic.Marca == dispositivo.Marca &&
-                ic.Modelo == dispositivo.Modelo.NombreModelo && 
+                ic.Modelo == dispositivo.Modelo.NombreModelo &&
                 ic.Color == dispositivo.Color
             );
 
@@ -52,11 +52,11 @@ namespace AppForSEII2526.Web
             }
             else
             {
-               
+
                 var nuevoItem = new CompraItemDTO
                 {
                     Marca = dispositivo.Marca,
-                    Modelo = dispositivo.Modelo.NombreModelo, 
+                    Modelo = dispositivo.Modelo.NombreModelo,
                     Color = dispositivo.Color,
                     Precio = dispositivo.PrecioParaCompra,
                     Cantidad = 1,

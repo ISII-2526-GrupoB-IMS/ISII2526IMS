@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-7">
 
-            @* AQUÍ APARECE EL MENSAJE SI LA VALIDACIÓN MANUAL FALLA *@
+            
             @if (!string.IsNullOrEmpty(mensajeError))
             {
                 <div class="alert alert-danger d-flex align-items-center mb-3" role="alert">
@@ -30,7 +30,7 @@
                 </div>
                 <div class="card-body">
 
-                    @* Usamos OnSubmit para controlar manualmente el proceso *@
+                   
                     <EditForm Model="CompraState.Compra" OnSubmit="ProcesarPedido">
                         
                         <div class="row g-3">
@@ -48,6 +48,7 @@
                                 <label class="form-label">Dirección de Entrega *</label>
                                 <InputText id="InputDireccion" @bind-Value="CompraState.Compra.DireccionDeEnvio" class="form-control" placeholder="Calle, número, ciudad..." />
                             </div>
+
 
                             <div class="col-12">
                                 <label class="form-label">Método de Pago *</label>
@@ -104,6 +105,10 @@
                                         <div>
                                             <h6 class="my-0">@item.Marca @item.Modelo</h6>
                                             <small class="text-muted">@item.Color (x @item.Cantidad)</small>
+                                            <div class="col-12">
+                                                <label class="form-label">Descripcion*</label>
+                                                <InputText id="descripcion" @bind-Value="item.Descripcion" class="form-control" placeholder="Compra web..." />
+                                            </div>
                                         </div>
                                         <span class="text-muted">@((item.Precio * item.Cantidad).ToString("C2"))</span>
                                     </div>
@@ -127,7 +132,7 @@
 
     protected override void OnInitialized()
     {
-        // Si el carrito está vacío, redirigimos al catálogo
+        // Si el carrito está vacio se redirige al paso anterior
         if (CompraState.Compra.ItemsCompra == null || !CompraState.Compra.ItemsCompra.Any())
         {
             Navigation.NavigateTo("/Compras/SelectDispositivosComprar");
@@ -137,10 +142,10 @@
    
     private async Task ProcesarPedido()
     {
-        // 1. Limpiamos errores
+        
         mensajeError = "";
 
-        // 2. VALIDACIONES DE OBLIGATORIEDAD (Vacíos)
+        
         if (string.IsNullOrWhiteSpace(CompraState.Compra.NombreUsuario))
         {
             mensajeError = "Por favor, introduce tu Nombre.";
@@ -159,8 +164,6 @@
             return;
         }
 
-        // 3. NUEVAS VALIDACIONES DE LONGITUD MÁXIMA
-        // Comprobamos la propiedad .Length de cada cadena
 
         if (CompraState.Compra.NombreUsuario.Length > 50)
         {
@@ -180,7 +183,7 @@
             return;
         }
 
-        // 4. ENVÍO
+       
         enviando = true;
 
         try
