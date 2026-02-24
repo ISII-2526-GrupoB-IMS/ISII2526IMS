@@ -287,7 +287,7 @@ namespace AppForSEII2526.UIT.UC_Compra
             _selectPO.SearchDispositivos("Oppo", "");
             _selectPO.AddDispositivoToCart(movilPrueba);
 
-            string precioAntesDeIrse = _selectPO.ObtenerPrecioTotal();
+            string precioAntesDeIrse = "799,99 €";
 
             _selectPO.TramitarPedido();
            
@@ -298,12 +298,11 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickVolver();
 
-            string precioAlVolver = _selectPO.ObtenerPrecioTotal();
 
             // ASSERT 
 
 
-            Assert.Equal(precioAntesDeIrse, precioAlVolver);
+            Assert.True(_selectPO.CheckPrecioTotal(precioAntesDeIrse));
 
 
             
