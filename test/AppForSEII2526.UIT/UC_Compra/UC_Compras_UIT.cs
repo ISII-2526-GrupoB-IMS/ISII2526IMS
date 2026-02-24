@@ -397,23 +397,27 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             //  ARRANGE 
             InitialStepsForCompra();
-            string movil1 = "Real";
-            string movil2 = "iPhone";
+            string movil1 = "Oppo";
+            string movil2 = "Iphone";
 
-            string nombreEsperado = "Realme GT3";
-            string marcaEsperada = "Realme";
-            string colorEsperado = "Negro";
-            string precioEsperado = "649,99";
+            string nombreEsperado = "Oppo Find X5";
+            string marcaEsperada = "Oppo";
+            string colorEsperado = "Azul";
+            string precioEsperado = "799,99";
+            string cantidadEsperada = "1";
+            string descripcionEsperada = "Compra Web";
 
             string nombreEsperado2 = "iPhone 14 Pro";
             string marcaEsperada2 = "Apple";
-            string colorEsperado2 = "Negro";
-            string precioEsperado2 = "1199,99";
+            string colorEsperado2 = "Morado";
+            string precioEsperado2 = "1.099,99";
+            string cantidadEsperada2 = "1";
+            string descripcionEsperada2 = "Compra Web";
 
-            _selectPO.SearchDispositivos("Real", "");
+            _selectPO.SearchDispositivos("Oppo", "");
             _selectPO.AddDispositivoToCart(movil1);
             _selectPO.SearchDispositivos("iPhone", "");
-            _selectPO.AddDispositivoToCart(movil2);
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 128GB");
             _selectPO.TramitarPedido();
 
 
@@ -432,7 +436,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickConfirmar();
 
-            string precioTotalEsperado = "1.849,98 €";
+            string precioTotalEsperado = "1.899,98 €";
             string fechaEsperada = DateTime.Now.ToString("dd/MM/yyyy");
 
             Assert.True(_detallePO.VerificarDetallesCabecera(
@@ -444,8 +448,8 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             List<string[]> dispositivosEsperados = new List<string[]>
             {
-                new string[] { nombreEsperado, marcaEsperada, colorEsperado, precioEsperado },
-                new string[] { nombreEsperado2, marcaEsperada2, colorEsperado2, precioEsperado2 }
+                new string[] { nombreEsperado, marcaEsperada, colorEsperado, precioEsperado,cantidadEsperada,descripcionEsperada },
+                new string[] { nombreEsperado2, marcaEsperada2, colorEsperado2, precioEsperado2,cantidadEsperada2,descripcionEsperada2 }
             };
 
             Assert.True(

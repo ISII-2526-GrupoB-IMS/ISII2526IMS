@@ -73,9 +73,9 @@ namespace AppForSEII2526.UIT.UC_Compra
                 string expectedNombre = expected[0];
                 string expectedMarca = expected[1];
                 string expectedColor = expected[2];
-                string expectedPrecio = Math.Round(
-                    decimal.Parse(expected[3], culturaES), 2)
-                    .ToString("F2", culturaES);
+                string expectedPrecio = expected[3];
+                string expectedCantidad = expected[4];
+                string expectedDescripcion = expected[5];
 
                 foreach (var fila in filas)
                 {
@@ -84,20 +84,19 @@ namespace AppForSEII2526.UIT.UC_Compra
                     string actualNombre = columnas[0].Text.Trim();
                     string actualMarca = columnas[1].Text.Trim();
                     string actualColor = columnas[2].Text.Trim();
+                    string actualPrecio = columnas[3].Text.Replace("€", "").Trim();
+                    string actualCantidad = columnas[4].Text.Trim();
+                    string actualDescripcion = columnas[5].Text.Trim();
 
-                    string precioTexto = columnas[3].Text.Replace("€", "").Trim();
-
-                    string actualPrecio = Math.Round(
-                        decimal.Parse(precioTexto, culturaES), 2)
-                        .ToString("F2", culturaES);
-
-                    _output.WriteLine($"DATOS EN LA WEB: {actualNombre} | {actualMarca} | {actualColor} | {actualPrecio}");
-                    _output.WriteLine($"DATOS ESPERADOS: {expectedNombre} | {expectedMarca} | {expectedColor} | {expectedPrecio}");
+                    _output.WriteLine($"DATOS EN LA WEB: {actualNombre} | {actualMarca} | {actualColor} | {actualPrecio} | {actualCantidad} | {actualDescripcion}");
+                    _output.WriteLine($"DATOS ESPERADOS: {expectedNombre} | {expectedMarca} | {expectedColor} | {expectedPrecio}| {expectedCantidad} | {expectedDescripcion}");
 
                     if (actualNombre.Contains(expectedNombre, StringComparison.OrdinalIgnoreCase) &&
                         actualMarca.Contains(expectedMarca, StringComparison.OrdinalIgnoreCase) &&
                         actualColor.Contains(expectedColor, StringComparison.OrdinalIgnoreCase) &&
-                        actualPrecio.Contains(expectedPrecio))
+                        actualPrecio.Contains(expectedPrecio) &&
+                        actualCantidad.Contains(expectedCantidad) &&
+                        actualDescripcion.Contains(expectedDescripcion, StringComparison.OrdinalIgnoreCase))
                     {
                         found = true;
                         break;
@@ -106,7 +105,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
                 if (!found)
                 {
-                    _output.WriteLine($"No se encontró FILA para: {expectedNombre} | {expectedMarca} | {expectedColor} | {expectedPrecio}");
+                    _output.WriteLine($"No se encontró FILA para: {expectedNombre} | {expectedMarca} | {expectedColor} | {expectedPrecio}| {expectedCantidad} | {expectedDescripcion}");
                     return false;
                 }
             }
