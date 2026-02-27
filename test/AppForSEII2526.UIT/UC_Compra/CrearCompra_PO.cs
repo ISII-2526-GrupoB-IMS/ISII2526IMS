@@ -36,6 +36,48 @@ namespace AppForSEII2526.UIT.UC_Compras
             }
         }
 
+        public bool CheckListOfDispositivosEnCarrito(List<string[]> expectedData)
+        {
+            var items = _driver.FindElements(By.CssSelector("ul.list-group li.list-group-item"));
+
+            if (items.Count == 0 && expectedData.Count > 0)
+                return false;
+
+            foreach (var expected in expectedData)
+            {
+                bool found = false;
+
+                string expectedNombre = expected[0];   
+                string expectedColor = expected[1];    
+                string expectedPrecio = expected[2]; 
+
+                foreach (var item in items)
+                {
+                    string actualNombre = item.FindElement(By.CssSelector("h6.my-0")).Text;
+                    string actualDetalle = item.FindElement(By.CssSelector("small.text-muted")).Text;
+                    string actualPrecio = item.FindElement(By.CssSelector("span.text-muted")).Text;
+                    _output.WriteLine($"Datos Esperados: {actualNombre} | {actualDetalle} | {actualPrecio}");
+                    _output.WriteLine($"Datos en la web: {expectedNombre} | {expectedColor} | {expectedPrecio}");
+
+                    if (actualNombre.Contains(expectedNombre, StringComparison.OrdinalIgnoreCase) &&
+                        actualDetalle.Contains(expectedColor, StringComparison.OrdinalIgnoreCase) &&
+                        actualPrecio.Contains(expectedPrecio))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public void EscribirApellidos(string apellidos)
         {
             WaitForBeingVisible(inputApellidos);

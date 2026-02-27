@@ -458,6 +458,67 @@ namespace AppForSEII2526.UIT.UC_Compra
 
         }
 
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_16_Informacion_Carrito()
+        {
+
+
+            //  ARRANGE 
+            InitialStepsForCompra();
+            string movil1 = "Oppo";
+            string movil2 = "Iphone";
+
+            string nombreEsperado = "Oppo Find X5";
+            string marcaEsperada = "Oppo";
+            string colorEsperado = "Azul";
+            string precioEsperado = "799,99";
+            string cantidadEsperada = "1";
+            string descripcionEsperada = "Compra Web";
+
+            string nombreEsperado2 = "iPhone 14 Pro";
+            string marcaEsperada2 = "Apple";
+            string colorEsperado2 = "Morado";
+            string precioEsperado2 = "1.099,99";
+            string cantidadEsperada2 = "1";
+            string descripcionEsperada2 = "Compra Web";
+
+            _selectPO.SearchDispositivos("Oppo", "");
+            _selectPO.AddDispositivoToCart(movil1);
+            _selectPO.SearchDispositivos("iPhone", "");
+            _selectPO.AddDispositivoToCart("iPhone 14 Pro 128GB");
+            _selectPO.TramitarPedido();
+
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+            var _detallePO = new DetalleCompra_PO(_driver, _output);
+
+            string nombreUser = "Juan";
+            string apellidosUser = "Pérez García";
+            string direccionUser = "Calle Mayor 123";
+
+            //  ACT 
+            crearCompraPO.EscribirNombre(nombreUser);
+            crearCompraPO.EscribirApellidos(apellidosUser);
+            crearCompraPO.EscribirDireccion(direccionUser);
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+           
+
+            List<string[]> dispositivosEsperados = new List<string[]>
+            {
+                new string[] { nombreEsperado, colorEsperado, precioEsperado},
+                new string[] { nombreEsperado2, colorEsperado2, precioEsperado2}
+            };
+
+            Assert.True(
+                crearCompraPO.CheckListOfDispositivosEnCarrito(dispositivosEsperados)
+            );
+
+
+
+        }
+
 
 
 
