@@ -408,15 +408,15 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             string nombreEsperado2 = "iPhone 14 Pro";
             string marcaEsperada2 = "Apple";
-            string colorEsperado2 = "Morado";
-            string precioEsperado2 = "1.099,99";
+            string colorEsperado2 = "Negro";
+            string precioEsperado2 = "1.199,99";
             string cantidadEsperada2 = "1";
             string descripcionEsperada2 = "Compra Web";
 
             _selectPO.SearchDispositivos("Oppo", "");
             _selectPO.AddDispositivoToCart(movil1);
             _selectPO.SearchDispositivos("iPhone", "");
-            _selectPO.AddDispositivoToCart("iPhone 14 Pro 128GB");
+            _selectPO.AddDispositivoToCart("iPhone");
             _selectPO.TramitarPedido();
 
 
@@ -435,7 +435,7 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             crearCompraPO.ClickConfirmar();
 
-            string precioTotalEsperado = "1.899,98 €";
+            string precioTotalEsperado = "1.999,98 €";
             string fechaEsperada = DateTime.Now.ToString("dd/MM/yyyy");
 
             Assert.True(_detallePO.VerificarDetallesCabecera(
@@ -478,15 +478,15 @@ namespace AppForSEII2526.UIT.UC_Compra
 
             string nombreEsperado2 = "iPhone 14 Pro";
             string marcaEsperada2 = "Apple";
-            string colorEsperado2 = "Morado";
-            string precioEsperado2 = "1.099,99";
+            string colorEsperado2 = "Negro";
+            string precioEsperado2 = "1.199,99";
             string cantidadEsperada2 = "1";
             string descripcionEsperada2 = "Compra Web";
 
             _selectPO.SearchDispositivos("Oppo", "");
             _selectPO.AddDispositivoToCart(movil1);
             _selectPO.SearchDispositivos("iPhone", "");
-            _selectPO.AddDispositivoToCart("iPhone 14 Pro 128GB");
+            _selectPO.AddDispositivoToCart("iPhone");
             _selectPO.TramitarPedido();
 
 
