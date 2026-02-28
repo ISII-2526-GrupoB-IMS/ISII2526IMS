@@ -23,10 +23,10 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         // Tabla de items en la vista Create
         private By tableRows = By.CssSelector("table tbody tr");
 
-        // --- Localizadores de Errores Específicos ---
-        // 1. Alertas generales (ValidationSummary y div de error custom)
+
+        // 1. Alertas generales
         private By alertError = By.CssSelector(".alert.alert-danger");
-        // 2. Mensajes de validación de campo individuales (Blazor usa esta clase por defecto)
+
         private By fieldValidation = By.CssSelector(".validation-message");
 
         public CreateAlquiler_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
@@ -81,7 +81,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 
         public void ConfirmarEnModal()
         {
-            Thread.Sleep(500); // Pequeña espera para animación del modal
+            Thread.Sleep(500); // Espera para la animación del modal
             By btnConfirmar = By.XPath("//div[contains(@class, 'modal')]//button[contains(@class, 'btn-primary')]");
             WaitForBeingClickable(btnConfirmar);
             _driver.FindElement(btnConfirmar).Click();
@@ -116,7 +116,6 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                         // Verificamos que sea visible y contenga el texto
                         if (elemento.Displayed && elemento.Text.Contains(textoEsperado))
                         {
-                            // _output.WriteLine($"Error encontrado en {locator}: {elemento.Text}"); // Debug
                             encontrado = true;
                             break;
                         }
@@ -132,19 +131,13 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 return false;
             }
         }
+        //Editar
 
-        public bool ContieneDispositivo(string nombreDispositivo)
+        public bool VerificarDispositivoEnTabla(List<string[]> dispositivosEsperados)
         {
-            try
-            {
-                var filas = _driver.FindElements(tableRows);
-                foreach (var fila in filas)
-                {
-                    if (fila.Text.Contains(nombreDispositivo)) return true;
-                }
-                return false;
-            }
-            catch (NoSuchElementException) { return false; }
+            By tablaDetalle = By.Id("DevicesForRent");
+
+            return CheckBodyTable(dispositivosEsperados, tablaDetalle);
         }
     }
 }

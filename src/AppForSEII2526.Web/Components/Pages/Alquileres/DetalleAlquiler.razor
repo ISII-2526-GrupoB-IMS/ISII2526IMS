@@ -38,9 +38,9 @@ else
         </tr>
     </table>
 
-    <h4>Rented Movies</h4>
+    <h4>Rented Devices</h4>
 
-    <table class="table" id="RentedMovies">
+    <table class="table" id="RentedDevices">
         <thead>
             <tr>
                 <th scope="col">Nombre</th>
@@ -62,7 +62,7 @@ else
         </tbody>
         <tfoot>
             <tr>
-                @* Ajustamos colspan a 3 para alinear con la columna de precio *@
+                @*  *@
                 <th scope="row" colspan="3" class="text-end">Total Price (@DiasAlquiler days):</th>
                 <td id="TotalPrice" class="fw-bold">@PrecioTotal.ToString("C")</td>
             </tr>
@@ -103,14 +103,14 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        //we check the user is logged in
+
         string userName = "";
         if (authenticationState is not null)
         {
             var authState = await authenticationState;
             var user = authState?.User;
 
-            //we retrieve the id of the user logged in
+
             if (user is not null)
             {
                 if (user.Identity is not null && user.Identity.IsAuthenticated && user.IsInRole("User"))

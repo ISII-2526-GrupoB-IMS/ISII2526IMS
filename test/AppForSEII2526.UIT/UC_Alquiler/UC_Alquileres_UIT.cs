@@ -1,4 +1,4 @@
-﻿using AppForSEII2526.UIT.Shared; // Para UC_UIT
+﻿using AppForSEII2526.UIT.Shared;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -11,14 +11,14 @@ namespace AppForSEII2526.UIT.UC_Alquileres
     public class UC_Alquileres_UIT : UC_UIT
     {
         private SelectDispositivosAlquiler_PO _selectPO;
-        private CreateAlquiler_PO _createPO; // PO Añadido para las pruebas de Create
+        private CreateAlquiler_PO _createPO; 
         private DetalleAlquiler_PO _detallePO;
         private const string dispNombre1 = "Galaxy A54";
-        private const string dispPrecioDia = "44,00 €"; // Precio base para validación
+        private const string dispPrecioDia = "44,00 €"; 
         public UC_Alquileres_UIT(ITestOutputHelper output) : base(output)
         {
             _selectPO = new SelectDispositivosAlquiler_PO(_driver, _output);
-            _createPO = new CreateAlquiler_PO(_driver, _output); // Inicializamos el PO de Create
+            _createPO = new CreateAlquiler_PO(_driver, _output); 
             _detallePO = new DetalleAlquiler_PO(_driver, _output);
         }
 
@@ -182,14 +182,14 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         public void UC_Create_18()
         {
             // Arrange
-            // Navegamos directamente con fechas conflictivas (según tu imagen UC2_17)
+            // Navegamos directamente con fechas conflictivas
             _driver.Navigate().GoToUrl(_URI + "Alquileres/SelectDispositivosAlquiler");
 
-            // Ponemos fechas conflictivas donde sabemos que no hay stock (según setup de prueba)
+            // Ponemos fechas conflictivas donde sabemos que no hay stock
             DateTime conflictFrom = DateTime.Today.AddDays(2);
             DateTime conflictTo = DateTime.Today.AddDays(4);
 
-            // Buscamos el dispositivo problemático (ej. "Galaxy S23 Ultra" según imagen)
+            // Buscamos el dispositivo que dará error
             string dispConflictivo = "Galaxy S23 Ultra";
             _selectPO.SearchDispositivos(dispConflictivo, "", conflictFrom, conflictTo);
             _selectPO.AddDispositivoToCart(dispConflictivo);
@@ -249,7 +249,13 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 precioTotalEsperado),
                 "Los datos de la cabecera del detalle (Nombre, Dirección, Pago o Precio) son incorrectos.");
 
-            Assert.True(_detallePO.VerificarDispositivoEnTabla(dispositivoEsperado),
+            var objsEsperados = new List<string[]>
+            {
+                new string[] { "Galaxy A54 5G 256GB", "Galaxy A54", "Samsung", "22" } 
+
+            };
+
+            Assert.True(_detallePO.VerificarDispositivoEnTabla(objsEsperados),
                 $"El dispositivo '{dispositivoEsperado}' no aparece en la tabla de detalles.");
         }
 
@@ -258,42 +264,39 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         // PRUEBAS EXAMEN
         // =====================================================================
 
-      
+
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC_Alq_Examen()
         {
             InitialStepsForAlquiler();
-            string item1_Nombre = "Galaxy A54 5G 256GB";    
-
+            string item1_Nombre = "Galaxy A54 5G 256GB";
             string item2_Nombre = "iPhone 13 256GB";
 
-            Thread.Sleep(1000);
-
+            var objsEsperados1 = new List<string[]>
+            {
+                new string[] { "iPhone 13 256GB", "Apple","35,00 €","iPhone 13" }
+            };
+            var objsEsperados2 = new List<string[]>
+            {
+                new string[] { "iPhone 13 256GB", "iPhone 13", "Apple", "35" }
+            };
 
             _selectPO.AddDispositivoToCart(item1_Nombre);
-
             _selectPO.SearchDispositivos("iPhone 13", "", null, null);
-
             _selectPO.AddDispositivoToCart(item2_Nombre);
-            Thread.Sleep(1000);
-
-
             _selectPO.ClickCrearReserva();
 
-
-            Assert.True(_createPO.ContieneDispositivo(item2_Nombre), "El Item 2 debería estar en el resumen.");
-
-
+            Assert.True(_createPO.VerificarDispositivoEnTabla(objsEsperados1), "El Item 2 debería estar en el resumen.");
 
 
             _createPO.RellenarFormulario("Juan", "Pérez García", "Calle Industria 55", "PayPal");
-            _createPO.ClickAlquilar();
+            _createPO.ClickAlquilar(); 
 
 
-            Thread.Sleep(1000);
+            Assert.True(_detallePO.VerificarDispositivoEnTabla(objsEsperados2),
+                "El Item 2 alquilado debería estar en el detalle final.");
 
-            Assert.True(_detallePO.VerificarDispositivoEnTabla(item2_Nombre), "El Item 2 alquilado debería estar en el detalle final.");
         }
     }
 

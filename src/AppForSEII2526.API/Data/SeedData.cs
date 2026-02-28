@@ -52,7 +52,8 @@
             //first, it checks the user does not already exist in the DB
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
             {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "Avda. España 2, Albacete");
+
+                ApplicationUser user = new ApplicationUser("6", "Elena", "Navarro Martínez", "Avda. España 2, Albacete");
           
 
                 var result = userManager.CreateAsync(user, "Password1234%");

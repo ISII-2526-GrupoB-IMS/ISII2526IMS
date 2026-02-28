@@ -60,7 +60,6 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         }
 
         // Verificar la tabla 
-        // En SelectDispositivosAlquiler_PO.cs
 
         public bool CheckListOfDispositivos(List<string[]> expectedRows)
         {
@@ -83,7 +82,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 {
                     var cells = row.FindElements(By.TagName("td"));
 
-                    // Aseguramos que la fila tenga suficientes columnas (al menos 5 según tu imagen)
+                    // Aseguramos que la fila tenga suficientes columnas
                     if (cells.Count < 5) continue;
 
                     // Extraemos SOLO lo que nos interesa: Índices 0 (Nombre), 1 (Marca) y 4 (Precio)
@@ -148,9 +147,10 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             _driver.FindElement(btnRemoveSpecific).Click();
         }
 
-        // Verificar botón reserva (Imitando RentingNotAvailable o similar)
+        // Verificar botón reserva
         public bool IsCrearReservaDisabledOrHidden()
         {
+
 
             try
             {

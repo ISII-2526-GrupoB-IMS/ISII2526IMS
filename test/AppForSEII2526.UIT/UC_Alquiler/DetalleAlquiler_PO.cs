@@ -53,24 +53,32 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             }
         }
 
-        public bool VerificarDispositivoEnTabla(string nombreDispositivo)
-        {
-            try
-            {
-                WaitForBeingVisible(tableMovies);
-                // Buscamos en todas las filas de la tabla
-                var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
 
-                foreach (var fila in filas)
-                {
-                    if (fila.Text.Contains(nombreDispositivo)) return true;
-                }
-                return false;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
+
+        //public bool VerificarDispositivoEnTabla(string nombreDispositivo)
+        //{
+        //    try
+        //    {
+        //        WaitForBeingVisible(tableMovies);
+        //        // Buscamos en todas las filas de la tabla
+        //        var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
+
+        //        foreach (var fila in filas)
+        //        {
+        //            if (fila.Text.Contains(nombreDispositivo)) return true;
+        //        }
+        //        return false;
+        //    }
+        //    catch (NoSuchElementException)
+        //    {
+        //        return false;
+        //    }
+        //}
+        public bool VerificarDispositivoEnTabla(List<string[]> dispositivosEsperados)
+        {
+            By tablaDetalle = By.Id("RentedDevices");
+
+            return CheckBodyTable(dispositivosEsperados, tablaDetalle);
         }
     }
 }
