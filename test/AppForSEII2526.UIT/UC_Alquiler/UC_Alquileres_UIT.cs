@@ -33,10 +33,8 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             _driver.Navigate().GoToUrl(_URI + "Alquileres/SelectDispositivosAlquiler");
         }
 
-        // =====================================================================
-        // PRUEBAS DE SELECT (UC_Alq_3 a UC_Alq_11)
-        // =====================================================================
 
+        // PRUEBAS DE SELECT (UC_Alq_3 a UC_Alq_11)
         [Theory]
         // Caso UC2_4: Filtrar por Título (Precio vacío) -> Espera Oppo
         [InlineData("Oppo Find X5", "", "Oppo Find X5 Pro 256GB", "Oppo", "35,00 €")]
@@ -116,10 +114,8 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 "El botón de crear reserva debería estar oculto o deshabilitado si el carrito está vacío.");
         }
 
-        // =====================================================================
-        // PRUEBAS DE CREATE (UC_Create_12 a UC_Create_18)
-        // =====================================================================
 
+        // PRUEBAS DE CREATE (UC_Create_12 a UC_Create_18)
         // Método auxiliar para llevar al test hasta la pantalla de Create
         private void Precondition_GoToCreatePage()
         {
@@ -207,9 +203,8 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 "Se esperaba un error de disponibilidad al intentar alquilar.");
         }
 
-        // =====================================================================
+
         // PRUEBAS DE DETALLE (UC_Detalle_1 a UC_Detalle_3)
-        // =====================================================================
 
         [Theory]
         [InlineData("TarjetaCredito", "Galaxy A54")] // UC2_1
@@ -260,11 +255,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         }
 
 
-        // =====================================================================
         // PRUEBAS EXAMEN
-        // =====================================================================
-
-
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC_Alq_Examen()

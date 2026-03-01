@@ -9,16 +9,13 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 {
     public class DetalleAlquiler_PO : PageObject
     {
-        // Localizadores
         private By labelNameSurname = By.Id("NameSurname");
         private By labelAddress = By.Id("DeliveryAddress");
-
-      
         private By labelPayment = By.XPath("//tr[th[contains(text(),'Payment Method')]]/td");
-
         private By labelRentalPeriod = By.Id("RentalPeriod");
         private By labelTotalPrice = By.Id("TotalPrice");
         private By tableMovies = By.Id("RentedMovies");
+        private By tablaDetalle = By.Id("RentedDevices");
 
         public DetalleAlquiler_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
@@ -54,7 +51,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         }
 
 
-
+        
         //public bool VerificarDispositivoEnTabla(string nombreDispositivo)
         //{
         //    try
@@ -74,9 +71,11 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         //        return false;
         //    }
         //}
+
         public bool VerificarDispositivoEnTabla(List<string[]> dispositivosEsperados)
         {
-            By tablaDetalle = By.Id("RentedDevices");
+            WaitForBeingVisible(tablaDetalle);
+
 
             return CheckBodyTable(dispositivosEsperados, tablaDetalle);
         }

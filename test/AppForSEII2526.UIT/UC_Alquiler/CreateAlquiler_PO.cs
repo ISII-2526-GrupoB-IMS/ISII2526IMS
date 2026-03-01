@@ -10,21 +10,22 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 {
     public class CreateAlquiler_PO : PageObject
     {
-        // --- Localizadores ---
+      
         private By inputName = By.Id("Name");
         private By inputSurname = By.Id("Surname");
         private By inputAddress = By.Id("DeliveryAddress");
         private By selectPayment = By.Id("PaymentMethod");
         private By btnSubmit = By.Id("Submit");
 
-        // Botón "Modify items"
+        // Botón Modify items
         private By btnModifyItems = By.XPath("//button[contains(text(), 'Modify items')]");
 
         // Tabla de items en la vista Create
         private By tableRows = By.CssSelector("table tbody tr");
+        private By btnConfirmar = By.XPath("//div[contains(@class, 'modal')]//button[contains(@class, 'btn-primary')]");
 
 
-        // 1. Alertas generales
+        // Alertas generales
         private By alertError = By.CssSelector(".alert.alert-danger");
 
         private By fieldValidation = By.CssSelector(".validation-message");
@@ -81,8 +82,9 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 
         public void ConfirmarEnModal()
         {
+            WaitForBeingClickable(btnConfirmar);
+
             Thread.Sleep(500); // Espera para la animación del modal
-            By btnConfirmar = By.XPath("//div[contains(@class, 'modal')]//button[contains(@class, 'btn-primary')]");
             WaitForBeingClickable(btnConfirmar);
             _driver.FindElement(btnConfirmar).Click();
         }
@@ -131,7 +133,6 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 return false;
             }
         }
-        //Editar
 
         public bool VerificarDispositivoEnTabla(List<string[]> dispositivosEsperados)
         {
