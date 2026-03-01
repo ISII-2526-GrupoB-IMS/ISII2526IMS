@@ -113,7 +113,7 @@ namespace AppForSEII2526.UIT.Shared {
 
             if (isServerEnvironment)
             {
-                // --- CONFIGURACIÓN SOLO PARA EL SERVIDOR (No visible) ---
+               
                 optionsEdge.AddArgument("--headless=new");
                 optionsEdge.AddArgument("--no-sandbox");
                 optionsEdge.AddArgument("--disable-dev-shm-usage");

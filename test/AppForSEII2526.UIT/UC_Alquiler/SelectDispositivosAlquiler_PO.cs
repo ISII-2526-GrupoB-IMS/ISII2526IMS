@@ -10,15 +10,11 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 
     public class SelectDispositivosAlquiler_PO : PageObject
     {
-
         private By inputNombre = By.CssSelector("input[placeholder='ej. iPhone']");
         private By inputPrecio = By.CssSelector("input[type='number']"); // El input de precio
         private By buttonSearch = By.XPath("//button[contains(text(),'Buscar')]");
-
-    
         private By inputFrom = By.XPath("(//input[@type='date'])[1]"); // Primer calendario
         private By inputTo = By.XPath("(//input[@type='date'])[2]");   // Segundo calendario
-
         private By tableOfDispositivos = By.TagName("table");
         private By errorShownBy = By.Id("ErrorsShown"); 
         private By buttonCrearReserva = By.XPath("//button[contains(text(),'Crear reserva')]");
@@ -31,6 +27,8 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         // Método Search 
         public void SearchDispositivos(string nombre, string precioMax, DateTime? from, DateTime? to)
         {
+            WaitForBeingVisible(inputNombre);
+
             // Esperamos que el input sea visible/clickable
             WaitForBeingClickable(inputNombre);
 
@@ -60,10 +58,11 @@ namespace AppForSEII2526.UIT.UC_Alquileres
         }
 
         // Verificar la tabla 
-        // En SelectDispositivosAlquiler_PO.cs
 
         public bool CheckListOfDispositivos(List<string[]> expectedRows)
         {
+            WaitForBeingVisible(tableOfDispositivos);
+
             // 1. Obtenemos todas las filas del cuerpo de la tabla
             var rows = _driver.FindElements(By.CssSelector("table tbody tr"));
 
@@ -83,7 +82,7 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 {
                     var cells = row.FindElements(By.TagName("td"));
 
-                    // Aseguramos que la fila tenga suficientes columnas (al menos 5 según tu imagen)
+                    // Aseguramos que la fila tenga suficientes columnas
                     if (cells.Count < 5) continue;
 
                     // Extraemos SOLO lo que nos interesa: Índices 0 (Nombre), 1 (Marca) y 4 (Precio)
@@ -148,9 +147,10 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             _driver.FindElement(btnRemoveSpecific).Click();
         }
 
-        // Verificar botón reserva (Imitando RentingNotAvailable o similar)
+        // Verificar botón reserva
         public bool IsCrearReservaDisabledOrHidden()
         {
+
 
             try
             {

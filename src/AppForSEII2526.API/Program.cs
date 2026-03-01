@@ -83,14 +83,14 @@ using (var scope = app.Services.CreateScope()) {
 
         //it creates the DB in case it does not exist
         //this is used only while developing the system
-        if (connection2Database == "SQLite")
-            db.Database.EnsureCreated();
-        else
-            db.Database.Migrate();
+        //if (connection2Database == "SQLite")
+        //    db.Database.EnsureCreated();
+        //else
+        //    db.Database.Migrate();
 
 
         //it sees the database
-        //SeedData.Initialize(db, scope.ServiceProvider, logger);
+        SeedData.Initialize(db, scope.ServiceProvider, logger);
     }
     catch (Exception ex) {
         logger.LogError(ex, "An error occurred seeding the DB.");

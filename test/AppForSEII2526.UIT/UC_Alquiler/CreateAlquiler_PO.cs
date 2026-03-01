@@ -10,23 +10,24 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 {
     public class CreateAlquiler_PO : PageObject
     {
-        // --- Localizadores ---
+      
         private By inputName = By.Id("Name");
         private By inputSurname = By.Id("Surname");
         private By inputAddress = By.Id("DeliveryAddress");
         private By selectPayment = By.Id("PaymentMethod");
         private By btnSubmit = By.Id("Submit");
 
-        // Botón "Modify items"
+        // Botón Modify items
         private By btnModifyItems = By.XPath("//button[contains(text(), 'Modify items')]");
 
         // Tabla de items en la vista Create
         private By tableRows = By.CssSelector("table tbody tr");
+        private By btnConfirmar = By.XPath("//div[contains(@class, 'modal')]//button[contains(@class, 'btn-primary')]");
 
-        // --- Localizadores de Errores Específicos ---
-        // 1. Alertas generales (ValidationSummary y div de error custom)
+
+        // Alertas generales
         private By alertError = By.CssSelector(".alert.alert-danger");
-        // 2. Mensajes de validación de campo individuales (Blazor usa esta clase por defecto)
+
         private By fieldValidation = By.CssSelector(".validation-message");
 
         public CreateAlquiler_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
@@ -81,8 +82,9 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 
         public void ConfirmarEnModal()
         {
-            Thread.Sleep(500); // Pequeña espera para animación del modal
-            By btnConfirmar = By.XPath("//div[contains(@class, 'modal')]//button[contains(@class, 'btn-primary')]");
+            WaitForBeingClickable(btnConfirmar);
+
+            Thread.Sleep(500); // Espera para la animación del modal
             WaitForBeingClickable(btnConfirmar);
             _driver.FindElement(btnConfirmar).Click();
         }
@@ -116,7 +118,6 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                         // Verificamos que sea visible y contenga el texto
                         if (elemento.Displayed && elemento.Text.Contains(textoEsperado))
                         {
-                            // _output.WriteLine($"Error encontrado en {locator}: {elemento.Text}"); // Debug
                             encontrado = true;
                             break;
                         }
@@ -133,18 +134,11 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             }
         }
 
-        public bool ContieneDispositivo(string nombreDispositivo)
+        public bool VerificarDispositivoEnTabla(List<string[]> dispositivosEsperados)
         {
-            try
-            {
-                var filas = _driver.FindElements(tableRows);
-                foreach (var fila in filas)
-                {
-                    if (fila.Text.Contains(nombreDispositivo)) return true;
-                }
-                return false;
-            }
-            catch (NoSuchElementException) { return false; }
+            By tablaDetalle = By.Id("DevicesForRent");
+
+            return CheckBodyTable(dispositivosEsperados, tablaDetalle);
         }
     }
 }

@@ -9,16 +9,13 @@ namespace AppForSEII2526.UIT.UC_Alquileres
 {
     public class DetalleAlquiler_PO : PageObject
     {
-        // Localizadores
         private By labelNameSurname = By.Id("NameSurname");
         private By labelAddress = By.Id("DeliveryAddress");
-
-      
         private By labelPayment = By.XPath("//tr[th[contains(text(),'Payment Method')]]/td");
-
         private By labelRentalPeriod = By.Id("RentalPeriod");
         private By labelTotalPrice = By.Id("TotalPrice");
         private By tableMovies = By.Id("RentedMovies");
+        private By tablaDetalle = By.Id("RentedDevices");
 
         public DetalleAlquiler_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
@@ -53,24 +50,34 @@ namespace AppForSEII2526.UIT.UC_Alquileres
             }
         }
 
-        public bool VerificarDispositivoEnTabla(string nombreDispositivo)
-        {
-            try
-            {
-                WaitForBeingVisible(tableMovies);
-                // Buscamos en todas las filas de la tabla
-                var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
 
-                foreach (var fila in filas)
-                {
-                    if (fila.Text.Contains(nombreDispositivo)) return true;
-                }
-                return false;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
+        
+        //public bool VerificarDispositivoEnTabla(string nombreDispositivo)
+        //{
+        //    try
+        //    {
+        //        WaitForBeingVisible(tableMovies);
+        //        // Buscamos en todas las filas de la tabla
+        //        var filas = _driver.FindElements(By.CssSelector("#RentedMovies tbody tr"));
+
+        //        foreach (var fila in filas)
+        //        {
+        //            if (fila.Text.Contains(nombreDispositivo)) return true;
+        //        }
+        //        return false;
+        //    }
+        //    catch (NoSuchElementException)
+        //    {
+        //        return false;
+        //    }
+        //}
+
+        public bool VerificarDispositivoEnTabla(List<string[]> dispositivosEsperados)
+        {
+            WaitForBeingVisible(tablaDetalle);
+
+
+            return CheckBodyTable(dispositivosEsperados, tablaDetalle);
         }
     }
 }
