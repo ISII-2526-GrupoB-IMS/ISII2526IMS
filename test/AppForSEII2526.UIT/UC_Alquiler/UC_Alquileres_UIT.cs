@@ -289,6 +289,41 @@ namespace AppForSEII2526.UIT.UC_Alquileres
                 "El Item 2 alquilado debería estar en el detalle final.");
 
         }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC_Alq_Examen_Marzo()
+        {
+            string item1_Nombre = "iPhone 13 256GB";
+            string item2_Nombre = "Galaxy A54 5G 256GB";      
+            string item3_Nombre = "Galaxy A54 5G 128GB";
+            
+            var objsEsperados1 = new List<string[]>
+            {
+                new string[] { "Galaxy A54 5G 128GB", "Galaxy A54", "Samsung","20"}
+            };
+
+            InitialStepsForAlquiler();
+            //Filtro 1
+            _selectPO.SearchDispositivos("iPhone 13", "", null, null);
+            _selectPO.AddDispositivoToCart(item1_Nombre);
+            //Filtro 2
+            _selectPO.SearchDispositivos("", "22", null, null);
+            _selectPO.AddDispositivoToCart(item2_Nombre);
+            _selectPO.AddDispositivoToCart(item3_Nombre);
+
+            //Elimino dispositivo
+            _selectPO.RemoveDispositivoFromCart(item2_Nombre);
+
+
+            //Continuo con el flujo básico
+            _selectPO.ClickCrearReserva();
+            _createPO.RellenarFormulario("Juan", "Pérez García", "Calle Industria 55", "PayPal");
+
+            _createPO.ClickAlquilar();
+            Assert.True(_detallePO.VerificarDispositivoEnTabla(objsEsperados1),
+                "El Item 3 alquilado debería estar en el detalle final.");
+        }
     }
 
 }
