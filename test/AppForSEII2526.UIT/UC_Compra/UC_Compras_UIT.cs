@@ -518,6 +518,84 @@ namespace AppForSEII2526.UIT.UC_Compra
 
 
         }
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void Examen()
+        {
+
+
+            //  ARRANGE 
+            InitialStepsForCompra();
+            string nombre1 = "iPhone 14";
+
+            string nombre2 = "Galaxy";
+            string color2 = "Verde";
+
+            string nombre3 = "iPhone 13";
+            string marca = "Apple";
+            string color = "Azul";
+            string precioEsperado = "799,99";
+            string cantidadEsperada = "1";
+            string descripcionEsperada = "Compra Web";
+
+            var crearCompraPO = new CrearCompra_PO(_driver, _output);
+            var _detallePO = new DetalleCompra_PO(_driver, _output);
+
+
+
+            string nombreUser = "Juan";
+            string apellidosUser = "Pérez García";
+            string direccionUser = "Calle Mayor 123";
+
+            //  ACT 
+
+            _selectPO.SearchDispositivos(nombre1, "");
+            _selectPO.AddDispositivoToCart(nombre1);
+
+            _selectPO.SearchDispositivos("", color2);
+            _selectPO.AddDispositivoToCart(nombre2);
+
+            _selectPO.SearchDispositivos(nombre3, "");
+            _selectPO.AddDispositivoToCart(nombre3);
+
+            _selectPO.RemoveDispositivoFromCart(nombre1);
+            _selectPO.RemoveDispositivoFromCart(nombre2);
+
+            _selectPO.TramitarPedido();
+
+
+            crearCompraPO.EscribirNombre(nombreUser);
+            crearCompraPO.EscribirApellidos(apellidosUser);
+            crearCompraPO.EscribirDireccion(direccionUser);
+            crearCompraPO.SeleccionarPago("Efectivo");
+
+            crearCompraPO.ClickConfirmar();
+
+            string precioTotalEsperado = "799,99 €";
+            string fechaEsperada = DateTime.Now.ToString("dd/MM/yyyy");
+
+            Assert.True(_detallePO.VerificarDetallesCabecera(
+               $"{nombreUser} {apellidosUser}",
+               direccionUser,
+               fechaEsperada,
+               precioTotalEsperado),
+               "Los datos de la cabecera del detalle (Nombre, Dirección, Pago o Precio) son incorrectos.");
+
+            List<string[]> dispositivosEsperados = new List<string[]>
+            {
+                new string[] { nombre3, marca, color, precioEsperado,cantidadEsperada,descripcionEsperada }
+            };
+
+            Assert.True(
+                _detallePO.CheckListOfDispositivos(dispositivosEsperados),
+                $"El dispositivo '{nombre3}' no aparece en la tabla de detalles."
+            );
+
+
+
+
+
+        }
 
 
 
