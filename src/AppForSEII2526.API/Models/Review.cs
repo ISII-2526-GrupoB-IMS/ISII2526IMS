@@ -19,13 +19,13 @@ namespace AppForSEII2526.API.Models
            
             FechaReview = fechaReview;
             ItemsReview = itemsReview ?? new List<ItemReview>();
-
-            // ✅ Calcular CalificaciónGeneral solo si hay elementos
+            ApplicationUser = applicationUser;
+        }
+        public void ActualizarCalificacionGeneral()
+        {
             CalificaciónGeneral = (ItemsReview != null && ItemsReview.Any())
                 ? ItemsReview.Average(item => item.Puntuacion)
                 : 0;
-            ItemsReview = itemsReview;
-            ApplicationUser = applicationUser;
         }
 
         [Key]

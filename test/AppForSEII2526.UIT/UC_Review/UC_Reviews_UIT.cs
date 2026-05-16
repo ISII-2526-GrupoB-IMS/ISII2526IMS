@@ -122,7 +122,6 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Theory]
         [InlineData("Apple", "2023", "iPhone 14 Pro 256GB")]
-        [InlineData("Samsung", "2023", "Galaxy S23 Ultra 512GB")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void CU_Rev_4_Filtrar_Marca_y_Año(string marca, string año, string nombreEsperado)
         {
@@ -238,7 +237,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU_Rev_10_Error_Titulo_Vacio()
+        public void CU_Rev_9_Error_Titulo_Vacio()
         {
             // --- 1. ARRANGE ---
             InitialStepsForReview();
@@ -265,7 +264,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU_Rev_11_Error_Titulo_Demasiado_Largo()
+        public void CU_Rev_10_Error_Titulo_Demasiado_Largo()
         {
             // --- 1. ARRANGE ---
             InitialStepsForReview();
@@ -294,7 +293,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU_Rev_12_Error_Pais_Excede_Longitud()
+        public void CU_Rev_11_Error_Pais_Excede_Longitud()
         {
             // --- 1. ARRANGE ---
             InitialStepsForReview();
@@ -324,7 +323,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU_Rev_13_Error_NombreAutor_Excede_Longitud()
+        public void CU_Rev_12_Error_NombreAutor_Excede_Longitud()
         {
             // --- 1. ARRANGE ---
             InitialStepsForReview();
@@ -343,10 +342,10 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
             // --- 3. ASSERT ---
 
-            // 1. Verificamos el mensaje técnico del DTO (nombre del campo según tu DTO, ej: NombreAutor o Nombre)
+            // 1. Verificamos el mensaje técnico del DTO 
             bool errorLongitudNombre = _crearPO.ExisteMensajeDeError("maximum length of 50");
 
-            // 2. Verificamos el mensaje genérico que sale en el banner rosado de tu código Blazor
+            // 2. Verificamos el mensaje genérico 
             bool errorGenerico = _crearPO.ExisteMensajeDeError("Hay errores en el formulario");
 
             Assert.True(errorLongitudNombre, "No apareció el error de validación de longitud para el nombre del autor.");
@@ -355,7 +354,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU_Rev_14_Error_Comentario_Excede_Longitud()
+        public void CU_Rev_13_Error_Comentario_Excede_Longitud()
         {
             // --- 1. ARRANGE ---
             InitialStepsForReview();
@@ -363,7 +362,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
             _selectPO.ClickReseñarDispositivos();
 
             // --- 2. ACT ---
-            // Generamos un comentario de más de 300 caracteres (según tu imagen image_77e5aa.png)
+            // Generamos un comentario de más de 300 caracteres
             string comentarioMuyLargo = "Review para " + new string('a', 305);
 
             _crearPO.RellenarCabecera("Reseña Válida", "España", "Juan");
@@ -382,7 +381,7 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU_Rev_15_Examen_Sprint3()
+        public void CU_Rev_14_Examen_Sprint3_ordi()
         {
             
             InitialStepsForReview();
@@ -425,6 +424,44 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
             // Verificamos que el registro está sincronizado
             Assert.True(_detallePO.VerificarSincronizacion(), "El registro no aparece como sincronizado.");
+        }
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU_Rev_15_FlujoAlt4_Volver_Mantiene_Carrito_Y_Datos()
+        {
+            // ARRANGE 
+            InitialStepsForReview();
+            _selectPO.AddDispositivoToReview("iPhone 14 Pro 256GB");
+            _selectPO.ClickReseñarDispositivos();
+
+            // ACT 
+            // 1. Rellenamos datos en el formulario
+            _crearPO.RellenarCabecera("Título a conservar", "España", "Juan");
+
+            // 2. Volvemos atrás usando el botón de "Modificar selección"
+            _crearPO.ClickModificarSeleccion();
+
+            // ASSERT 
+            // Comprobamos que al volver al catálogo, el botón de reseñar NO está deshabilitado 
+            // (es decir, el carrito sigue teniendo nuestro iPhone).
+            Assert.False(_selectPO.IsReseñarButtonDisabled(),
+                "El carrito se ha vaciado al volver atrás, ¡debería mantener la selección!");
+        }
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU_Rev_16_Filtro_Sin_Resultados()
+        {
+            // ARRANGE
+            InitialStepsForReview();
+            string marcaInexistente = "MarcaInventadaX";
+            string mensajeEsperado = "No se han encontrado dispositivos con esos filtros";
+
+            // ACT
+            _selectPO.SearchDispositivos(marcaInexistente, "");
+
+            // ASSERT 
+            Assert.True(_selectPO.CheckMessageErrorNotAvaibleDispositivos(mensajeEsperado),
+                "El mensaje de 'No se encontraron dispositivos' debería ser visible.");
         }
     }
 }

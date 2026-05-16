@@ -102,7 +102,7 @@ namespace AppForSEII2526.API.Controllers
                  0, // EF Core lo asignará automáticamente
         ReviewParaCrear.Titulo,
         ReviewParaCrear.Pais,
-        ReviewParaCrear.FechaReview,
+        DateTime.Now,
         new List<ItemReview>(),
         applicationUser: user
             );
@@ -145,6 +145,7 @@ namespace AppForSEII2526.API.Controllers
 
                 Review.ItemsReview.Add(itemReview);
             }
+            Review.ActualizarCalificacionGeneral();
 
             // Log para debugging
             _logger.LogInformation($"Creando Review con {Review.ItemsReview.Count} items");
