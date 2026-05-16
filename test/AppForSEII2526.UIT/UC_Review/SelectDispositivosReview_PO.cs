@@ -145,5 +145,22 @@ namespace AppForSEII2526.UIT.UC_Reviews
                 _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             }
         }
+        public bool CheckMessageErrorNotAvaibleDispositivos(string expectedMessage)
+        {
+            // Esperamos a que aparezca el alert-warning
+            By alertWarning = By.ClassName("alert-warning");
+
+            try
+            {
+                WaitForBeingVisible(alertWarning);
+                string actualMessage = _driver.FindElement(alertWarning).Text;
+                return actualMessage.Contains(expectedMessage);
+            }
+            catch (WebDriverTimeoutException)
+            {
+                _output.WriteLine("No apareció el mensaje de advertencia de dispositivos no encontrados.");
+                return false;
+            }
+        }
     }
 }

@@ -15,6 +15,10 @@ namespace AppForSEII2526.UIT.UC_Reviews
         private By inputUserName = By.Id("UserName");
         private By btnSubmit = By.Id("Submit");
 
+        // 1. Localizador (Añádelo arriba con los demás 'private By')
+        // Usamos XPath para buscar el botón amarillo por su texto exacto
+        private By buttonModificar = By.XPath("//button[contains(., 'Modificar selección')]");
+
         // --- Localizadores de Errores (Aparecen debajo de los campos) ---
         private By validationMessages = By.CssSelector(".text-danger, .validation-message");
 
@@ -100,6 +104,21 @@ namespace AppForSEII2526.UIT.UC_Reviews
 
             _output.WriteLine($"ERROR: No se encontró '{textoEsperado}' en ningún elemento de error visible.");
             return false;
+        }
+
+        
+
+        // 2. Método de Acción (Añádelo abajo con los demás métodos públicos)
+        public void ClickModificarSeleccion()
+        {
+            // Esperamos a que el botón sea visible para evitar errores de sincronización
+            WaitForBeingClickable(buttonModificar);
+
+            // Hacemos scroll si es necesario y clicamos
+            _driver.FindElement(buttonModificar).Click();
+
+            // Opcional: Pequeña espera para que Blazor procese el cambio de página de vuelta al catálogo
+            Thread.Sleep(500);
         }
     }
 }

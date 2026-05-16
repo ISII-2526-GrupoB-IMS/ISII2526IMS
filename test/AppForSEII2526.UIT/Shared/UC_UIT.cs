@@ -114,7 +114,7 @@ namespace AppForSEII2526.UIT.Shared {
             if (isServerEnvironment)
             {
                
-                optionsEdge.AddArgument("--headless=new");
+               optionsEdge.AddArgument("--headless=new");
                 optionsEdge.AddArgument("--no-sandbox");
                 optionsEdge.AddArgument("--disable-dev-shm-usage");
                 optionsEdge.AddArgument("--window-size=1920,1080");

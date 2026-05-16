@@ -106,6 +106,7 @@ namespace AppForSEII2526.UIT.Shared {
         public void WaitForBeingClickable(By IdElement) {
             //used whenever the webelement needs a delay for being clickable
             var wait = new WebDriverWait(_driver, new TimeSpan(0, 0, 30));
+            wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException));
             wait.Until(ExpectedConditions.ElementToBeClickable(IdElement));
 
         }

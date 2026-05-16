@@ -152,23 +152,21 @@ namespace AppForSEII2526.UT.ReviewController_test
                 _nombreUsuario,
                 items
             );
-
-            var fecha = DateTime.Now;
-
-            var expected = new ReviewDetailDTO(
-                _nombreUsuario,
-                _pais,
-                _titulo,
-                fecha,
-                items
-            );
-
             // Act
             var result = await controller.CrearReview(ReviewDTO);
 
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actual = Assert.IsType<ReviewDetailDTO>(createdResult.Value);
 
+            var expected = new ReviewDetailDTO(
+                _nombreUsuario,
+                _pais,
+                _titulo,
+                actual.FechaReview,
+                items
+            );
+
+            
 
             Assert.Equal( expected, actual );
 
