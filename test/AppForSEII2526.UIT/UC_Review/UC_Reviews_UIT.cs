@@ -463,6 +463,60 @@ namespace AppForSEII2526.UIT.UC_Reviews
             Assert.True(_selectPO.CheckMessageErrorNotAvaibleDispositivos(mensajeEsperado),
                 "El mensaje de 'No se encontraron dispositivos' debería ser visible.");
         }
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU_Rev_17_Examen_extra()
+        {
+
+            InitialStepsForReview();
+            Thread.Sleep(1000);
+
+            string marcaBusqueda = "Apple";
+            string anio = "2023";
+            string dispositivo1 = "iPhone 14 Pro 256GB";
+            string dispositivo2 = "iPhone 14 Pro 512GB";
+            string dispositivo3 = "iPhone 14 Pro 128GB";
+
+            // Datos del formulario
+            string tituloReseña = "Excelente experiencia con iPhone";
+            string paisReseña = "España";
+            string nombreAutor = "Juan";
+            string comentario = "Review para : ¡Va genial!";
+
+            _selectPO.SearchDispositivos(marcaBusqueda, "");
+
+            _selectPO.AddDispositivoToReview(dispositivo1);
+
+            _selectPO.AddDispositivoToReview(dispositivo2);
+
+            _selectPO.SearchDispositivos("", anio);
+
+            _selectPO.AddDispositivoToReview(dispositivo3);
+
+            _selectPO.RemoveDispositivoFromReview(dispositivo1);
+
+            _selectPO.RemoveDispositivoFromReview(dispositivo2);
+
+            _selectPO.ClickReseñarDispositivos();
+
+            _crearPO.RellenarCabecera(tituloReseña, paisReseña, nombreAutor);
+
+            _crearPO.RellenarDetalleDispositivo(dispositivo3, "5", comentario);
+
+            _crearPO.ClickPublicarReseña();
+
+            // Verificamos que estamos en la página de éxito
+            Assert.True(_detallePO.VerificarExitoPublicacion(), "No se mostró el banner de éxito.");
+
+            // Verificamos que el autor y ubicación coinciden
+            Assert.True(_detallePO.VerificarDatosAutor(nombreAutor, paisReseña), "Los datos del autor no coinciden.");
+
+            // Verificamos que los dispositivos aparecen valorados (con su calificacion X/5)
+            Assert.True(_detallePO.VerificarDispositivoValorado(dispositivo3, "(5/5)", comentario));
+
+            // Verificamos que el registro está sincronizado
+            Assert.True(_detallePO.VerificarSincronizacion(), "El registro no aparece como sincronizado.");
+        }
     }
 }
 
